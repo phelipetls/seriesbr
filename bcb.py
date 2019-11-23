@@ -1,6 +1,7 @@
 import pandas as pd
 from helpers.dates import parse_date
 from helpers.types import parse_args
+from helpers.response import parse_response
 from helpers.request import get_serie
 
 
@@ -12,21 +13,7 @@ def get(cod, nome=None, start=None, end=None, last_n=None, out="pd"):
     else:
         data = get_dates(start, end)
         url = base_url + formato + data
-    return parse_response(get_serie(url), cod, nome, out)
-
-
-def parse_response(json, cod, nome, out):
-    if out == "raw":
-        return json
-    elif out == "pd":
-        try:
-            json_df = pd.read_json(json, dtype={"data": "datetime64", "valor": "float"})
-        except ValueError:
-            print(f"Request for {cod} produces invalid json.")
-            raise
-        return json_df.set_index("data").rename(columns={"valor": nome if nome else cod})
-    else:
-        return "{out.capitalize()} is not a valid output format."
+    return parse_response(get_serie(url), cod, nome, out, source="bcb")
 
 
 def get_dates(start, end):
