@@ -30,9 +30,9 @@ def get_dates(start, end):
     return data
 
 
-def get_series(*args, start=None, end=None, last_n=None, join="outer", **kwargs):
-    codigos, nomes = parse_args(*args)
-    return pd.concat(
+def get_series(*codigos, start=None, end=None, last_n=None, join="outer", **kwargs):
+    codigos, nomes = parse_cods(*codigos)
+    return concat(
         [get(cod, start, end, last_n) for cod in codigos],
         axis="columns",
         join=join,
