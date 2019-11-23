@@ -1,10 +1,10 @@
-import requests
 import pandas as pd
 from helpers.dates import parse_date
 from helpers.types import parse_args
+from helpers.request import get_serie
 
 
-def get(cod, start=None, end=None, last_n=None, convert=True):
+def get(cod, nome=None, start=None, end=None, last_n=None, out="pd"):
     base_url = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{cod}/dados"
     formato = "?formato=json"
     if last_n:
@@ -12,7 +12,17 @@ def get(cod, start=None, end=None, last_n=None, convert=True):
     else:
         data = get_dates(start, end)
         url = base_url + formato + data
-    return pd.read_json(requests.get(url).text)
+    return parse_response(get_serie(url), cod, nome, out)
+
+
+def parse_response(json, cod, nome, out):
+    if out == "json":
+        return json
+    elif out == "pd":
+        json_df = pd.read_json(json, dtype={"data": "datetime64", "valor": "float"})
+        return json_df.set_index("data").rename(columns={"valor": nome if nome else cod})
+    else:
+        return "Not a valid output format."
 
 
 def get_dates(start, end):
