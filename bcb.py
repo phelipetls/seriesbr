@@ -1,6 +1,6 @@
-import pandas as pd
+from pandas import concat
 from helpers.dates import parse_date
-from helpers.types import parse_args
+from helpers.types import parse_cods
 from helpers.response import parse_response
 from helpers.request import get_serie
 

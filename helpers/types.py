@@ -1,4 +1,4 @@
-def parse_args(*args):
+def parse_cods(*args):
     if len(args) > 1:
         err_msg = "Codes must be str or int and of the same type"
         str_cond = check_types(args, str)
