@@ -16,13 +16,17 @@ def get(cod, nome=None, start=None, end=None, last_n=None, out="pd"):
 
 
 def parse_response(json, cod, nome, out):
-    if out == "json":
+    if out == "raw":
         return json
     elif out == "pd":
-        json_df = pd.read_json(json, dtype={"data": "datetime64", "valor": "float"})
+        try:
+            json_df = pd.read_json(json, dtype={"data": "datetime64", "valor": "float"})
+        except ValueError:
+            print(f"Request for {cod} produces invalid json.")
+            raise
         return json_df.set_index("data").rename(columns={"valor": nome if nome else cod})
     else:
-        return "Not a valid output format."
+        return "{out.capitalize()} is not a valid output format."
 
 
 def get_dates(start, end):
