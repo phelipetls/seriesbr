@@ -3,6 +3,7 @@ from helpers.dates import parse_date
 from helpers.types import parse_cods
 from helpers.response import parse_response
 from helpers.request import custom_get
+from helpers.formatter import format_results_bcb
 
 
 def get(cod, name=None, start=None, end=None, last_n=None, out="pd"):
@@ -87,3 +88,18 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
     ).rename(columns={cod: nome for nome, cod in zip(names, codes)})
 
 
+def search(name, page=1):
+    """
+    Search for a name in the SGS database.
+
+    Parameters:
+    name (str): string to search.
+
+    page (int): page of results.
+
+    Returns:
+    None. Just prints the search results.
+    """
+    baseurl = "https://dadosabertos.bcb.gov.br/dataset"
+    results = custom_get(baseurl, params={"q": name, "page": page})
+    format_results_bcb(results, page)
