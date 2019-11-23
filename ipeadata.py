@@ -12,15 +12,15 @@ def get(cod, nome=None, start=None, end=None, out="pd"):
     return parse_response(custom_get(url).text, cod, nome, out, source="ipea")
 
 
-def get_series(*codigos, start=None, end=None, last_n=None, join="outer", **kwargs):
-    codigos, nomes = parse_cods(*codigos)
+def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs):
+    codes, names = parse_cods(*cods)
     return concat(
-        [get(cod, start, end) for cod in codigos],
+        [get(cod, start, end) for cod in codes],
         axis="columns",
         join=join,
         sort=True,  # done to avoid pandas warning messages
         **kwargs
-    ).rename(columns={cod: nome for nome, cod in zip(nomes, codigos)})
+    ).rename(columns={cod: nome for nome, cod in zip(names, codes)})
 
 
 def search(name):
