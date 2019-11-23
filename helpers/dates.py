@@ -2,7 +2,7 @@ import datetime as dt
 
 default = ["%d/%m/%Y"]
 year_only = ["%Y", "%y"]
-month_year_only = ["%m/%y", "%M/%Y", "%b/%Y", "%B/%y"]
+month_year_only = ["%m/%y", "%m/%Y", "%M/%Y", "%b/%Y", "%B/%y"]
 
 all_formats = default + year_only + month_year_only
 slash_formats = [fmt for fmt in all_formats]
