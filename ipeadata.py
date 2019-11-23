@@ -1,6 +1,6 @@
 from pandas import concat
 from helpers.types import parse_cods
-from helpers.request import get_serie
+from helpers.request import custom_get
 from helpers.response import parse_response
 
 

@@ -2,7 +2,7 @@ from pandas import concat
 from helpers.dates import parse_date
 from helpers.types import parse_cods
 from helpers.response import parse_response
-from helpers.request import get_serie
+from helpers.request import custom_get
 
 
 def get(cod, name=None, start=None, end=None, last_n=None, out="pd"):

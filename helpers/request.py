@@ -1,7 +1,7 @@
 import requests
 
 
-def get_serie(url):
-    response = requests.get(url, timeout=1000)
+def custom_get(url, *args, **kwargs):
+    response = requests.get(url, **kwargs, timeout=1000)
     response.raise_for_status()
-    return response.text
+    return response
