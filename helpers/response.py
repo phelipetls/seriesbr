@@ -29,7 +29,7 @@ def parse_bcb_json(response, cod, nome):
 def parse_ipea_json(response, cod, nome):
     json = response.json()["value"]
     if json == []:
-        raise ValueError(f"Request for {cod} returns no values.")
+        raise ValueError(f"Request for {cod} returns nothing.")
     return to_dataframe(json).rename(columns={"value": nome if nome else cod})
 
 
