@@ -26,6 +26,15 @@ def get(cod, start=None, end=None, name=None, out="pd"):
     """
     url = f"http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='{cod}')"
     serie = parse_response(custom_get(url), cod, name, out, source="ipea")
+    if out == "pd":
+        if start and end:
+            return serie[start:end]
+        elif start:
+            return serie[start:]
+        elif end:
+            return serie[:end]
+        else:
+            return serie
     return serie
 
 
