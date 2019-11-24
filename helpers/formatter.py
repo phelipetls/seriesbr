@@ -12,22 +12,22 @@ def format_results_bcb(results, page):
             codigos.append(extract_code(dataset.a["href"]))
             nomes.append(dataset.text.replace("\n", ""))
     print(f"Page {page} of {last_page}")
-    format_to_table(codigos, nomes)
+    to_table(codigos, nomes)
 
 
 def format_results_ipea(results):
     codigos = [item["SERCODIGO"] for item in results]
     nomes = [item["SERNOME"] for item in results]
-    format_to_table(codigos, nomes)
+    to_table(codigos, nomes)
+
+
+def to_table(codigos, nomes):
+    for codigo, nome in zip(codigos, nomes):
+        print(f"{format(codigo, codigos)} | {format(nome, nomes)} |")
 
 
 def format(string, iterable):
     return f"{string:<{len(max(iterable, key=len))}}"
-
-
-def format_to_table(codigos, nomes):
-    for codigo, nome in zip(codigos, nomes):
-        print(f"{format(codigo, codigos)} | {format(nome, nomes)} |")
 
 
 def extract_code(codigo):

@@ -1,6 +1,5 @@
 from pandas import read_json
-from json import loads
-from pandas import DataFrame
+from pandas import DataFrame, Timestamp
 from datetime import date
 
 
@@ -18,23 +17,27 @@ def parse_response(response, cod, nome, out, source):
         return "{out.capitalize()} is not a valid output format."
 
 
-def parse_bcb_json(raw_json, cod, nome):
+def parse_bcb_json(response, cod, nome):
     try:
-        json_df = read_json(raw_json, dtype={"data": "datetime64", "valor": "float"})
+        df = read_json(response.text, dtype={"data": "datetime64", "valor": "float"})
     except ValueError:
         print(f"Request for {cod} produces invalid json.")
         raise
-    return json_df.set_index("data").rename(columns={"valor": nome if nome else cod})
+    return df.set_index("data").rename(columns={"valor": nome if nome else cod})
 
 
-def parse_ipea_json(raw_json, cod, nome):
-    json_values = loads(raw_json)["value"]
-    if json_values == []:
+def parse_ipea_json(response, cod, nome):
+    json = response.json()["value"]
+    if json == []:
         raise ValueError(f"Request for {cod} returns no values.")
-    return DataFrame([
-        {
-            "date": date(item["ANO"], item["MES"], item["DIA"]).strftime("%d/%m/%Y"),
-            "value": item["VALVALOR"],
-        }
-        for item in json_values
-    ]).set_index("date").rename(columns={"value": nome if nome else cod})
+    return to_dataframe(json).rename(columns={"value": nome if nome else cod})
+
+
+def to_dataframe(json):
+    series_dict = {"date": [], "value": []}
+    for item in json:
+        obs_date = date(item["ANO"], item["MES"], item["DIA"]).strftime("%d/%m/%Y")
+        series_dict["date"].append(Timestamp(obs_date))
+        obs_value = item["VALVALOR"]
+        series_dict["value"].append(obs_value)
+    return DataFrame(series_dict).set_index("date")
