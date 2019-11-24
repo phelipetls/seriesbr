@@ -1,6 +1,6 @@
 from pandas import read_json
 from pandas import DataFrame, Timestamp
-from datetime import date
+from datetime import datetime as dt
 
 
 def parse_response(response, cod, nome, out, source):
@@ -36,7 +36,7 @@ def parse_ipea_json(response, cod, nome):
 def to_dataframe(json):
     series_dict = {"date": [], "value": []}
     for item in json:
-        obs_date = date(item["ANO"], item["MES"], item["DIA"]).strftime("%d/%m/%Y")
+        obs_date = dt.strptime(item["VALDATA"], "%Y-%m-%dT%H:%M:%S%z").strftime("%d/%m/%Y")
         series_dict["date"].append(Timestamp(obs_date))
         obs_value = item["VALVALOR"]
         series_dict["value"].append(obs_value)

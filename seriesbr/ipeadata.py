@@ -26,7 +26,9 @@ def get(cod, start=None, end=None, name=None, out="pd"):
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"ValoresSerie(SERCODIGO='{cod}')"
-    url = f"{baseurl}{resource_path}"
+    select = "?$select=VALDATA,VALVALOR"  # just return the date and values
+    # TODO: query dates (very hard with OData apparently)
+    url = f"{baseurl}{resource_path}{select}"
     serie = parse_response(custom_get(url), cod, name, out, source="ipea")
     if out == "pd":
         if start and end:
