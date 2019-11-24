@@ -6,7 +6,7 @@ from helpers.request import custom_get
 from helpers.formatter import format_results_bcb
 
 
-def get(cod, name=None, start=None, end=None, last_n=None, out="pd"):
+def get(cod, start=None, end=None, name=None, last_n=None, out="pd"):
     """
     Returns a time series from Time Series Management System (SGS)
     of Brazilian Central Bank (BCB).
@@ -36,7 +36,7 @@ def get(cod, name=None, start=None, end=None, last_n=None, out="pd"):
     else:
         data = parse_dates(start, end)
         url = base_url + formato + data
-    return parse_response(custom_get(url).text, cod, name, out, source="bcb")
+    return parse_response(custom_get(url), cod, name, out, source="bcb")
 
 
 def parse_dates(start, end):

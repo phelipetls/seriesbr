@@ -20,7 +20,7 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
         join=join,
         sort=True,  # done to avoid pandas warning messages
         **kwargs
-    ).rename(columns={cod: nome for nome, cod in zip(names, codes)})
+    ).rename(columns={cod: name for name, cod in zip(names, codes)})
 
 
 def search(name):

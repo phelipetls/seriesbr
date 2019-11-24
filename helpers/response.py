@@ -4,14 +4,14 @@ from pandas import DataFrame
 from datetime import date
 
 
-def parse_response(json, cod, nome, out, source):
+def parse_response(response, cod, nome, out, source):
     if out == "raw":
-        return json
+        return response.text
     elif out == "pd":
         if source == "bcb":
-            return parse_bcb_json(json, cod, nome)
+            return parse_bcb_json(response, cod, nome)
         elif source == "ipea":
-            return parse_ipea_json(json, cod, nome)
+            return parse_ipea_json(response, cod, nome)
         else:
             raise ValueError("Invalid source.")
     else:
