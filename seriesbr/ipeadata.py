@@ -24,7 +24,9 @@ def get(cod, start=None, end=None, name=None, out="pd"):
     str: if out == "raw"
     pandas.DataFrame: if out == "pd"
     """
-    url = f"http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='{cod}')"
+    baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
+    resource_path = f"ValoresSerie(SERCODIGO='{cod}')"
+    url = f"{baseurl}{resource_path}"
     serie = parse_response(custom_get(url), cod, name, out, source="ipea")
     if out == "pd":
         if start and end:
@@ -78,7 +80,9 @@ def search(name):
     Returns:
     None. Just prints the search results.
     """
-    baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados?$select=SERCODIGO,SERNOME"
-    url = baseurl + f"&$filter=contains(SERNOME,'{name}')"
+    baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
+    resource_path = "Metadados"
+    query = f"?$select=SERCODIGO,SERNOME&$filter=contains(SERNOME,'{name}')"
+    url = f"{baseurl}{resource_path}{query}"
     results = custom_get(url).json()["value"]
     format_results_ipea(results)
