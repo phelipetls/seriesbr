@@ -6,7 +6,7 @@ from .helpers.request import custom_get
 from .helpers.formatter import format_response_bcb
 
 
-def get(cod, start=None, end=None, name=None, last_n=None, out="pd"):
+def get_serie(cod, start=None, end=None, name=None, last_n=None, out="pd"):
     """
     Returns a time series from Time Series Management System (SGS)
     of Brazilian Central Bank (BCB).
@@ -23,38 +23,21 @@ def get(cod, start=None, end=None, name=None, last_n=None, out="pd"):
     last_n (int): Ignore other arguments and get the last
     n observations.
 
-    out (str): Output format (either "pd" or "raw")
+    out (str): Output format (either "pd" or "json")
 
     Returns:
     str: if out == "raw"
     pandas.DataFrame: if out == "pd"
     """
-    base_url = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{cod}/dados"
+    baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{cod}/dados"
     formato = "?formato=json"
     if last_n:
-        url = base_url + f"/ultimos/{last_n + 1}?formato=json"
+        url = f"{baseurl}/ultimos/{last_n + 1}?formato=json"
     else:
-        data = parse_dates(start, end)
-        url = base_url + formato + data
+        start, end = parse_dates(start, end, api="bcb")
+        dates = f"&dataInicial={start}&dataFinal={end}"
+        url = f"{baseurl}{formato}{dates}"
     return parse_response(custom_get(url), cod, name, out, source="bcb")
-
-
-def parse_dates(start, end):
-    """
-    Auxiliary function to convert different date formats
-    to %d/%m/%Y, required by the SGS API.
-    """
-    start = parse_date(start, start=True) if start else start
-    end = parse_date(end, start=False) if end else end
-    if start and end:
-        data = f"&dataInicial={start}&dataFinal={end}"
-    elif start:
-        data = f"&dataInicial={start}"
-    elif end:
-        data = f"&dataFinal={end}"
-    else:
-        data = ""
-    return data
 
 
 def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs):
@@ -69,7 +52,7 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
 
     end (str): End date.
 
-    last_n (int): Get last n observations.
+    last_n (int): Get last_n observations.
 
     join (str): "outer" givess all observations and
     "inner" gives the intersection of them.
@@ -79,27 +62,30 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
     Returns:
     pandas.DataFrame with the series
     """
-    codes, names = parse_cods(*cods)
+    codes, names = check_cods(*cods)
     return concat(
-        [get(cod, start, end, last_n) for cod in codes],
+        [get_serie(cod, start, end, last_n) for cod in codes],
         axis="columns",
         join=join,
         **kwargs
     ).rename(columns={cod: nome for nome, cod in zip(names, codes)})
 
 
-def search(name, page=1):
+def search(name, rows=10, page=1):
     """
     Search for a name in the SGS database.
 
     Parameters:
     name (str): string to search.
 
-    page (int): page of results.
+    rows (int or str): how many results to show.
+
+    page (int or str): page of results.
 
     Returns:
     None. Just prints the search results.
     """
-    baseurl = "https://dadosabertos.bcb.gov.br/dataset"
-    results = custom_get(baseurl, params={"q": name, "page": page})
-    format_results_bcb(results, page)
+    url = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+    params = {"q": name, "rows": rows, "start": page * rows, "sort": "relevance asc"}
+    response = custom_get(url, params=params)
+    format_response_bcb(response)
