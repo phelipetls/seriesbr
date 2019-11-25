@@ -5,11 +5,12 @@ from .helpers.response import parse_response
 from .helpers.formatter import format_search_ipea, to_table
 from .helpers.dates import parse_dates
 from .helpers.metadata import make_select_query, make_filter_query
+# MANUAL: http://ipeadata.gov.br/api/
 
 
-def get(cod, start=None, end=None, name=None, out="pd"):
+def get_serie(cod, start=None, end=None, name=None, out="pd"):
     """
-    Returns a time series from IPEADATA 3.0 database.
+    Returns a time series from IPEADATA database.
 
     Parameters:
     cod (int or str): The code of the time series.
@@ -66,21 +67,18 @@ def get_series(*cods, start=None, end=None, **kwargs):
 
     end (str): End date.
 
-    join (str): "outer" givess all observations and
-    "inner" gives the intersection of them.
-
     **kwargs: passed to pandas.concat.
 
     Returns:
-    pandas.DataFrame with the series
+    pandas.DataFrame with the requested series.
     """
-    codes, names = parse_cods(*cods)
+    codes, names = check_cods(*cods)
+    # TODO: maybe I should make a function fot this... not straight-forward.
     return concat(
-        [get(cod, start, end) for cod in codes],
+        [get_serie(cod, start, end) for cod in codes],
         axis="columns",
-        join=join,
         sort=True,  # done to avoid pandas warning messages
-        **kwargs
+        **kwargs,
     ).rename(columns={cod: name for name, cod in zip(names, codes)})
 
 
