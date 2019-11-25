@@ -28,23 +28,33 @@ def get(cod, start=None, end=None, name=None, out="pd"):
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"ValoresSerie(SERCODIGO='{cod}')"
-    select = "?$select=VALDATA,VALVALOR"  # just return the date and values
-    # TODO: query dates (very hard with OData apparently)
-    url = f"{baseurl}{resource_path}{select}"
+    select = "?$select=VALDATA,VALVALOR"
+    start, end = parse_dates(start, end, api="ipeadata")
+    dates = date_filter(start, end)
+    url = f"{baseurl}{resource_path}{select}{dates}"
     serie = parse_response(custom_get(url), cod, name, out, source="ipea")
-    if out == "pd":
-        if start and end:
-            return serie[start:end]
-        elif start:
-            return serie[start:]
-        elif end:
-            return serie[:end]
-        else:
-            return serie
     return serie
 
 
-def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs):
+def date_filter(start, end):
+    """
+    Auxiliary function to return the right query
+    to filter dates.
+
+    """
+    # TODO: Yes, this is ugly. Got to improve this.
+    if start and end:
+        data = f"&$filter=VALDATA ge {start} and VALDATA le {end}"
+    elif start:
+        data = f"&$filter=VALDATA ge {start}"
+    elif end:
+        data = f"&$filter=VALDATA le {end}"
+    else:
+        data = ""
+    return data
+
+
+def get_series(*cods, start=None, end=None, **kwargs):
     """
     Get multiple series all at once in a single data frame.
 
