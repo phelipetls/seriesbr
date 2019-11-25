@@ -4,8 +4,8 @@ from datetime import datetime as dt
 
 
 def parse_response(response, cod, nome, out, source):
-    if out == "raw":
-        return response.text
+    if out == "json":
+        return response.json()
     elif out == "pd":
         if source == "bcb":
             return parse_bcb_json(response, cod, nome)
@@ -21,7 +21,7 @@ def parse_bcb_json(response, cod, nome):
     try:
         df = read_json(response.text, dtype={"data": "datetime64", "valor": "float"})
     except ValueError:
-        print(f"Request for {cod} produces invalid json.")
+        print(f"Request for {cod} produced invalid json.")
         raise
     return df.set_index("data").rename(columns={"valor": nome if nome else cod})
 
@@ -29,7 +29,7 @@ def parse_bcb_json(response, cod, nome):
 def parse_ipea_json(response, cod, nome):
     json = response.json()["value"]
     if json == []:
-        raise ValueError(f"Request for {cod} returns nothing.")
+        raise ValueError(f"Request for {cod} returned nothing.")
     return to_dataframe(json).rename(columns={"value": nome if nome else cod})
 
 
