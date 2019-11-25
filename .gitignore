@@ -1,0 +1,33 @@
+__pycache__
+__init__.py
+
+# tests
+*test_*
+
+# ctags
+tags
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+
+# codebraid
+_codebraid
+
+# jupyter notebook
+*.ipynb
