@@ -29,6 +29,7 @@ def get_serie(code, name=None, start=None, end=None):
     -------
     pandas.DataFrame
     """
+    assert isinstance(code, str), "Not a valid code format."
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"ValoresSerie(SERCODIGO='{code}')"
     select = "?$select=VALDATA,VALVALOR"
@@ -74,6 +75,7 @@ def get_series(*codes, start=None, end=None, **kwargs):
     -------
     pandas.DataFrame with the requested series.
     """
+    assert codes, "You must pass at least one code to be searched."
     codes, names = expect_type(*codes)
     return concat(
         [get_serie(code, name, start, end) for code, name in zip(codes, names)],

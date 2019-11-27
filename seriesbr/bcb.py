@@ -28,7 +28,7 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
     -------
     pandas.DataFrame
     """
-    assert isinstance(code, str) or isinstance(code, int), "Not a valid code."
+    assert isinstance(code, str) or isinstance(code, int), "Not a valid code format."
     baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
     if last_n:
         url = f"{baseurl}/ultimos/{last_n - 1}?formato=json"
@@ -63,6 +63,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     -------
     A DataFrame with the series.
     """
+    assert codes, "You must pass at least one code."
     codes, names = expect_type(*codes)
     return concat(
         (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
