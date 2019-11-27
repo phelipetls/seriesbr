@@ -11,7 +11,7 @@ from .helpers.metadata import (
 )
 
 
-def get_serie(code, start=None, end=None, name=None):
+def get_serie(code, name=None, start=None, end=None):
     """
     Returns a time series from IPEADATA database.
 
@@ -76,10 +76,10 @@ def get_series(*codes, start=None, end=None, **kwargs):
     """
     codes, names = expect_type(*codes)
     return concat(
-        [get_serie(code, start, end) for code in codes],
+        [get_serie(code, name, start, end) for code, name in zip(codes, names)],
         axis="columns",
         **kwargs,
-    ).rename(columns={code: name for name, code in zip(names, codes)})
+    )
 
 
 def search(SERNOME="", **fields):
@@ -88,7 +88,6 @@ def search(SERNOME="", **fields):
     select_query = ipea_make_select_query(fields)
     filter_query = ipea_make_filter_query(SERNOME, fields)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    print(url)
     response = custom_get(url)
     results = return_search_results_ipea(response)
     return results
@@ -103,6 +102,7 @@ def get_metadata(cod):
     url = f"{baseurl}{resource_path}"
     results = custom_get(url).json()["value"][0]
     return results
+
 
 def get_suggestions():
     print_suggestions()

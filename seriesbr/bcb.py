@@ -6,7 +6,7 @@ from .helpers.request import custom_get
 from .helpers.search_results import return_search_results_bcb
 
 
-def get_serie(code, start=None, end=None, name=None, last_n=None):
+def get_serie(code, name=None, start=None, end=None, last_n=None):
     """
     Returns a time series from Time Series Management System (SGS)
     of Brazilian Central Bank (BCB).
@@ -65,7 +65,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     """
     codes, names = expect_type(*codes)
     return concat(
-        [get_serie(code, start, end, name, last_n) for code, name in zip(codes, names)],
+        (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
         axis="columns",
         **kwargs
     )
