@@ -6,7 +6,7 @@ def return_search_results_bcb(response):
     count = json["result"]["count"]
     search_results = json["result"]["results"]
     assert search_results, "Nothing was found."
-    metadata_list = ["codigo_sgs", "periodicidade", "unidade_medida", "title"]
+    metadata_list = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
     D = {metadata: [] for metadata in metadata_list}
     for result in search_results:
         for metadata in metadata_list:
