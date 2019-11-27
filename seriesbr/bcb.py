@@ -97,8 +97,8 @@ def search(name="", *filters, skip=10, start=1):
     # that are then joined and passed to the &fq= API parameter.
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"q={name}&rows={skip}&start={start}&sort=score desc"
-    filter_params = "+".join(f"{value}" for value in filters if filters)
-    url = f"{baseurl}{params}{'&fq=' if filters else ''}{filter_params}"
+    filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
+    url = f"{baseurl}{params}{filter_params}"
     response = custom_get(url)
     count, results = return_search_results_bcb(response)
     search_message = f"{skip if skip < count else count} out of {count} results, starting at row {start}"
