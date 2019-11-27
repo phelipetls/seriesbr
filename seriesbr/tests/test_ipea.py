@@ -30,6 +30,9 @@ class IPEAtest(unittest.TestCase):
     def test_if_search_with_parentheses(self):
         self.assertIsInstance(ipea.search(UNINOME="(p.p.)"), pandas.DataFrame)
 
+    def test_if_columns_are_keys(self):
+        self.assertListEqual(self.df.columns.to_list(), ["IGP", "INAD", "IBC"])
+
     def test_search_with_multiple_filters(self):
         result = ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
         self.assertGreater(len(result), 0)
