@@ -4,12 +4,13 @@ def ipea_make_select_query(queried_fields):
 from pprint import pprint
 
 
+def ipea_make_select_query(fields):
     # to get the string
     # SERCODIGO,PERNOME,UNINOME,SERNOME,ANOTHERFILTER,ANOTHERFILTER
     # where ANOTHER must be something not alreay selected in default
-    not_in_default = set(field for field in queried_fields) - default
-    queried = ordem + list(not_in_default)
-    return f"?$select={','.join(queried)}"
+    defaults = ["SERCODIGO", "PERNOME", "UNINOME", "SERNOME"]
+    selected = defaults + [field for field in fields if field not in defaults]
+    return f"?$select={','.join(selected)}"
 
 
 def ipea_make_filter_query(name, filters):
