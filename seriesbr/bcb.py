@@ -38,12 +38,13 @@ def get_serie(code, start=None, end=None, name=None, last_n=None):
     return parse_response(custom_get(url), code, name, source="bcb")
 
 
-def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs):
+def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     """
     Get multiple series all at once in a single data frame.
 
-    Parameters:
-    cods (dict, str, int): dictionary like {"name1": cod1, "name2": cod2}
+    Parameters
+    ----------
+    codes (dict, str, int): dictionary like {"name1": cod1, "name2": cod2}
     or a bunch of code numbers like cod1, cod2.
 
     start (str): Initial date.
@@ -57,16 +58,16 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
 
     **kwargs: passed to pandas.concat.
 
-    Returns:
-    pandas.DataFrame with the series
+    Returns
+    -------
+    A DataFrame with the series.
     """
     codes, names = check_and_return_codes_and_names(*codes)
     return concat(
-        [get_serie(cod, start, end, last_n) for cod in codes],
+        [get_serie(code, start, end, name, last_n) for code, name in zip(codes, names)],
         axis="columns",
-        join=join,
         **kwargs
-    ).rename(columns={cod: nome for nome, cod in zip(names, codes)})
+    )
 
 
 def search(name="", *filters, rows=10, start=1):

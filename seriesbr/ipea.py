@@ -42,9 +42,7 @@ def date_filter(start, end):
     """
     Auxiliary function to return the right query
     to filter dates.
-
     """
-    # TODO: Yes, this is ugly. Got to improve this.
     if start and end:
         data = f"&$filter=VALDATA ge {start} and VALDATA le {end}"
     elif start:
@@ -56,12 +54,13 @@ def date_filter(start, end):
     return data
 
 
-def get_series(*cods, start=None, end=None, **kwargs):
+def get_series(*codes, start=None, end=None, **kwargs):
     """
     Get multiple series all at once in a single data frame.
 
-    Parameters:
-    cods (dict, str, int): dictionary like {"name1": cod1, "name2": cod2}
+    Parameters
+    ----------
+    codes (dict, str, int): dictionary like {"name1": cod1, "name2": cod2}
     or a bunch of code numbers like cod1, cod2.
 
     start (str): Initial date.
