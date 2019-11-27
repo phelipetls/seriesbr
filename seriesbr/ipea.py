@@ -2,7 +2,7 @@ from pandas import concat
 from .helpers.types import check_and_return_codes_and_names
 from .helpers.request import custom_get
 from .helpers.response import parse_response
-from .helpers.formatter import format_search_ipea, to_table
+from .helpers.search_results import return_search_results_ipea
 from .helpers.dates import parse_dates
 from .helpers.metadata import make_select_query, make_filter_query
 # MANUAL: http://ipeadata.gov.br/api/
@@ -81,15 +81,15 @@ def get_series(*cods, start=None, end=None, **kwargs):
     ).rename(columns={code: name for name, code in zip(names, codes)})
 
 
-def search(**kwargs):
+def search(name="", **kwargs):
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"
-    select_query = make_select_query(kwargs)
-    filter_query = make_filter_query(kwargs)
+    select_query = ipea_make_select_query(kwargs)
+    filter_query = ipea_make_filter_query(name, kwargs)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    print(url)
-    results = custom_get(url).json()["value"]
-    format_search_ipea(results)
+    response = custom_get(url)
+    results = return_search_results_ipea(response)
+    return results
 
 
 def get_metadata(cod):
