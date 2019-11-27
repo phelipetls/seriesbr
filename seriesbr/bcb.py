@@ -3,7 +3,7 @@ from .helpers.dates import parse_dates
 from .helpers.types import check_and_return_codes_and_names
 from .helpers.response import parse_response
 from .helpers.request import custom_get
-from .helpers.formatter import format_response_bcb
+from .helpers.search_results import return_search_results_bcb
 
 
 def get_serie(cod, start=None, end=None, name=None, last_n=None, out="pd"):
@@ -71,16 +71,40 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
     ).rename(columns={cod: nome for nome, cod in zip(names, codes)})
 
 
-def search(name, rows=10, page=1):
+def search(name="", *filters, rows=10, start=1):
     """
     Search for a name in the SGS database.
 
-    Parameters:
+    Parameters
+    ----------
     name (str): string to search.
 
     rows (int or str): how many results to show.
 
-    page (int or str): page of results.
+    start (int or str): start showing from this result.
+
+    Returns
+    -------
+    A DataFrame with the results.
+    """
+    # The api also takes parameters (filter queries)
+    # but very often it returned nothing.
+    # It turned out that, when I tried withou specifying
+    # the queried parameters, I got better results in general
+    # so I've sticked with this.
+    # It doens't accept any keyword arguments, just positional arguments
+    # that are then joined and passed to the &fq= API parameter.
+    baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+    params = f"q={name}&rows={rows}&start={start}&sort=score desc"
+    filter_params = "+".join(f"{value}" for value in filters if filters)
+    url = f"{baseurl}{params}{'&fq=' if filters else ''}{filter_params}"
+    response = custom_get(url)
+    count, results = return_search_results_bcb(response)
+    search_message = f"{rows if rows < count else count} out of {count} results, starting at row {start}"
+    print(search_message)
+    return results
+
+
 
     Returns:
     None. Just prints the search results.
