@@ -8,12 +8,13 @@ from .helpers.metadata import make_select_query, make_filter_query
 # MANUAL: http://ipeadata.gov.br/api/
 
 
-def get_serie(cod, start=None, end=None, name=None, out="pd"):
+def get_serie(code, start=None, end=None, name=None):
     """
     Returns a time series from IPEADATA database.
 
-    Parameters:
-    cod (int or str): The code of the time series.
+    Parameters
+    ----------
+    code (int or str): The code of the time series.
 
     name (str): The name of the series.
 
@@ -21,19 +22,17 @@ def get_serie(cod, start=None, end=None, name=None, out="pd"):
 
     end (str): End date.
 
-    out (str): Output format (either "pd" or "raw")
-
-    Returns:
-    str: if out == "raw"
-    pandas.DataFrame: if out == "pd"
+    Returns
+    -------
+    pandas.DataFrame
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    resource_path = f"ValoresSerie(SERCODIGO='{cod}')"
+    resource_path = f"ValoresSerie(SERCODIGO='{code}')"
     select = "?$select=VALDATA,VALVALOR"
     start, end = parse_dates(start, end, api="ipeadata")
     dates = date_filter(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
-    serie = parse_response(custom_get(url), cod, name, out, source="ipea")
+    serie = parse_response(custom_get(url), code, name, source="ipea")
     return serie
 
 

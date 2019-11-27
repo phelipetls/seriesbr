@@ -6,13 +6,14 @@ from .helpers.request import custom_get
 from .helpers.search_results import return_search_results_bcb
 
 
-def get_serie(cod, start=None, end=None, name=None, last_n=None, out="pd"):
+def get_serie(code, start=None, end=None, name=None, last_n=None):
     """
     Returns a time series from Time Series Management System (SGS)
     of Brazilian Central Bank (BCB).
 
-    Parameters:
-    cod (int or str): The code of the time series.
+    Parameters
+    ----------
+    code (int or str): The code of the time series.
 
     name (str): The name of the series.
 
@@ -23,21 +24,18 @@ def get_serie(cod, start=None, end=None, name=None, last_n=None, out="pd"):
     last_n (int): Ignore other arguments and get the last
     n observations.
 
-    out (str): Output format (either "pd" or "json")
-
-    Returns:
-    str: if out == "raw"
-    pandas.DataFrame: if out == "pd"
+    Returns
+    -------
+    pandas.DataFrame
     """
-    baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{cod}/dados"
-    formato = "?formato=json"
+    baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados?formato=json"
     if last_n:
         url = f"{baseurl}/ultimos/{last_n + 1}?formato=json"
     else:
         start, end = parse_dates(start, end, api="bcb")
         dates = f"&dataInicial={start}&dataFinal={end}"
-        url = f"{baseurl}{formato}{dates}"
-    return parse_response(custom_get(url), cod, name, out, source="bcb")
+        url = f"{baseurl}{dates}"
+    return parse_response(custom_get(url), code, name, source="bcb")
 
 
 def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs):
