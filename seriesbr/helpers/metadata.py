@@ -27,12 +27,8 @@ def ipea_make_filter_query(name, fields):
 
 def print_suggestions():
     newline = "\n"
-    metadatas = [
-        print(metadado, descricao, end=newline)
-        for metadado, descricao in ipea_metadata_list.items()
-    ]
-    suggestion_msg = f"These are not valid fields. Try one of these: {metadatas}"
-    pprint(suggestion_msg)
+    print("These are not valid fields. Some hints:")
+    pprint(ipea_metadata_list)
 
 
 ipea_metadata_list = {

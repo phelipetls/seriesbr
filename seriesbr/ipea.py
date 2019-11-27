@@ -7,7 +7,6 @@ from .helpers.dates import parse_dates
 from .helpers.metadata import (
     ipea_make_select_query,
     ipea_make_filter_query,
-    print_suggestions,
 )
 
 
@@ -104,7 +103,3 @@ def get_metadata(cod):
     url = f"{baseurl}{resource_path}"
     results = custom_get(url).json()["value"][0]
     return results
-
-
-def get_suggestions():
-    print_suggestions()
