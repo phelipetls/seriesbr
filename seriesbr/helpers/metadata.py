@@ -1,26 +1,37 @@
-metadata_list = {
+# Dictionaries of metadatas to query
+
+ipea_metadata_list = {
     "name": "SERNOME",
-    "source": "FNTNOME",
-    "source_code": "FNTSIGLA",
-    "period": "SERNOME",
-    "region_code": "PAICODIGO",
-    "multiplo": "MULNOME",
     "base": "BASNOME",
-    "comentario": "SERCOMENTARIO",
+    "theme": "TEMNOME",
+    "unit": "UNINOME",
+    "period": "PERNOME",
+    "source": "FNTNOME",
+    "code": "SERCODIGO",
+    "source_code": "FNTSIGLA",
+    "region_code": "PAICODIGO",
+    "description": "SERCOMENTARIO",
 }
 
 
-def make_select_query(queries):
-    return "?$select=SERCODIGO," + ",".join(
-        metadata_list[query] for query in queries if query in metadata_list
-    )
+def ipea_make_select_query(selection):
+    ordem = ["SERCODIGO", "PERNOME", "UNINOME", "SERNOME"]
+    defaults = set({"SERCODIGO", "PERNOME", "UNINOME", "SERNOME"})
+    # to get the string
+    # SERCODIGO,PERNOME,UNINOME,SERNOME,ANOTHERFILTER,ANOTHERFILTER
+    # where ANOTHER must be something not alreay selected in default
+    additional = set([ipea_metadata_list[selected] for selected in selection]) - defaults
+    queried = ordem + additional
+    return f"?$select={','.join(queried)}"
 
 
-def make_filter_query(queries):
-    filter_query = "&$filter=contains("
-    query_arguments = []
-    for metadata, value in queries.items():
-        if metadata in metadata_list:
-            query_arguments.append(f"{metadata_list[metadata]},'{value}')")
-    joined_arguments = query_arguments[0] + " and contains(".join([""] + query_arguments[1:])
-    return f"{filter_query}{joined_arguments}"
+def ipea_make_filter_query(name, filters):
+    # to get the string "&$filter=contains(SERNOME,'name')
+    # and contains(ANOTHER,'value') and contains(ANOTHER,'value')"
+    filter_query = f"&$filter=contains(SERNOME,'{name}')"
+    if filters:
+        filter_arguments = "and contains" + " and contains".join(
+            f"({ipea_metadata_list[metadata]},'{value}')"
+            for metadata, value in filters.items()
+        )
+    return f"{filter_query}{filter_arguments if filters else ''}"

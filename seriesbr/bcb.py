@@ -103,11 +103,20 @@ def search(name="", *filters, rows=10, start=1):
     return results
 
 
-
-    Returns:
-    None. Just prints the search results.
+def get_metadata(code):
     """
-    url = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    params = {"q": name, "rows": rows, "start": page * rows, "sort": "relevance asc"}
-    response = custom_get(url, params=params)
-    format_response_bcb(response)
+    Get metadata of a series given its code.
+
+    Parameters
+    ----------
+    code (str): code to search.
+
+    Returns
+    -------
+    A dictionary with the results.
+    """
+    baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+    params = f"fq=codigo_sgs:{code}"
+    url = f"{baseurl}{params}"
+    results = custom_get(url).json()["result"]["results"][0]
+    return results

@@ -4,8 +4,10 @@ from .helpers.request import custom_get
 from .helpers.response import parse_response
 from .helpers.search_results import return_search_results_ipea
 from .helpers.dates import parse_dates
-from .helpers.metadata import make_select_query, make_filter_query
-# MANUAL: http://ipeadata.gov.br/api/
+from .helpers.metadata import (
+    ipea_make_select_query,
+    ipea_make_filter_query,
+)
 
 
 def get_serie(code, start=None, end=None, name=None):
@@ -98,5 +100,5 @@ def get_metadata(cod):
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"Metadados('{cod}')"
     url = f"{baseurl}{resource_path}"
-    metadados = custom_get(url).json()["value"][0]
-    to_table(metadados.keys(), metadados.values())
+    results = custom_get(url).json()["value"][0]
+    return results
