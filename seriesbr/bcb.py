@@ -1,6 +1,6 @@
 from pandas import concat
 from .helpers.dates import parse_dates
-from .helpers.types import check_cods
+from .helpers.types import check_and_return_codes_and_names
 from .helpers.response import parse_response
 from .helpers.request import custom_get
 from .helpers.formatter import format_response_bcb
@@ -62,7 +62,7 @@ def get_series(*cods, start=None, end=None, last_n=None, join="outer", **kwargs)
     Returns:
     pandas.DataFrame with the series
     """
-    codes, names = check_cods(*cods)
+    codes, names = check_and_return_codes_and_names(*codes)
     return concat(
         [get_serie(cod, start, end, last_n) for cod in codes],
         axis="columns",

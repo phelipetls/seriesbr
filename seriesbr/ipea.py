@@ -1,5 +1,5 @@
 from pandas import concat
-from .helpers.types import check_cods
+from .helpers.types import check_and_return_codes_and_names
 from .helpers.request import custom_get
 from .helpers.response import parse_response
 from .helpers.formatter import format_search_ipea, to_table
@@ -69,17 +69,16 @@ def get_series(*cods, start=None, end=None, **kwargs):
 
     **kwargs: passed to pandas.concat.
 
-    Returns:
+    Returns
+    -------
     pandas.DataFrame with the requested series.
     """
-    codes, names = check_cods(*cods)
-    # TODO: maybe I should make a function fot this... not straight-forward.
+    codes, names = check_and_return_codes_and_names(*codes)
     return concat(
-        [get_serie(cod, start, end) for cod in codes],
+        [get_serie(code, start, end) for code in codes],
         axis="columns",
-        sort=True,  # done to avoid pandas warning messages
         **kwargs,
-    ).rename(columns={cod: name for name, cod in zip(names, codes)})
+    ).rename(columns={code: name for name, code in zip(names, codes)})
 
 
 def search(**kwargs):
