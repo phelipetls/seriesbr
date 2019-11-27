@@ -29,13 +29,13 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
     pandas.DataFrame
     """
     assert isinstance(code, str) or isinstance(code, int), "Not a valid code."
-    baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados?formato=json"
+    baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
     if last_n:
-        url = f"{baseurl}/ultimos/{last_n + 1}?formato=json"
+        url = f"{baseurl}/ultimos/{last_n - 1}?formato=json"
     else:
         start, end = parse_dates(start, end, api="bcb")
         dates = f"&dataInicial={start}&dataFinal={end}"
-        url = f"{baseurl}{dates}"
+        url = f"{baseurl}?format=json{dates}"
     return parse_response(custom_get(url), code, name, source="bcb")
 
 
