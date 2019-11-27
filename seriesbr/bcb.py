@@ -28,6 +28,7 @@ def get_serie(code, start=None, end=None, name=None, last_n=None):
     -------
     pandas.DataFrame
     """
+    assert isinstance(code, str) or isinstance(code, int), "Not a valid code."
     baseurl = f"http://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados?formato=json"
     if last_n:
         url = f"{baseurl}/ultimos/{last_n + 1}?formato=json"
