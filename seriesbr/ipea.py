@@ -7,6 +7,7 @@ from .helpers.dates import parse_dates
 from .helpers.metadata import (
     ipea_make_select_query,
     ipea_make_filter_query,
+    print_suggestions,
 )
 
 
@@ -81,12 +82,13 @@ def get_series(*codes, start=None, end=None, **kwargs):
     ).rename(columns={code: name for name, code in zip(names, codes)})
 
 
-def search(name="", **kwargs):
+def search(SERNOME="", **fields):
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"
-    select_query = ipea_make_select_query(kwargs)
-    filter_query = ipea_make_filter_query(name, kwargs)
+    select_query = ipea_make_select_query(fields)
+    filter_query = ipea_make_filter_query(SERNOME, fields)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
+    print(url)
     response = custom_get(url)
     results = return_search_results_ipea(response)
     return results
@@ -101,3 +103,6 @@ def get_metadata(cod):
     url = f"{baseurl}{resource_path}"
     results = custom_get(url).json()["value"][0]
     return results
+
+def get_suggestions():
+    print_suggestions()

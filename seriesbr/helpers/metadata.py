@@ -1,6 +1,3 @@
-def ipea_make_select_query(queried_fields):
-    ordem = ["SERCODIGO", "PERNOME", "UNINOME", "SERNOME"]
-    default = set({"SERCODIGO", "PERNOME", "UNINOME", "SERNOME"})
 from pprint import pprint
 
 
@@ -13,16 +10,20 @@ def ipea_make_select_query(fields):
     return f"?$select={','.join(selected)}"
 
 
-def ipea_make_filter_query(name, filters):
+def ipea_make_filter_query(name, fields):
     # to get the string "&$filter=contains(SERNOME,'name')
     # and contains(ANOTHER,'value') and contains(ANOTHER,'value')"
     filter_query = f"&$filter=contains(SERNOME,'{name}')"
-    if filters:
-        filter_arguments = "and contains" + " and contains".join(
-            f"({metadata},'{value}')"
-            for metadata, value in filters.items()
+    if not all([field in ipea_metadata_list for field in fields]):
+        print_suggestions()
+    if fields:
+        filter_arguments = " and contains" + " and contains".join(
+            f"({metadata},'{value}')" for metadata, value in fields.items()
         )
-    return f"{filter_query}{filter_arguments if filters else ''}"
+        return f"{filter_query}{filter_arguments}"
+    return f"{filter_query}"
+
+
 def print_suggestions():
     newline = "\n"
     metadatas = [
