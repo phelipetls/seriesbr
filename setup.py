@@ -1,14 +1,15 @@
 import setuptools
+import distutils
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="seriesbr",
-    version="0.0.1",
+    version="0.0.7",
     author="Phelipe Teles",
     author_email="phelipe_teles@hotmail.com",
-    description="Get requests for brazilian economic time series",
+    description="Get requests for brazilian economic time series databases",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/phelipetls/brseries",
