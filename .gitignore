@@ -1,8 +1,8 @@
 __pycache__
 __init__.py
 
-# tests
-*test_*
+# virtual env
+venv
 
 # ctags
 tags
@@ -29,5 +29,5 @@ var/
 # codebraid
 _codebraid
 
-# jupyter notebook
-*.ipynb
+# temp files
+*~
