@@ -5,10 +5,12 @@
 <li><a href="#seriesbr-a-python-:session-package-to-get-brazilian-economic-time-series">1. SeriesBR: A Python package to get brazilian economic time series</a>
 <ul>
 <li><a href="#sec-1-1">1.1. Introduction</a></li>
-<li><a href="#banco-central-do-brasil">1.2. Banco Central do Brasil</a></li>
-<li><a href="#instituto-de-pesquisa-econ-mica-aplicada">1.3. Instituto de Pesquisa Econômica Aplicada</a></li>
-<li><a href="#sec-1-4">1.4. Metadata information</a></li>
-<li><a href="#sec-1-5">1.5. Conclusion</a></li>
+<li><a href="#sec-1-2">1.2. Installation</a></li>
+<li><a href="#sec-1-3">1.3. Dependencies</a></li>
+<li><a href="#sec-1-4">1.4. Features</a></li>
+<li><a href="#banco-central-do-brasil">1.5. Banco Central do Brasil</a></li>
+<li><a href="#instituto-de-pesquisa-econ-mica-aplicada">1.6. Instituto de Pesquisa Econômica Aplicada</a></li>
+<li><a href="#sec-1-7">1.7. Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -30,7 +32,24 @@ into a `pandas.DataFrame`.
 
 It takes heavy inspiration from the R packages [rbcb](https://github.com/wilsonfreitas/rbcb) and [ipeaData](https://github.com/ipea/ipeaData).
 
-Here I'll demonstrate how it would be used.
+## Installation<a id="sec-1-2" name="sec-1-2"></a>
+
+`pip3 install seriesbr`
+
+## Dependencies<a id="sec-1-3" name="sec-1-3"></a>
+
+-   requests
+-   pandas
+
+## Features<a id="sec-1-4" name="sec-1-4"></a>
+
+Once downloaded, you will be able to enjoy these features:
+
+-   Get multiple time series with `get_series`.
+-   Search in a given database with `search`.
+-   Get metadata with `get_metadata`.
+
+Let's see how this is done.
 
 ## Banco Central do Brasil<a id="banco-central-do-brasil" name="banco-central-do-brasil"></a>
 
@@ -77,12 +96,11 @@ The API then do its best to give the results accordingly.
     8      10844        mensal  Variação percentual mensal  Índice de Preços ao Consumidor-Amplo (IPCA) - ...
     9      16122        mensal  Variação percentual mensal  Índice nacional de preços ao consumidor - Ampl...
 
-By default, it only returns the first 10 results. If what you're looking
-for isn't there, you can get more results by specifying the `rows`
-argument and it will be returned that many results,
-starting at line `start` (whose default is value 1).
-
-You can also declare the `start` argument to specify
+By default, it only returns the first 10 results.
+If you didn't find what you're looking for,
+you can manipulate the return data by specifying the `rows`
+argument, and then that many rows will be returned
+starting at line `start` (default 1).
 
     bcb.search("Monetária", rows = 20, start = 1)
 
@@ -102,7 +120,7 @@ You can also declare the `start` argument to specify
     [20 rows x 4 columns]
 
 Ok, so now you know how to find out the desired code.
-Let's get the actual values next.
+Let's get the actual values.
 
 To get just one series, you would simply do:
 
@@ -126,11 +144,12 @@ To get just one series, you would simply do:
 
 But, in general, you will want to get multiple series.
 
-The most most convenient way to do that is to pass a dictionary
+The most convenient way to do that is to pass a dictionary
 with keys being names and values being codes.
 
 You can also specify the arguments `start` and `end`, that
-corresponds to the initial and final date.
+corresponds to the initial and final date, or `last_n` to get
+just the last n observations.
 
     bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
 
@@ -150,7 +169,7 @@ corresponds to the initial and final date.
     
     [19 rows x 3 columns]
 
-And if you don't mind the columns names:
+If you don't mind the columns names, you can just pass the codes.
 
     bcb.get_series(20786, 4189, 4380)
 
@@ -170,7 +189,8 @@ And if you don't mind the columns names:
     
     [402 rows x 3 columns]
 
-See this bunch of NaN? You can get rid of them by specifying the join argument, which is passed to the `pandas.concat` function,
+See this bunch of NaN? You can get rid of them by specifying the join argument,
+which is passed to the [`pandas.concat`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html) function,
 as well as any other keyword argument.
 
     bcb.get_series(20786, 4189, 4380, join="inner")
@@ -190,6 +210,18 @@ as well as any other keyword argument.
     2019-10-01  30.35   5.38  613627.6
     
     [104 rows x 3 columns]
+
+You can also get metadata for a series, just cal `get_metadata` and you will get a dictionary with the results.
+
+    metadados = bcb.get_metadata(11)
+    
+    metadados["notes"]
+
+    Taxa de juros que representa a taxa média ajustada das operações compromissadas com prazo de um dia útil lastreadas com títulos públicos federais custodiados no Sistema Especial de Liquidação e de Custódia (Selic). Divulgação em % a.d.
+    
+    __Para mais informações sobre a série, clique no link abaixo:__
+    
+    https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=11
 
 ## Instituto de Pesquisa Econômica Aplicada<a id="instituto-de-pesquisa-econômica-aplicada" name="instituto-de-pesquisa-econômica-aplicada"></a>
 
@@ -241,7 +273,7 @@ Another example:
     
     [17 rows x 4 columns]
 
-You would get the series in a similar fashion as with the bcb module:
+You could then get the series in the very same way:
 
     ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
 
@@ -261,10 +293,7 @@ You would get the series in a similar fashion as with the bcb module:
     
     [430 rows x 2 columns]
 
-## Metadata information<a id="sec-1-4" name="sec-1-4"></a>
-
-If you want to get metadata information about a series,
-you can do it like in the snippets below, which will give you a dictionary.
+To get metadata you would the exact same as in `bcb` module.
 
     metadados = ipea.get_metadata("BM12_TJOVER12")
     
@@ -272,30 +301,17 @@ you can do it like in the snippets below, which will give you a dictionary.
 
     'Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.'
 
-You'll get a dictionary back.
-
-Similarly for BCB module:
-
-    metadados = bcb.get_metadata(11)
-    
-    metadados["notes"]
-
-    Taxa de juros que representa a taxa média ajustada das operações compromissadas com prazo de um dia útil lastreadas com títulos públicos federais custodiados no Sistema Especial de Liquidação e de Custódia (Selic). Divulgação em % a.d.
-    
-    __Para mais informações sobre a série, clique no link abaixo:__
-    
-    https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=11
-
-## Conclusion<a id="sec-1-5" name="sec-1-5"></a>
+## Conclusion<a id="sec-1-7" name="sec-1-7"></a>
 
 For your convenience there is also a module to get
 series from both databases in a single call.
 
 You will always get a `pandas.DataFrame` when calling
-`get_series`.
+`get_series` in every module.
 
-This is done so you can do nice things such as plotting
-the series immediately after getting them.
+You don't have to worry about converting dates because the index
+is already of type `datetime64[ns]` sou you can immediately enjoy
+pandas functionalities regarding dates, such as slicing and plotting.
 
     from seriesbr import seriesbr
     
@@ -320,7 +336,7 @@ the series immediately after getting them.
 
 ![img](example.png)
 
-Hope you enjoy the package.
+Hope you enjoy the package!!
 
 If you find any bugs or if you think something could be better, 
 feel free to open an issue / contribute by opening a pull request!

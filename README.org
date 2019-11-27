@@ -16,7 +16,28 @@ into a =pandas.DataFrame=.
 
 It takes heavy inspiration from the R packages [[https://github.com/wilsonfreitas/rbcb][rbcb]] and [[https://github.com/ipea/ipeaData][ipeaData]].
 
-Here I'll demonstrate how it would be used.
+** Installation
+
+#+NAME: Installation
+
+=pip3 install seriesbr=
+
+#+END_NAME:
+
+** Dependencies
+
+- requests
+- pandas
+
+** Features
+
+Once downloaded, you will be able to enjoy these features:
+
+- Get multiple time series with =get_series=.
+- Search in a given database with =search=.
+- Get metadata with =get_metadata=.
+
+Let's see how this is done.
 
 ** Banco Central do Brasil
    :PROPERTIES:
@@ -79,12 +100,11 @@ The API then do its best to give the results accordingly.
 9      16122        mensal  Variação percentual mensal  Índice nacional de preços ao consumidor - Ampl...
 #+end_example
 
-By default, it only returns the first 10 results. If what you're looking
-for isn't there, you can get more results by specifying the =rows=
-argument and it will be returned that many results,
-starting at line =start= (whose default is value 1).
-
-You can also declare the =start= argument to specify
+By default, it only returns the first 10 results.
+If you didn't find what you're looking for,
+you can manipulate the return data by specifying the =rows=
+argument, and then that many rows will be returned
+starting at line =start= (default 1).
 
 #+BEGIN_SRC python :session
   bcb.search("Monetária", rows = 20, start = 1)
@@ -109,7 +129,7 @@ You can also declare the =start= argument to specify
 #+end_example
 
 Ok, so now you know how to find out the desired code.
-Let's get the actual values next.
+Let's get the actual values.
 
 To get just one series, you would simply do:
 
@@ -138,61 +158,29 @@ date
 
 But, in general, you will want to get multiple series.
 
-The most most convenient way to do that is to pass a dictionary
+The most convenient way to do that is to pass a dictionary
 with keys being names and values being codes.
 
 You can also specify the arguments =start= and =end=, that
-corresponds to the initial and final date.
+corresponds to the initial and final date, or =last_n= to get
+just the last n observations.
 
 #+BEGIN_SRC python :session
   bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-            Spread  Selic  PIB_Mensal
-date                                 
-2011-01-01     NaN  10.85    333330.5
-2011-02-01     NaN  11.17    335117.5
-2011-03-01   26.22  11.62    348082.9
-2011-04-01   27.01  11.74    349255.0
-2011-05-01   26.84  11.92    366411.2
-...            ...    ...         ...
-2012-03-01   27.42   9.82    393868.0
-2012-04-01   26.84   9.35    382581.2
-2012-05-01   25.20   8.87    401072.7
-2012-06-01   24.42   8.39    399470.5
-2012-07-01   24.17   8.07    415385.2
 
-[19 rows x 3 columns]
-#+end_example
-
-And if you don't mind the columns names:
+If you don't mind the columns names, you can just pass the codes.
 
 #+BEGIN_SRC python :session
   bcb.get_series(20786, 4189, 4380)
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-            20786  4189      4380 
-date                              
-1986-06-01    NaN  18.23       NaN
-1986-07-01    NaN  23.51       NaN
-1986-08-01    NaN  35.55       NaN
-1986-09-01    NaN  39.39       NaN
-1986-10-01    NaN  23.65       NaN
-...           ...    ...       ...
-2019-07-01  31.63   6.40  619395.2
-2019-08-01  31.57   5.90  603944.8
-2019-09-01  30.84   5.71  566361.6
-2019-10-01  30.35   5.38  613627.6
-2019-11-01    NaN   4.90       NaN
 
-[402 rows x 3 columns]
-#+end_example
-
-See this bunch of NaN? You can get rid of them by specifying the join argument, which is passed to the =pandas.concat= function,
+See this bunch of NaN? You can get rid of them by specifying the join argument,
+which is passed to the [[https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html][=pandas.concat=]] function,
 as well as any other keyword argument.
 
 #+BEGIN_SRC python :session
@@ -217,6 +205,21 @@ date
 
 [104 rows x 3 columns]
 #+end_example
+
+You can also get metadata for a series, just cal =get_metadata= and you will get a dictionary with the results.
+
+#+BEGIN_SRC python :session
+  metadados = bcb.get_metadata(11)
+
+  metadados["notes"]
+#+END_SRC
+
+#+RESULTS:
+: Taxa de juros que representa a taxa média ajustada das operações compromissadas com prazo de um dia útil lastreadas com títulos públicos federais custodiados no Sistema Especial de Liquidação e de Custódia (Selic). Divulgação em % a.d.
+: 
+: __Para mais informações sobre a série, clique no link abaixo:__
+: 
+: https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=11
 
 ** Instituto de Pesquisa Econômica Aplicada
    :PROPERTIES:
@@ -280,7 +283,7 @@ Another example:
 [17 rows x 4 columns]
 #+end_example
 
-You would get the series in a similar fashion as with the bcb module:
+You could then get the series in the very same way:
 
 #+BEGIN_SRC python :session
   ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
@@ -305,10 +308,8 @@ date
 [430 rows x 2 columns]
 #+end_example
 
-** Metadata information
 
-If you want to get metadata information about a series,
-you can do it like in the snippets below, which will give you a dictionary.
+To get metadata you would the exact same as in =bcb= module.
 
 #+BEGIN_SRC python :session :results output
   metadados = ipea.get_metadata("BM12_TJOVER12")
@@ -318,25 +319,7 @@ you can do it like in the snippets below, which will give you a dictionary.
 
 #+RESULTS:
 : 
-: >>> >>> 'Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.'
-
-You'll get a dictionary back.
-
-Similarly for BCB module:
-
-#+BEGIN_SRC python :session
-  metadados = bcb.get_metadata(11)
-
-  metadados["notes"]
-#+END_SRC
-
-#+RESULTS:
-: Taxa de juros que representa a taxa média ajustada das operações compromissadas com prazo de um dia útil lastreadas com títulos públicos federais custodiados no Sistema Especial de Liquidação e de Custódia (Selic). Divulgação em % a.d.
-: 
-: __Para mais informações sobre a série, clique no link abaixo:__
-: 
-: https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=11
-
+: 'Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.'
 
 ** Conclusion
 
@@ -344,10 +327,11 @@ For your convenience there is also a module to get
 series from both databases in a single call.
 
 You will always get a =pandas.DataFrame= when calling
-=get_series=.
+=get_series= in every module.
 
-This is done so you can do nice things such as plotting
-the series immediately after getting them.
+You don't have to worry about converting dates because the index
+is already of type =datetime64[ns]= sou you can immediately enjoy
+pandas functionalities regarding dates, such as slicing and plotting.
 
 #+BEGIN_SRC python :session
   from seriesbr import seriesbr
