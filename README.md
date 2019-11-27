@@ -11,6 +11,7 @@
 <li><a href="#banco-central-do-brasil">1.5. Banco Central do Brasil</a></li>
 <li><a href="#instituto-de-pesquisa-econ-mica-aplicada">1.6. Instituto de Pesquisa Econômica Aplicada</a></li>
 <li><a href="#sec-1-7">1.7. Conclusion</a></li>
+<li><a href="#sec-1-8">1.8. LICENSE</a></li>
 </ul>
 </li>
 </ul>
@@ -26,11 +27,11 @@
 This package eases the task of getting data from Banco Central do Brasil
 (BCB) and Instituto de Pesquisa Econômica Aplicada (Ipea) databases API.
 
-It comes packed with a bunch of functions to interact with these databases API,
-such as searching for a series, getting metadata and, most importantly, getting the values
-into a `pandas.DataFrame`.
+It comes packed with a bunch of functions to interact with them,
+such as searching for a series, retrieving metadata and, most importantly,
+getting the series values into a `pandas.DataFrame`.
 
-It takes heavy inspiration from the R packages [rbcb](https://github.com/wilsonfreitas/rbcb) and [ipeaData](https://github.com/ipea/ipeaData).
+It is heavily inspired by the R packages [rbcb](https://github.com/wilsonfreitas/rbcb) and [ipeaData](https://github.com/ipea/ipeaData).
 
 ## Installation<a id="sec-1-2" name="sec-1-2"></a>
 
@@ -43,13 +44,9 @@ It takes heavy inspiration from the R packages [rbcb](https://github.com/wilsonf
 
 ## Features<a id="sec-1-4" name="sec-1-4"></a>
 
-Once downloaded, you will be able to enjoy these features:
-
 -   Get multiple time series with `get_series`.
 -   Search in a given database with `search`.
 -   Get metadata with `get_metadata`.
-
-Let's see how this is done.
 
 ## Banco Central do Brasil<a id="banco-central-do-brasil" name="banco-central-do-brasil"></a>
 
@@ -66,17 +63,17 @@ Not a problem, you can search for it like this:
     
     bcb.search("Selic")
 
-      codigo_sgs periodicidade                            unidade_medida                                              title
-    0       1178        diária                         Percentual ao ano          Taxa de juros - Selic anualizada base 252
-    1       4390        mensal                         Percentual ao mês             Taxa de juros - Selic acumulada no mês
-    2       4189        mensal                         Percentual ao ano  Taxa de juros - Selic acumulada no mês anualiz...
-    3       4177        mensal                                Percentual  Dívida mobiliária - Participação por indexador...
-    4      10634        mensal  Milhões de unidades monetárias correntes  Dívida mobiliária federal (saldos) - Posição e...
-    5                   Mensal                                            Estatísticas dos Sistemas de Liquidação de Tít...
-    6                                                                     Negociação de Títulos Federais no Mercado Secu...
-    7      10613        mensal                                     Meses  Dívida mobiliária federal - Títulos do Tesouro...
-    8      10614        mensal                                     Meses  Dívida mobiliária federal - Títulos do Tesouro...
-    9      10618        mensal                                     Meses  Dívida mobiliária federal - Títulos do Tesouro...
+      codigo_sgs                                              title periodicidade                            unidade_medida
+    0       1178          Taxa de juros - Selic anualizada base 252        diária                         Percentual ao ano
+    1       4390             Taxa de juros - Selic acumulada no mês        mensal                         Percentual ao mês
+    2       4189  Taxa de juros - Selic acumulada no mês anualiz...        mensal                         Percentual ao ano
+    3       4177  Dívida mobiliária - Participação por indexador...        mensal                                Percentual
+    4      10634  Dívida mobiliária federal (saldos) - Posição e...        mensal  Milhões de unidades monetárias correntes
+    5             Estatísticas dos Sistemas de Liquidação de Tít...        Mensal                                          
+    6             Negociação de Títulos Federais no Mercado Secu...                                                        
+    7      10613  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
+    8      10614  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
+    9      10618  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
 
 The `bcb.search` function takes an arbitrary number of optional arguments.
 
@@ -84,38 +81,37 @@ The API then do its best to give the results accordingly.
 
     bcb.search("Atividade", "Econômica", "Índice")
 
-      codigo_sgs periodicidade              unidade_medida                                              title
-    0      24364        mensal                      Índice  Índice de Atividade Econômica do Banco Central...
-    1       7414        mensal                      Índice       Vendas do setor supermercadista (Jan/94=100)
-    2      11426        mensal  Variação percentual mensal  Índice nacional de preços ao consumidor - Ampl...
-    3      11427        mensal  Variação percentual mensal  Índice nacional de preços ao consumidor - Ampl...
-    4      10841        mensal  Variação percentual mensal  Índice de Preços ao Consumidor-Amplo (IPCA) - ...
-    5      10842        mensal  Variação percentual mensal  Índice de Preços ao Consumidor-Amplo (IPCA) - ...
-    6      11428        mensal  Variação percentual mensal  Índice nacional de preços ao consumidor - Ampl...
-    7      10843        mensal  Variação percentual mensal  Índice de Preços ao Consumidor-Amplo (IPCA) - ...
-    8      10844        mensal  Variação percentual mensal  Índice de Preços ao Consumidor-Amplo (IPCA) - ...
-    9      16122        mensal  Variação percentual mensal  Índice nacional de preços ao consumidor - Ampl...
+      codigo_sgs                                              title periodicidade              unidade_medida
+    0      24364  Índice de Atividade Econômica do Banco Central...        mensal                      Índice
+    1       7414       Vendas do setor supermercadista (Jan/94=100)        mensal                      Índice
+    2      11426  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+    3      11427  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+    4      10841  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+    5      10842  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+    6      11428  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+    7      10843  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+    8      10844  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+    9      16122  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
 
 By default, it only returns the first 10 results.
 If you didn't find what you're looking for,
-you can manipulate the return data by specifying the `rows`
-argument, and then that many rows will be returned
-starting at line `start` (default 1).
+you can specify the number of returned results with `rows`
+and how many results to skip `skip`.
 
     bcb.search("Monetária", rows = 20, start = 1)
 
-       codigo_sgs periodicidade                                   unidade_medida                                              title
-    0       17633        mensal        Milhares de unidades monetárias correntes  Recolhimentos obrigatórios de instituições fin...
-    1        1849        mensal        Milhares de unidades monetárias correntes  Recolhimentos obrigatórios de instituições fin...
-    2        1848        mensal        Milhares de unidades monetárias correntes  Recolhimentos obrigatórios de instituições fin...
-    3        1850        mensal        Milhares de unidades monetárias correntes  Recolhimentos obrigatórios de instituições fin...
-    4        1797        mensal        Milhares de unidades monetárias correntes  Recolhimentos obrigatórios de instituições fin...
-    ..        ...           ...                                              ...                                                ...
-    15      10813        diária  Taxa unidade monetária corrente/dólar americano  Taxa de câmbio - Livre - Dólar americano (compra)
-    16          1        diária  Taxa unidade monetária corrente/dólar americano  Taxa de câmbio - Livre - Dólar americano (vend...
-    17      12150        mensal         Milhões de unidades monetárias correntes  Saldos das operações de crédito das instituiçõ...
-    18      12106        mensal         Milhões de unidades monetárias correntes  Saldos das operações de crédito das instituiçõ...
-    19      17620        mensal        Milhares de unidades monetárias correntes  Insuficiência de direcionamento de crédito - D...
+       codigo_sgs                                              title periodicidade                                   unidade_medida
+    0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+    1        1849  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+    2        1848  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+    3        1850  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+    4        1797  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+    ..        ...                                                ...           ...                                              ...
+    15      10813  Taxa de câmbio - Livre - Dólar americano (compra)        diária  Taxa unidade monetária corrente/dólar americano
+    16          1  Taxa de câmbio - Livre - Dólar americano (vend...        diária  Taxa unidade monetária corrente/dólar americano
+    17      12150  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
+    18      12106  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
+    19      17620  Insuficiência de direcionamento de crédito - D...        mensal        Milhares de unidades monetárias correntes
     
     [20 rows x 4 columns]
 
@@ -124,7 +120,7 @@ Let's get the actual values.
 
 To get just one series, you would simply do:
 
-    bcb.get_series({"Spread": 20786})
+    bcb.get_series({"Spread": 20786}) # or simply 20786
 
                 Spread
     date              
@@ -147,7 +143,7 @@ But, in general, you will want to get multiple series.
 The most convenient way to do that is to pass a dictionary
 with keys being names and values being codes.
 
-You can also specify the arguments `start` and `end`, that
+You can optionally specify the arguments `start` and `end`, that
 corresponds to the initial and final date, or `last_n` to get
 just the last n observations.
 
@@ -169,7 +165,7 @@ just the last n observations.
     
     [19 rows x 3 columns]
 
-If you don't mind the columns names, you can just pass the codes.
+If you don't mind the columns names, you can just feed it with the numbers.
 
     bcb.get_series(20786, 4189, 4380)
 
@@ -189,9 +185,11 @@ If you don't mind the columns names, you can just pass the codes.
     
     [402 rows x 3 columns]
 
-See this bunch of NaN? You can get rid of them by specifying the join argument,
+You can get rid of the NaN's with the argument `join`,
 which is passed to the [`pandas.concat`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.concat.html) function,
 as well as any other keyword argument.
+
+The default value for `join` is "outer". So, if you pass "inner":
 
     bcb.get_series(20786, 4189, 4380, join="inner")
 
@@ -211,7 +209,10 @@ as well as any other keyword argument.
     
     [104 rows x 3 columns]
 
-You can also get metadata for a series, just cal `get_metadata` and you will get a dictionary with the results.
+Or, of course, you can call `dropna()` afterwards.
+
+If you want more information about a given series, you can call `get_metadata`
+and you will get a dictionary with the results.
 
     metadados = bcb.get_metadata(11)
     
@@ -226,31 +227,32 @@ You can also get metadata for a series, just cal `get_metadata` and you will get
 ## Instituto de Pesquisa Econômica Aplicada<a id="instituto-de-pesquisa-econômica-aplicada" name="instituto-de-pesquisa-econômica-aplicada"></a>
 
 
-Now let's check what we got to interact with IPEA's database.
+Now let's check what we can do with the IPEA's database.
 
 The `search` function here is more powerful because there are way more filters to play with.
 
-For example, let's filter for series in the macroeconomics database, of monthly
-period and percent unit measure. Here, we have to specify which parameter we are referring to.
+For example, let's filter for a monthly macroeconomic time series with units in percent points.
+Here, we have to specify which parameter we are referring to.
 
-Under the hood, this functions asks the API to return any result containing a given string in the specified field.
+Under the hood, this functions asks the API to return any result
+containing a given string in the specified field.
 
     from seriesbr import ipea
     
     ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 
-                 SERCODIGO PERNOME UNINOME                                            SERNOME         BASNOME
-    0         BM12_CRDSD12  Mensal  (p.p.)  Operações de crédito - recursos direcionados -...  Macroeconômico
-    1       BM12_CRDSDPF12  Mensal  (p.p.)  Operações de crédito - recursos direcionados -...  Macroeconômico
-    2       BM12_CRDSDPJ12  Mensal  (p.p.)  Operações de crédito - recursos direcionados -...  Macroeconômico
-    3         BM12_CRLSD12  Mensal  (p.p.)    Operações de crédito - recursos livres - spread  Macroeconômico
-    4       BM12_CRLSDPF12  Mensal  (p.p.)  Operações de crédito - recursos livres - sprea...  Macroeconômico
-    ..                 ...     ...     ...                                                ...             ...
-    10  VALOR12_GLOBAL2412  Mensal  (p.p.)               Bônus global República (24) - spread  Macroeconômico
-    11  VALOR12_GLOBAL2712  Mensal  (p.p.)               Bônus global República (27) - spread  Macroeconômico
-    12  VALOR12_GLOBAL4012  Mensal  (p.p.)               Bônus global República (40) - spread  Macroeconômico
-    13   VALOR12_GLOBAL912  Mensal  (p.p.)                Bônus global República (9) - spread  Macroeconômico
-    14   VALOR12_TJCBOND12  Mensal  (p.p.)                                    C-Bond - spread  Macroeconômico
+                 SERCODIGO                                            SERNOME PERNOME UNINOME         BASNOME
+    0         BM12_CRDSD12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
+    1       BM12_CRDSDPF12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
+    2       BM12_CRDSDPJ12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
+    3         BM12_CRLSD12    Operações de crédito - recursos livres - spread  Mensal  (p.p.)  Macroeconômico
+    4       BM12_CRLSDPF12  Operações de crédito - recursos livres - sprea...  Mensal  (p.p.)  Macroeconômico
+    ..                 ...                                                ...     ...     ...             ...
+    10  VALOR12_GLOBAL2412               Bônus global República (24) - spread  Mensal  (p.p.)  Macroeconômico
+    11  VALOR12_GLOBAL2712               Bônus global República (27) - spread  Mensal  (p.p.)  Macroeconômico
+    12  VALOR12_GLOBAL4012               Bônus global República (40) - spread  Mensal  (p.p.)  Macroeconômico
+    13   VALOR12_GLOBAL912                Bônus global República (9) - spread  Mensal  (p.p.)  Macroeconômico
+    14   VALOR12_TJCBOND12                                    C-Bond - spread  Mensal  (p.p.)  Macroeconômico
     
     [15 rows x 5 columns]
 
@@ -258,18 +260,18 @@ Another example:
 
     ipea.search("Juros", PERNOME="Mensal", UNINOME="(% a.m.)")
 
-                SERCODIGO PERNOME   UNINOME                                            SERNOME
-    0   ANBIMA12_TJCDBP12  Mensal  (% a.m.)                     Taxa de juros - CDB pré-fixado
-    1       BM12_TJCDBN12  Mensal  (% a.m.)                                Taxa de juros - CDB
-    2        BM12_TJCDI12  Mensal  (% a.m.)                         Taxa de juros - CDI / Over
-    3       BM12_TJLCMN12  Mensal  (% a.m.)       Taxa de juros - letras de câmbio ao mutuário
-    4       BM12_TJLCTN12  Mensal  (% a.m.)        Taxa de juros - letras de câmbio ao tomador
-    ..                ...     ...       ...                                                ...
-    12       GM12_TJLFT12  Mensal  (% a.m.)  Taxa de juros - Letras do Tesouro Nacional - f...
-    13   IBMEC12_OTNRTJ12  Mensal  (% a.m.)  Taxa de juros - obrigações reajustáveis do Tes...
-    14    IBMEC12_TJEMP12  Mensal  (% a.m.)  Taxa de juros paga pelo tomador do empréstimo ...
-    15     IBMEC12_TJLM12  Mensal  (% a.m.)                Taxa de juros - letras imobiliárias
-    16    IBMEC12_TJTIT12  Mensal  (% a.m.)                   Taxa de juros - letras de câmbio
+                SERCODIGO                                            SERNOME PERNOME   UNINOME
+    0   ANBIMA12_TJCDBP12                     Taxa de juros - CDB pré-fixado  Mensal  (% a.m.)
+    1       BM12_TJCDBN12                                Taxa de juros - CDB  Mensal  (% a.m.)
+    2        BM12_TJCDI12                         Taxa de juros - CDI / Over  Mensal  (% a.m.)
+    3       BM12_TJLCMN12       Taxa de juros - letras de câmbio ao mutuário  Mensal  (% a.m.)
+    4       BM12_TJLCTN12        Taxa de juros - letras de câmbio ao tomador  Mensal  (% a.m.)
+    ..                ...                                                ...     ...       ...
+    12       GM12_TJLFT12  Taxa de juros - Letras do Tesouro Nacional - f...  Mensal  (% a.m.)
+    13   IBMEC12_OTNRTJ12  Taxa de juros - obrigações reajustáveis do Tes...  Mensal  (% a.m.)
+    14    IBMEC12_TJEMP12  Taxa de juros paga pelo tomador do empréstimo ...  Mensal  (% a.m.)
+    15     IBMEC12_TJLM12                Taxa de juros - letras imobiliárias  Mensal  (% a.m.)
+    16    IBMEC12_TJTIT12                   Taxa de juros - letras de câmbio  Mensal  (% a.m.)
     
     [17 rows x 4 columns]
 
@@ -293,7 +295,7 @@ You could then get the series in the very same way:
     
     [430 rows x 2 columns]
 
-To get metadata you would the exact same as in `bcb` module.
+To get metadata you would do the same as in `bcb` module.
 
     metadados = ipea.get_metadata("BM12_TJOVER12")
     
@@ -340,3 +342,7 @@ Hope you enjoy the package!!
 
 If you find any bugs or if you think something could be better, 
 feel free to open an issue / contribute by opening a pull request!
+
+## LICENSE<a id="sec-1-8" name="sec-1-8"></a>
+
+[The Unlicense](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)
