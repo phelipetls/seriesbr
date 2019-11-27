@@ -1,5 +1,5 @@
 from pandas import concat
-from .helpers.types import check_and_return_codes_and_names
+from .helpers.types import expect_type
 from .helpers.request import custom_get
 from .helpers.response import parse_response
 from .helpers.search_results import return_search_results_ipea
@@ -73,7 +73,7 @@ def get_series(*codes, start=None, end=None, **kwargs):
     -------
     pandas.DataFrame with the requested series.
     """
-    codes, names = check_and_return_codes_and_names(*codes)
+    codes, names = expect_type(*codes)
     return concat(
         [get_serie(code, start, end) for code in codes],
         axis="columns",

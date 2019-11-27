@@ -1,6 +1,6 @@
 from pandas import concat
 from .helpers.dates import parse_dates
-from .helpers.types import check_and_return_codes_and_names
+from .helpers.types import expect_type
 from .helpers.response import parse_response
 from .helpers.request import custom_get
 from .helpers.search_results import return_search_results_bcb
@@ -62,7 +62,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     -------
     A DataFrame with the series.
     """
-    codes, names = check_and_return_codes_and_names(*codes)
+    codes, names = expect_type(*codes)
     return concat(
         [get_serie(code, start, end, name, last_n) for code, name in zip(codes, names)],
         axis="columns",
