@@ -14,8 +14,9 @@ def ipea_make_filter_query(name, fields):
     # to get the string "&$filter=contains(SERNOME,'name')
     # and contains(ANOTHER,'value') and contains(ANOTHER,'value')"
     filter_query = f"&$filter=contains(SERNOME,'{name}')"
-    if not all([field in ipea_metadata_list for field in fields]):
+    if any([field not in ipea_metadata_list for field in fields]):
         print_suggestions()
+        return
     if fields:
         filter_arguments = " and contains" + " and contains".join(
             f"({metadata},'{value}')" for metadata, value in fields.items()
