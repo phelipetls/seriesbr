@@ -1,10 +1,7 @@
-from pprint import pprint
-
-
 def ipea_make_select_query(fields):
     # to get the string
     # SERCODIGO,PERNOME,UNINOME,SERNOME,ANOTHERFILTER,ANOTHERFILTER
-    # where ANOTHER must be something not alreay selected in default
+    # where ANOTHER must be something not alreay selected by default
     defaults = ["SERCODIGO", "SERNOME", "PERNOME", "UNINOME"]
     selected = defaults + [field for field in fields if field not in defaults]
     return f"?$select={','.join(selected)}"
