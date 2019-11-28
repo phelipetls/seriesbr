@@ -27,10 +27,11 @@
 ## Introduction
 
 This package eases the task of getting data from Banco Central do Brasil
-(BCB) and Instituto de Pesquisa Econômica Aplicada (Ipea) databases API.
+(BCB) and Instituto de Pesquisa Econômica Aplicada (Ipea) databases.
 
-It comes packed with a bunch of functions to interact with them,
-such as searching for a series, retrieving metadata and, most importantly,
+It has several function to interact with these databases through their API,
+such as searching for a series by name or another criteria,
+retrieving metadata and, most importantly,
 getting the series values into a `pandas.DataFrame`.
 
 It is heavily inspired by the R packages [rbcb](https://github.com/wilsonfreitas/rbcb) and [ipeaData](https://github.com/ipea/ipeaData).
@@ -54,7 +55,7 @@ It is heavily inspired by the R packages [rbcb](https://github.com/wilsonfreitas
 
 
 Let's imagine you need to get the brazilian interest rate. You
-will need a code for that but you have no idea what it is.
+will need the corresponding code but you have no idea what it is.
 
 Not a problem, you can search for it like this:
 
