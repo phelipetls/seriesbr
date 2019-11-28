@@ -29,7 +29,7 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 - requests
 - pandas
 
-** Features
+** Main Features
 
 - Get multiple time series with =get_series=.
 - Search in a given database with =search=.
@@ -302,6 +302,9 @@ Another example:
 [17 rows x 4 columns]
 #+end_example
 
+If you want to filter by theme ("TEMNOME") or by country ("PAINOME"), take a look at what is in
+the database with =list_theme()= and =list_countries()=.
+
 You could then get the series in the very same way:
 
 #+BEGIN_SRC python :session
@@ -386,6 +389,6 @@ Hope you enjoy the package!!
 If you find any bugs or if you think something could be better, 
 feel free to open an issue / contribute by opening a pull request!
 
-** LICENSE
+** License
 
 [[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][The Unlicense]]

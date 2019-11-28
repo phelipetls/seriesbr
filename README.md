@@ -7,11 +7,11 @@
 <li><a href="#sec-1-1">1.1. Introduction</a></li>
 <li><a href="#sec-1-2">1.2. Installation</a></li>
 <li><a href="#sec-1-3">1.3. Dependencies</a></li>
-<li><a href="#sec-1-4">1.4. Features</a></li>
+<li><a href="#sec-1-4">1.4. Main Features</a></li>
 <li><a href="#banco-central-do-brasil">1.5. Banco Central do Brasil</a></li>
 <li><a href="#instituto-de-pesquisa-econ-mica-aplicada">1.6. Instituto de Pesquisa Econômica Aplicada</a></li>
 <li><a href="#sec-1-7">1.7. Conclusion</a></li>
-<li><a href="#sec-1-8">1.8. LICENSE</a></li>
+<li><a href="#sec-1-8">1.8. License</a></li>
 </ul>
 </li>
 </ul>
@@ -42,7 +42,7 @@ It is heavily inspired by the R packages [rbcb](https://github.com/wilsonfreitas
 -   requests
 -   pandas
 
-## Features<a id="sec-1-4" name="sec-1-4"></a>
+## Main Features<a id="sec-1-4" name="sec-1-4"></a>
 
 -   Get multiple time series with `get_series`.
 -   Search in a given database with `search`.
@@ -275,6 +275,9 @@ Another example:
     
     [17 rows x 4 columns]
 
+If you want to filter by theme ("TEMNOME") or by country ("PAINOME"), take a look at what is in
+the database with `list_theme()` and `list_countries()`.
+
 You could then get the series in the very same way:
 
     ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
@@ -343,6 +346,6 @@ Hope you enjoy the package!!
 If you find any bugs or if you think something could be better, 
 feel free to open an issue / contribute by opening a pull request!
 
-## LICENSE<a id="sec-1-8" name="sec-1-8"></a>
+## License<a id="sec-1-8" name="sec-1-8"></a>
 
 [The Unlicense](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)
