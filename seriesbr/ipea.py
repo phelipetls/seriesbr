@@ -1,5 +1,6 @@
 from pandas import concat, DataFrame
 from .helpers.types import expect_type
+from pprint import pprint
 from .helpers.request import custom_get
 from .helpers.response import parse_response
 from .helpers.search_results import return_search_results_ipea
@@ -7,6 +8,7 @@ from .helpers.dates import parse_dates
 from .helpers.metadata import (
     ipea_make_select_query,
     ipea_make_filter_query,
+    ipea_metadata_list,
 )
 
 
@@ -119,3 +121,10 @@ def list_metadata(resource_path, code_key, value_key):
     url = f"{baseurl}{resource_path}"
     response = custom_get(url).json()["value"]
     return [{code_key: item[code_key], value_key: item[value_key]} for item in response]
+
+
+def list_fields():
+    """
+    Pretty print dictionary of metadata with their description as values
+    """
+    pprint(ipea_metadata_list)

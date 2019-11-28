@@ -15,20 +15,15 @@ def ipea_make_filter_query(name, fields):
     # and contains(ANOTHER,'value') and contains(ANOTHER,'value')"
     filter_query = f"&$filter=contains(SERNOME,'{name}')"
     if any([field not in ipea_metadata_list for field in fields]):
-        print_suggestions()
-        raise ValueError("Not a valid field")
+        raise ValueError(
+            f"Can't search for {' or '.join(fields)}. Call ipea.list_fields() if you need help."
+        )
     if fields:
         filter_arguments = " and contains" + " and contains".join(
             f"({metadata},'{value}')" for metadata, value in fields.items()
         )
         return f"{filter_query}{filter_arguments}"
     return f"{filter_query}"
-
-
-def print_suggestions():
-    newline = "\n"
-    print("These are not valid fields. Some hints:")
-    pprint(ipea_metadata_list)
 
 
 ipea_metadata_list = {
