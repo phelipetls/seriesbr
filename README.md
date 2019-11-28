@@ -1,3 +1,8 @@
+# SeriesBR: A Python package to get brazilian economic time series
+
+
+[\\![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
+
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -18,11 +23,7 @@
 </div>
 </div>
 
-# SeriesBR: A Python package to get brazilian economic time series<a id="seriesbr-a-python :session-package-to-get-brazilian-economic-time-series" name="seriesbr-a-python :session-package-to-get-brazilian-economic-time-series"></a>
-
-
-
-## Introduction<a id="sec-1-1" name="sec-1-1"></a>
+## Introduction
 
 This package eases the task of getting data from Banco Central do Brasil
 (BCB) and Instituto de Pesquisa Econômica Aplicada (Ipea) databases API.
@@ -33,22 +34,22 @@ getting the series values into a `pandas.DataFrame`.
 
 It is heavily inspired by the R packages [rbcb](https://github.com/wilsonfreitas/rbcb) and [ipeaData](https://github.com/ipea/ipeaData).
 
-## Installation<a id="sec-1-2" name="sec-1-2"></a>
+## Installation
 
 `pip3 install seriesbr`
 
-## Dependencies<a id="sec-1-3" name="sec-1-3"></a>
+## Dependencies
 
 -   requests
 -   pandas
 
-## Main Features<a id="sec-1-4" name="sec-1-4"></a>
+## Main Features
 
 -   Get multiple time series with `get_series`.
 -   Search in a given database with `search`.
 -   Get metadata with `get_metadata`.
 
-## Banco Central do Brasil<a id="banco-central-do-brasil" name="banco-central-do-brasil"></a>
+## Banco Central do Brasil
 
 
 Let's imagine you need to get the brazilian interest rate. You
@@ -193,22 +194,6 @@ The default value for `join` is "outer". So, if you pass "inner":
 
     bcb.get_series(20786, 4189, 4380, join="inner")
 
-                20786  4189      4380 
-    date                              
-    2011-03-01  26.22  11.62  348082.9
-    2011-04-01  27.01  11.74  349255.0
-    2011-05-01  26.84  11.92  366411.2
-    2011-06-01  26.72  12.10  371046.4
-    2011-07-01  26.91  12.25  373333.7
-    ...           ...    ...       ...
-    2019-06-01  31.43   6.40  594163.0
-    2019-07-01  31.63   6.40  619395.2
-    2019-08-01  31.57   5.90  603944.8
-    2019-09-01  30.84   5.71  566361.6
-    2019-10-01  30.35   5.38  613627.6
-    
-    [104 rows x 3 columns]
-
 Or, of course, you can just call `dropna()` afterwards.
 
 If you want more information about a given series, you can call `get_metadata`
@@ -224,7 +209,7 @@ and you will get a dictionary with the results.
     
     https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=11
 
-## Instituto de Pesquisa Econômica Aplicada<a id="instituto-de-pesquisa-econômica-aplicada" name="instituto-de-pesquisa-econômica-aplicada"></a>
+## Instituto de Pesquisa Econômica Aplicada
 
 
 Now let's check what we can do with the IPEA's database.
@@ -306,7 +291,7 @@ To get metadata you would do the same as in `bcb` module.
 
     'Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.'
 
-## Conclusion<a id="sec-1-7" name="sec-1-7"></a>
+## Conclusion
 
 For your convenience there is also a module to get
 series from both databases in a single call.
@@ -346,6 +331,6 @@ Hope you enjoy the package!!
 If you find any bugs or if you think something could be better, 
 feel free to open an issue / contribute by opening a pull request!
 
-## License<a id="sec-1-8" name="sec-1-8"></a>
+## License
 
 [MIT](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)

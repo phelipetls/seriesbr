@@ -1,9 +1,13 @@
+#+OPTIONS: toc:nil
 * SeriesBR: A Python package to get brazilian economic time series
   :PROPERTIES:
   :CUSTOM_ID: seriesbr-a-python :session-package-to-get-brazilian-economic-time-series
   :header-args:python: :exports both
   :END:
 
+[![Build Status](https://travis-ci.org/phelipetls/seriesbr.svg?branch=master)](https://travis-ci.org/phelipetls/seriesbr)
+
+ #+TOC: headlines 2
 
 ** Introduction
 
