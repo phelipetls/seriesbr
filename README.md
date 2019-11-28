@@ -96,7 +96,7 @@ The API then do its best to give the results accordingly.
 By default, it only returns the first 10 results.
 If you didn't find what you're looking for,
 you can specify the number of returned results with `rows`
-and how many results to skip `skip`.
+and how many results to skip with `skip`.
 
     bcb.search("Monetária", rows = 20, start = 1)
 
@@ -120,7 +120,7 @@ Let's get the actual values.
 
 To get just one series, you would simply do:
 
-    bcb.get_series({"Spread": 20786}) # or simply 20786
+    bcb.get_series({"Spread": 20786}) # or just 20786
 
                 Spread
     date              
@@ -143,8 +143,8 @@ But, in general, you will want to get multiple series.
 The most convenient way to do that is to pass a dictionary
 with keys being names and values being codes.
 
-You can optionally specify the arguments `start` and `end`, that
-corresponds to the initial and final date, or `last_n` to get
+You can optionally specify the arguments `start` and `end` for the
+initial and final date,  or `last_n` to get
 just the last n observations.
 
     bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
@@ -209,7 +209,7 @@ The default value for `join` is "outer". So, if you pass "inner":
     
     [104 rows x 3 columns]
 
-Or, of course, you can call `dropna()` afterwards.
+Or, of course, you can just call `dropna()` afterwards.
 
 If you want more information about a given series, you can call `get_metadata`
 and you will get a dictionary with the results.
@@ -276,7 +276,7 @@ Another example:
     [17 rows x 4 columns]
 
 If you want to filter by theme ("TEMNOME") or by country ("PAINOME"), take a look at what is in
-the database with `list_theme()` and `list_countries()`.
+the database with `list_theme` and `list_countries`.
 
 You could then get the series in the very same way:
 
