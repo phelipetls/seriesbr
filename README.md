@@ -1,7 +1,7 @@
 # SeriesBR: A Python package to get brazilian economic time series
 
 
-[\\![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
+[![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
