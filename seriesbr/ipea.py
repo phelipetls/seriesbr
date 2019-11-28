@@ -79,6 +79,7 @@ def get_series(*codes, start=None, end=None, **kwargs):
     return concat(
         [get_serie(code, name, start, end) for code, name in zip(codes, names)],
         axis="columns",
+        sort=True,
         **kwargs,
     )
 
