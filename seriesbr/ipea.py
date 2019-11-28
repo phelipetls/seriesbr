@@ -1,4 +1,4 @@
-from pandas import concat
+from pandas import concat, DataFrame
 from .helpers.types import expect_type
 from .helpers.request import custom_get
 from .helpers.response import parse_response
@@ -103,3 +103,18 @@ def get_metadata(cod):
     url = f"{baseurl}{resource_path}"
     results = custom_get(url).json()["value"][0]
     return results
+
+
+def list_themes():
+    return DataFrame(list_themes("Temas", "TEMCODIGO", "TEMNOME"))
+
+
+def list_countries():
+    return DataFrame(list_metadata("Paises", "PAICODIGO", "PAINOME"))
+
+
+def list_metadata(resource_path, code_key, value_key):
+    baseurl = "http://www.ipeadata.gov.br/api/odata4/"
+    url = f"{baseurl}{resource_path}"
+    response = custom_get(url).json()["value"]
+    return [{code_key: item[code_key], value_key: item[value_key]} for item in response]
