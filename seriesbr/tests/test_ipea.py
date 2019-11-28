@@ -24,7 +24,7 @@ class IPEAtest(unittest.TestCase):
     def test_if_search_empty_string_returns_data_frame(self):
         self.assertIsInstance(ipea.search(""), pandas.DataFrame)
 
-    def test_if_columns_are_keys(self):
+    def test_column_names(self):
         self.assertListEqual(self.df.columns.to_list(), ["IGP", "INAD", "IBC"])
 
     def test_search_with_multiple_filters(self):

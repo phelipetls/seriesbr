@@ -29,13 +29,13 @@ class BCBtest(unittest.TestCase):
     def test_if_search_returns_data_frame(self):
         self.assertIsInstance(bcb.search("Spread"), pandas.DataFrame)
 
-    def test_if_search_two_params_returns_data_frame(self):
-        self.assertIsInstance(bcb.search("Spread", "Mensal"), pandas.DataFrame)
-
-    def test_if_search_three_params_returns_data_frame(self):
+    def test_if_search_more_than_one__params_returns_data_frame(self):
         self.assertIsInstance(bcb.search("Spread", "Pontos percentuais", "Mensal"), pandas.DataFrame)
 
-    def test_if_columns_are_keys(self):
+    def test_search_with_argument_rows(self):
+        self.assertEqual(len(bcb.search("Spread")), 10)
+
+    def test_column_names(self):
         self.assertListEqual(self.df.columns.to_list(), ["Spread", "Selic", "PIB_mensal", "Meta", "Dívida/PIB"])
 
     def test_if_get_metadata_works(self):
