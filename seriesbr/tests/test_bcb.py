@@ -10,7 +10,15 @@ from seriesbr import bcb
 
 class BCBtest(unittest.TestCase):
 
-    df = bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_mensal": 4380, "Meta": 13521, "Dívida/PIB": 11405})
+    df = bcb.get_series(
+        {
+            "Spread": 20786,
+            "Selic": 4189,
+            "PIB_mensal": 4380,
+            "Meta": 13521,
+            "Dívida/PIB": 11405,
+        }
+    )
 
     def test_if_get_series_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)
