@@ -109,10 +109,16 @@ def get_metadata(cod):
 
 
 def list_themes():
-    return DataFrame(list_themes("Temas", "TEMCODIGO", "TEMNOME"))
+    """
+    List all themes available.
+    """
+    return DataFrame(list_metadata("Temas", "TEMCODIGO", "TEMNOME"))
 
 
 def list_countries():
+    """
+    List all countries available
+    """
     return DataFrame(list_metadata("Paises", "PAICODIGO", "PAINOME"))
 
 
