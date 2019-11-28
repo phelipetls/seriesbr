@@ -391,4 +391,4 @@ feel free to open an issue / contribute by opening a pull request!
 
 ** License
 
-[[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][The Unlicense]]
+[[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][MIT]]

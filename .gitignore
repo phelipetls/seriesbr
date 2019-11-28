@@ -25,7 +25,6 @@ var/
 .installed.cfg
 *.egg
 
-
 # codebraid
 _codebraid
 

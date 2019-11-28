@@ -348,4 +348,4 @@ feel free to open an issue / contribute by opening a pull request!
 
 ## License<a id="sec-1-8" name="sec-1-8"></a>
 
-[The Unlicense](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)
+[MIT](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)
