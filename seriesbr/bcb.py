@@ -72,7 +72,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     )
 
 
-def search(name="", *filters, skip=10, start=1):
+def search(name="", *filters, rows=10, skip=1):
     """
     Search for a name in the SGS database.
 
@@ -96,7 +96,7 @@ def search(name="", *filters, skip=10, start=1):
     # It doens't accept any keyword arguments, just positional arguments
     # that are then joined and passed to the &fq= API parameter.
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    params = f"q={name}&rows={skip}&start={start}&sort=score desc"
+    params = f"q={name}&rows={rows}&start={skip}&sort=score desc"
     filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
     url = f"{baseurl}{params}{filter_params}"
     response = custom_get(url)
