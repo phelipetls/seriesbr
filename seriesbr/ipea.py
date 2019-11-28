@@ -1,6 +1,6 @@
 from pandas import concat, DataFrame
-from .helpers.types import expect_type
 from pprint import pprint
+from .helpers.types import return_codes_and_names
 from .helpers.request import custom_get
 from .helpers.response import parse_response
 from .helpers.search_results import return_search_results_ipea
@@ -77,7 +77,7 @@ def get_series(*codes, start=None, end=None, **kwargs):
     pandas.DataFrame with the requested series.
     """
     assert codes, "You must pass at least one code to be searched."
-    codes, names = expect_type(*codes)
+    codes, names = return_codes_and_names(*codes)
     return concat(
         [get_serie(code, name, start, end) for code, name in zip(codes, names)],
         axis="columns",
