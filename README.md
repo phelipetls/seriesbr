@@ -1,7 +1,7 @@
 # SeriesBR: A Python package to get brazilian economic time series into a DataFrame
 
 
-[\\![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
+[![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -99,7 +99,7 @@ If you didn't find what you're looking for,
 you can specify the number of returned results with `rows`
 and how many results to skip with `skip`.
 
-    bcb.search("Monetária", rows = 20, start = 1)
+    bcb.search("Monetária", rows=20, skip=1)
 
        codigo_sgs                                              title periodicidade                                   unidade_medida
     0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
