@@ -100,9 +100,7 @@ def search(name="", *filters, skip=10, start=1):
     filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
     url = f"{baseurl}{params}{filter_params}"
     response = custom_get(url)
-    count, results = return_search_results_bcb(response)
-    search_message = f"{skip if skip < count else count} out of {count} results, starting at row {start}"
-    print(search_message)
+    results = return_search_results_bcb(response)
     return results
 
 

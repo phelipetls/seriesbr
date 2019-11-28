@@ -3,7 +3,6 @@ from pandas import DataFrame
 
 def return_search_results_bcb(response):
     json = response.json()
-    count = json["result"]["count"]
     search_results = json["result"]["results"]
     assert search_results, "Nothing was found."
     metadata_list = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
@@ -12,7 +11,7 @@ def return_search_results_bcb(response):
         for metadata in metadata_list:
             D[metadata].append(result[metadata])
     df = DataFrame(D)
-    return count, df
+    return df
 
 
 def return_search_results_ipea(response):
