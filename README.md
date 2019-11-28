@@ -1,13 +1,13 @@
-# SeriesBR: A Python package to get brazilian economic time series
+# SeriesBR: A Python package to get brazilian economic time series into a DataFrame
 
 
-[![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
+[\\![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#seriesbr-a-python-:session-package-to-get-brazilian-economic-time-series">1. SeriesBR: A Python package to get brazilian economic time series</a>
+<li><a href="#seriesbr-a-python-:session-package-to-get-brazilian-economic-time-series">1. SeriesBR: A Python package to get brazilian economic time series into a DataFrame</a>
 <ul>
 <li><a href="#sec-1-1">1.1. Introduction</a></li>
 <li><a href="#sec-1-2">1.2. Installation</a></li>
@@ -193,6 +193,22 @@ as well as any other keyword argument.
 The default value for `join` is "outer". So, if you pass "inner":
 
     bcb.get_series(20786, 4189, 4380, join="inner")
+
+                20786  4189      4380 
+    date                              
+    2011-03-01  26.22  11.62  348082.9
+    2011-04-01  27.01  11.74  349255.0
+    2011-05-01  26.84  11.92  366411.2
+    2011-06-01  26.72  12.10  371046.4
+    2011-07-01  26.91  12.25  373333.7
+    ...           ...    ...       ...
+    2019-06-01  31.43   6.40  594163.0
+    2019-07-01  31.63   6.40  619395.2
+    2019-08-01  31.57   5.90  603944.8
+    2019-09-01  30.84   5.71  566361.6
+    2019-10-01  30.35   5.38  613627.6
+    
+    [104 rows x 3 columns]
 
 Or, of course, you can just call `dropna()` afterwards.
 

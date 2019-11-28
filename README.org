@@ -1,5 +1,5 @@
 #+OPTIONS: toc:nil
-* SeriesBR: A Python package to get brazilian economic time series
+* SeriesBR: A Python package to get brazilian economic time series into a DataFrame
   :PROPERTIES:
   :CUSTOM_ID: seriesbr-a-python :session-package-to-get-brazilian-economic-time-series
   :header-args:python: :exports both
