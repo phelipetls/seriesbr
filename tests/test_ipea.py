@@ -3,7 +3,7 @@ import sys
 import unittest
 import pandas
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seriesbr import ipea
 
@@ -33,6 +33,10 @@ class IPEAtest(unittest.TestCase):
 
     def test_if_metadata_returns_dict(self):
         self.assertIsInstance(ipea.get_metadata("PAN12_IGPDIG12"), dict)
+
+    def test_lists_functions(self):
+        self.assertIsInstance(ipea.list_themes(), pandas.DataFrame)
+        self.assertIsInstance(ipea.list_countries(), pandas.DataFrame)
 
 
 if __name__ == "__main__":

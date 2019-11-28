@@ -4,7 +4,7 @@ from pandas import concat
 
 
 def get_series(*codes, start=None, end=None, **kwargs):
-    codes, names = helpers.types.expect_type(*codes)
+    codes, names = helpers.types.return_codes_and_names(*codes)
     series = []
     for code, name in zip(codes, names):
         if re.search(r"^\d+$", str(code)):
