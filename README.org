@@ -29,7 +29,7 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 #+END_NAME:
 
 ** Dependencies
-
+   
 - requests
 - pandas
 
@@ -386,7 +386,7 @@ pandas functionalities regarding dates, such as slicing and plotting.
 #+END_SRC
 
 #+RESULTS:
-: Text(0.5, 0.98, 'Séries do IPEADATA e do BCB')
+[[file:example.png]]
 
 Hope you enjoy the package!!
 
@@ -396,3 +396,7 @@ feel free to open an issue / contribute by opening a pull request!
 ** License
 
 [[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][MIT]]
+
+** Support
+
+If you find it useful, give this repo a start :)

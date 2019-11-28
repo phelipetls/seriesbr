@@ -1,7 +1,7 @@
 # SeriesBR: A Python package to get brazilian economic time series into a DataFrame
 
 
-[![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
+[\\![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -17,6 +17,7 @@
 <li><a href="#instituto-de-pesquisa-econ-mica-aplicada">1.6. Instituto de Pesquisa Econômica Aplicada</a></li>
 <li><a href="#sec-1-7">1.7. Conclusion</a></li>
 <li><a href="#sec-1-8">1.8. License</a></li>
+<li><a href="#sec-1-9">1.9. Support</a></li>
 </ul>
 </li>
 </ul>
@@ -57,12 +58,14 @@ will need a code for that but you have no idea what it is.
 
 Not a problem, you can search for it like this:
 
-    import pandas as pd
-    pd.set_option('display.max_rows', 10)
+```python
+import pandas as pd
+pd.set_option('display.max_rows', 10)
 
-    from seriesbr import bcb
-    
-    bcb.search("Selic")
+from seriesbr import bcb
+
+bcb.search("Selic")
+```
 
       codigo_sgs                                              title periodicidade                            unidade_medida
     0       1178          Taxa de juros - Selic anualizada base 252        diária                         Percentual ao ano
@@ -80,7 +83,9 @@ The `bcb.search` function takes an arbitrary number of optional arguments.
 
 The API then do its best to give the results accordingly.
 
-    bcb.search("Atividade", "Econômica", "Índice")
+```python
+bcb.search("Atividade", "Econômica", "Índice")
+```
 
       codigo_sgs                                              title periodicidade              unidade_medida
     0      24364  Índice de Atividade Econômica do Banco Central...        mensal                      Índice
@@ -99,7 +104,9 @@ If you didn't find what you're looking for,
 you can specify the number of returned results with `rows`
 and how many results to skip with `skip`.
 
-    bcb.search("Monetária", rows=20, skip=1)
+```python
+bcb.search("Monetária", rows=20, skip=1)
+```
 
        codigo_sgs                                              title periodicidade                                   unidade_medida
     0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
@@ -121,7 +128,9 @@ Let's get the actual values.
 
 To get just one series, you would simply do:
 
-    bcb.get_series({"Spread": 20786}) # or just 20786
+```python
+bcb.get_series({"Spread": 20786}) # or just 20786
+```
 
                 Spread
     date              
@@ -148,7 +157,9 @@ You can optionally specify the arguments `start` and `end` for the
 initial and final date,  or `last_n` to get
 just the last n observations.
 
-    bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
+```python
+bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
+```
 
                 Spread  Selic  PIB_Mensal
     date                                 
@@ -168,7 +179,9 @@ just the last n observations.
 
 If you don't mind the columns names, you can just feed it with the numbers.
 
-    bcb.get_series(20786, 4189, 4380)
+```python
+bcb.get_series(20786, 4189, 4380)
+```
 
                 20786  4189      4380 
     date                              
@@ -192,7 +205,9 @@ as well as any other keyword argument.
 
 The default value for `join` is "outer". So, if you pass "inner":
 
-    bcb.get_series(20786, 4189, 4380, join="inner")
+```python
+bcb.get_series(20786, 4189, 4380, join="inner")
+```
 
                 20786  4189      4380 
     date                              
@@ -215,9 +230,11 @@ Or, of course, you can just call `dropna()` afterwards.
 If you want more information about a given series, you can call `get_metadata`
 and you will get a dictionary with the results.
 
-    metadados = bcb.get_metadata(11)
-    
-    metadados["notes"]
+```python
+metadados = bcb.get_metadata(11)
+
+metadados["notes"]
+```
 
     Taxa de juros que representa a taxa média ajustada das operações compromissadas com prazo de um dia útil lastreadas com títulos públicos federais custodiados no Sistema Especial de Liquidação e de Custódia (Selic). Divulgação em % a.d.
     
@@ -238,9 +255,11 @@ Here, we have to specify which parameter we are referring to.
 Under the hood, this functions asks the API to return any result
 containing a given string in the specified field.
 
-    from seriesbr import ipea
-    
-    ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
+```python
+from seriesbr import ipea
+
+ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
+```
 
                  SERCODIGO                                            SERNOME PERNOME UNINOME         BASNOME
     0         BM12_CRDSD12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
@@ -259,7 +278,9 @@ containing a given string in the specified field.
 
 Another example:
 
-    ipea.search("Juros", PERNOME="Mensal", UNINOME="(% a.m.)")
+```python
+ipea.search("Juros", PERNOME="Mensal", UNINOME="(% a.m.)")
+```
 
                 SERCODIGO                                            SERNOME PERNOME   UNINOME
     0   ANBIMA12_TJCDBP12                     Taxa de juros - CDB pré-fixado  Mensal  (% a.m.)
@@ -281,7 +302,9 @@ the database with `list_theme` and `list_countries`.
 
 You could then get the series in the very same way:
 
-    ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
+```python
+ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
+```
 
                 Taxa de juros - Over / Selic  Taxa de juros - CDB
     date                                                         
@@ -301,9 +324,11 @@ You could then get the series in the very same way:
 
 To get metadata you would do the same as in `bcb` module.
 
-    metadados = ipea.get_metadata("BM12_TJOVER12")
-    
-    metadados["SERCOMENTARIO"]
+```python
+metadados = ipea.get_metadata("BM12_TJOVER12")
+
+metadados["SERCOMENTARIO"]
+```
 
     'Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.'
 
@@ -319,26 +344,27 @@ You don't have to worry about converting dates because the index
 is already of type `datetime64[ns]` sou you can immediately enjoy
 pandas functionalities regarding dates, such as slicing and plotting.
 
-    from seriesbr import seriesbr
-    
-    dados = seriesbr.get_series(
-        {
-            "spread": 20786,
-            "pib_mensal": 4380,
-            "igp": "PAN12_IGPDIG12",
-            "inadimplência": "BM12_CRLIN12"
-        },
-        join="inner",
-    )
+```python
+from seriesbr import seriesbr
 
-    import matplotlib.pyplot as plt
-    
-    dados.plot(subplots=True, layout=(2, 2))
-    plt.gcf().tight_layout()
-    plt.suptitle("Séries do IPEADATA e do BCB")
-    plt.subplots_adjust(top=.9)
-    plt.savefig('example.png', figsize=(7, 7))
-    'example.png'
+dados = seriesbr.get_series(
+    {
+        "spread": 20786,
+        "pib_mensal": 4380,
+        "igp": "PAN12_IGPDIG12",
+        "inadimplência": "BM12_CRLIN12"
+    },
+    join="inner",
+)
+
+import matplotlib.pyplot as plt
+
+dados.plot(subplots=True, layout=(2, 2))
+plt.gcf().tight_layout()
+plt.suptitle("Séries do IPEADATA e do BCB")
+plt.subplots_adjust(top=.9)
+plt.savefig('example.png', figsize=(7, 7))
+```
 
 ![img](example.png)
 
@@ -350,3 +376,7 @@ feel free to open an issue / contribute by opening a pull request!
 ## License
 
 [MIT](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)
+
+## Support
+
+If you find it useful, give this repo a start :)
