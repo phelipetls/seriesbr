@@ -16,7 +16,7 @@ def ipea_make_filter_query(name, fields):
     filter_query = f"&$filter=contains(SERNOME,'{name}')"
     if any([field not in ipea_metadata_list for field in fields]):
         print_suggestions()
-        return
+        raise ValueError("Not a valid field")
     if fields:
         filter_arguments = " and contains" + " and contains".join(
             f"({metadata},'{value}')" for metadata, value in fields.items()
