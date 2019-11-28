@@ -1,7 +1,7 @@
 # SeriesBR: A Python package to get brazilian economic time series into a DataFrame
 
 
-[\\![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
+[![Build Status](<https://travis-ci.org/phelipetls/seriesbr.svg?branch=master>)](<https://travis-ci.org/phelipetls/seriesbr>)
 
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
@@ -366,7 +366,9 @@ plt.subplots_adjust(top=.9)
 plt.savefig('example.png', figsize=(7, 7))
 ```
 
-![img](example.png)
+<p align="center">
+<img src="example.png">
+</p>
 
 Hope you enjoy the package!!
 
@@ -379,4 +381,4 @@ feel free to open an issue / contribute by opening a pull request!
 
 ## Support
 
-If you find it useful, give this repo a start :)
+If you find it useful, consider giving the repository a star.
