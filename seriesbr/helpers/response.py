@@ -7,9 +7,6 @@ def parse_response(response, code, name, source):
         return parse_bcb_json(response, code, name)
     elif source == "ipea":
         return parse_ipea_json(response, code, name)
-    else:
-        print("Invalid source.")
-        return
 
 
 def parse_bcb_json(response, code, name):
