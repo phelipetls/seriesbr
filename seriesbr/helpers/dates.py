@@ -44,10 +44,14 @@ def parse_dates(start, end, api):
 
 def api_date_format_of(date, api):
     if api == "ipeadata":
-        utc_offset = datetime.now(timezone.utc).astimezone().isoformat()[-6:]
+        utc_offset = get_utc_offset()
         return date.strftime("%Y-%m-%dT00:00:00") + utc_offset  # 01-12-2010T00:00:00-03:00
     if api == "bcb":
         return date.strftime("%d/%m/%Y")  # 01/12/2010
+
+
+def get_utc_offset():
+    return datetime.now(timezone.utc).astimezone().isoformat()[-6:]
 
 
 def last_day_of_month(date):
