@@ -28,6 +28,10 @@ class TestDates(unittest.TestCase):
         self.assertEqual(parse_date("08/2017", "bcb", start=False), "31/08/2017")
         self.assertEqual(parse_date("08-2017", "bcb", start=False), "31/08/2017")
 
+    def test_if_raises(self):
+        with self.assertRaises(ValueError):
+            parse_date("082017", "bcb", start="False")
+
 
 if __name__ == "__main__":
     unittest.main()

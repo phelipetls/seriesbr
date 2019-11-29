@@ -13,7 +13,7 @@ You can discover more about it in its GitHub [repository](https://github.com/phe
 
 setuptools.setup(
     name="seriesbr",
-    version="0.0.3",
+    version="0.0.4",
     author="Phelipe Teles",
     author_email="phelipe_teles@hotmail.com",
     description="Get requests for brazilian economic time series databases",
