@@ -18,7 +18,7 @@ def parse_bcb_json(response, code, name):
 def parse_ipea_json(response, code, name):
     json = response.json()["value"]
     assert json, print(f"Request for {code} returned nothing.")
-    return json_to_dataframe(json, code, name, "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S%z")
+    return json_to_dataframe(json, code, name, "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S")
 
 
 def json_to_dataframe(json, code, name, date_key, value_key, date_fmt):
@@ -34,4 +34,5 @@ def json_to_dataframe(json, code, name, date_key, value_key, date_fmt):
 
 @pd.np.vectorize
 def convert_to_datetime(date_string, date_fmt):
+    date_string = date_string[:-6] if date_fmt == "%Y-%m-%dT%H:%M:%S" else date_string
     return datetime.strptime(date_string, date_fmt).strftime("%d/%m/%Y")
