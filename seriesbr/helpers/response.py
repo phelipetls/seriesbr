@@ -18,21 +18,20 @@ def parse_bcb_json(response, code, name):
 def parse_ipea_json(response, code, name):
     json = response.json()["value"]
     assert json, print(f"Request for {code} returned nothing.")
-    return json_to_dataframe(
-        json, code, name, "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S%z"
-    )
+    return json_to_dataframe(json, code, name, "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S%z")
 
 
 def json_to_dataframe(json, code, name, date_key, value_key, date_fmt):
-    D = {"date": [], "value": []}
-    date_value_generator = ((item[date_key], item[value_key]) for item in json)
-    for date, value in date_value_generator:
-        D["date"].append(datetime.strptime(date, date_fmt).strftime("%d/%m/%Y"))
-        D["value"].append(value)
-    dataframe = pd.DataFrame(D)
-    dataframe["date"] = pd.to_datetime(dataframe["date"], format="%d/%m/%Y")
-    dataframe["value"] = dataframe["value"].astype("float64")
-    dataframe = dataframe.set_index("date").rename(
-        columns={"value": name if name else code}
-    )
-    return dataframe
+    df = pd.DataFrame(json)
+    df[date_key] = convert_to_datetime(df[date_key].values, date_fmt=date_fmt)
+    df[date_key] = pd.to_datetime(df[date_key], format="%d/%m/%Y")
+    df[value_key] = df[value_key].astype('float64')
+    df = df.set_index(date_key)
+    df.columns = [name if name else code]
+    df = df.rename_axis("date")
+    return df
+
+
+@pd.np.vectorize
+def convert_to_datetime(date_string, date_fmt):
+    return datetime.strptime(date_string, date_fmt).strftime("%d/%m/%Y")
