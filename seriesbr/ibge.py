@@ -48,13 +48,30 @@ def build_classification_query(classifications=None):
         return ""
 
 
-def build_variables_query(variables):
-    if isiterable(variables):
-        return f"variaveis/{pipe(variables)}"
-    elif variables:
-        return f"variaveis/{variables}"
+def build_dates_query(start=None, end=None, last_n=None, monthly=True):
+    """
+    Auxiliary function to build the date part
+    of the url.
+
+    It depends if date
+    """
+    if monthly:
+        today = datetime.today().strftime('%Y%m')
     else:
-        return f"variaveis"
+        today = datetime.today().strftime('%Y')
+        start = start[:-2] if start else start
+        end = end[:-2] if end else end
+    if last_n:
+        return f"/periodos/-{last_n}"
+    elif start and end:
+        dates = f"/periodos/{start}-{end}"
+    elif start:
+        dates = f"/periodos/{start}-{today}"
+    elif end:
+        dates = f"/periodos/190001-{end}"
+    else:
+        dates = f"/periodos/-10000000"
+    return dates
 
 
     else:
@@ -138,20 +155,6 @@ def get_metadata(code):
     print(description)
 
 
-def date_filter(start, end):
-    """
-    Auxiliary function to return the right query
-    to filter dates.
-    """
-    if start and end:
-        dates = f"periodos/{start}-{end}/"
-    elif start:
-        dates = f"periodos/{start}01-{datetime.today().strftime('%Y%m')}/"
-    elif end:
-        dates = f"periodos/190001-{end}/"
-    else:
-        dates = ""
-    return dates
 
 
 ## List Metadata Functions
