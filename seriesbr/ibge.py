@@ -1,9 +1,10 @@
 import re
 import requests
-from datetime import datetime
-from pandas.io.json import json_normalize
+import pandas as pd
 from .helpers.request import custom_get
-from .helpers.utils import pipe, isiterable
+from .helpers.utils import cat, isiterable
+from .helpers.response import parse_ibge_response
+from datetime import datetime
 
 
 def get_series(
@@ -208,7 +209,7 @@ def list_mesoregions(*codes, macroregion=None):
 
 
 def clean_json(json):
-    df = json_normalize(json, sep='_')
+    df = pd.io.json.json_normalize(json, sep='_')
     df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
     df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
     return df
