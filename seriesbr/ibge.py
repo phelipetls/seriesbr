@@ -84,11 +84,14 @@ def date_filter(start, end):
     return dates
 
 
-def list_aggregates():
+## List Metadata Functions
+
+def list_aggregates(search=None):
     json = requests.get("https://servicodados.ibge.gov.br/api/v3/agregados").json()
-    return json_normalize(
-        json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
-    )
+    df = pd.io.json.json_normalize(json, record_path="agregados")
+    if search:
+        return df.query('nome.str.contains(@search)', engine='python')
+    return df
 
 
 def list_variables(aggregate_code):
@@ -96,70 +99,37 @@ def list_variables(aggregate_code):
     query = f"/agregados/{aggregate_code}/variaveis/all?localidades=BR"
     url = f"{baseurl}{query}"
     json = custom_get(url).json()
-    return json_normalize(json).iloc[:, :3]
+    return pd.io.json.json_normalize(json).iloc[:, :3]
 
 
 def list_states(*codes):
-    baseurl = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
-    url = f"{baseurl}{pipe(codes)}"
-    print(url)
+    url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
     json = custom_get(url).json()
-    df = json_normalize(json)
+    df = pd.io.json.json_normalize(json)
     df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
     return clean_json(json)
 
 
 def list_macroregions(*codes):
-    baseurl = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes/"
-    url = f"{baseurl}{pipe(codes)}"
-    print(url)
+    url = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
     json = custom_get(url).json()
     return clean_json(json)
 
 
 def list_cities(*codes, state=None, macroregion=None, microregion=None, mesoregion=None):
-    baseurl = "https://servicodados.ibge.gov.br/api/v1/localidades/"
-    if state:
-        url = f"{baseurl}estados/{pipe(state)}/municipios"
-    elif macroregion:
-        url = f"{baseurl}regioes/{pipe(macroregion)}/municipios"
-    elif microregion:
-        url = f"{baseurl}microrregioes/{pipe(microregion)}/municipios"
-    elif mesoregion:
-        url = f"{baseurl}mesorregioes/{pipe(mesoregion)}/municipios/"
-    else:
-        url = f"{baseurl}municipios/{pipe(codes)}"
-    print(url)
+    url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
     json = custom_get(url).json()
     return clean_json(json)
 
 
 def list_microregions(*codes, state=None, macroregion=None, mesoregion=None):
-    baseurl = "https://servicodados.ibge.gov.br/api/v1/localidades/"
-    if state:
-        url = f"{baseurl}estados/{pipe(state)}/microrregioes"
-    elif macroregion:
-        url = f"{baseurl}regioes/{pipe(macroregion)}/microrregioes"
-    elif mesoregion:
-        url = f"{baseurl}mesorregioes/{pipe(mesoregion)}/microrregioes"
-    elif codes:
-        url = f"{baseurl}microrregioes/{pipe(codes)}"
-    else:
-        url = f"{baseurl}microrregioes"
-    print(url)
+    url = "https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes"
     json = custom_get(url).json()
     return clean_json(json)
 
 
 def list_mesoregions(*codes, macroregion=None):
-    baseurl = "https://servicodados.ibge.gov.br/api/v1/localidades/"
-    if macroregion:
-        url = f"{baseurl}regioes/{pipe(macroregion)}/mesorregioes"
-    elif codes:
-        url = f"{baseurl}mesorregioes/{pipe(codes)}"
-    else:
-        url = f"{baseurl}mesorregioes"
-    print(url)
+    url = "https://servicodados.ibge.gov.br/api/v1/localidades/mesorregioes"
     json = custom_get(url).json()
     return clean_json(json)
 
