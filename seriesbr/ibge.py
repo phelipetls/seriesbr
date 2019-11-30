@@ -75,8 +75,13 @@ def build_dates_query(start=None, end=None, last_n=None, monthly=True):
     return dates
 
 
+def build_variables_query(variables):
+    if isiterable(variables):
+        return f"/variaveis/{cat(variables, '|')}"
+    elif variables:
+        return f"/variaveis/{variables}"
     else:
-        return date_filter(start, end)
+        return f"/variaveis"
 
 
 def build_locality_query(city, state, macroregion, microregion, mesoregion):
