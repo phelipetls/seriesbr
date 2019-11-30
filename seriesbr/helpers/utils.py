@@ -1,5 +1,5 @@
-def pipe(something):
-    return '|'.join(map(str, something)) if isiterable(something) else something
+def cat(something, sep):
+    return sep.join(map(str, something)) if isiterable(something) else something
 
 
 def isiterable(something):
