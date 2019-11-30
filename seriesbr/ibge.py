@@ -37,27 +37,27 @@ def build_variables_query(variables):
         return f"variaveis"
 
 
-def build_dates_query(start, end, last_n):
-    if last_n:
-        return f"periodos/-{last_n}/"
     else:
         return date_filter(start, end)
 
 
 def build_locality_query(city, state, macroregion, microregion, mesoregion):
-    base = "?localidades"
+    # note-to-self: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
+    base = "&localidades="
+    query = []
     if city:
-        return f"{base}/N6/{pipe(city)}"
-    elif state:
-        return f"{base}/N3/{pipe(state)}"
-    elif macroregion:
-        return f"{base}/N2/{pipe(macroregion)}"
-    elif microregion:
-        return f"{base}/N3/{pipe(microregion)}"
-    elif mesoregion:
-        return f"{base}/N7/{pipe(microregion)}"
-    else:
-        return f"{base}=BR"
+        query.append(f"N6[{cat(city, '|') if city != 'all' else city}]")
+    if state:
+        query.append(f"N3[{cat(state, ',') if state != 'all' else state}]")
+    if macroregion:
+        query.append(f"N2[{cat(macroregion, ',') if macroregion != 'all' else macroregion}]")
+    if mesoregion:
+        query.append(f"N7[{cat(mesoregion, ',') if mesoregion != 'all' else mesoregion}]")
+    if microregion:
+        query.append(f"N9[{cat(microregion, ',') if microregion != 'all' else microregion}]")
+    if all([local is None for local in [city, state, macroregion, microregion, mesoregion]]):
+        return f"{base}BR"
+    return base + "|".join(query)
 
 
 def get_metadata(code):
