@@ -61,11 +61,61 @@ def build_locality_query(city, state, macroregion, microregion, mesoregion):
 
 
 def get_metadata(code):
+    """
+    This function prints metadata information
+    about a given aggregated variable.
+
+    Parameters
+    ----------
+    code (str or int): variable's code.
+
+    Returns
+    -------
+    None.
+    """
     baseurl = "https://servicodados.ibge.gov.br/api/v3/agregados"
     url = f"{baseurl}/{code}/metadados"
-    print(url)
     json = custom_get(url).json()
-    return json_normalize(json, record_path=['variaveis'], meta=['id', 'nome'], meta_prefix='agregado_')
+    newline = "\n"
+    double_newline = "\n\n"
+    spaces = "\t"
+    description = f"""
+    Id:   {json['id']}
+    Nome: {json['nome']}
+    Url:  {json['URL']}
+
+    Níveis Territoriais: {', '.join(json['nivelTerritorial']['Administrativo'])}
+
+    {', '.join(['{}: {}'.format(metadata.capitalize(), value) for metadata, value in json['periodicidade'].items()])}
+
+    Variáveis:
+
+    {
+    newline.join(
+            [
+                "{} {} {}".format(spaces, variavel["id"], variavel["nome"])
+                for variavel in json["variaveis"]
+            ]
+        )
+    }
+
+    Classificações e categorias:
+
+{double_newline.join(
+    [
+        "{} {} ({}): ".format(" " * 3, classificacao["nome"], classificacao["id"])
+        + f"{newline}{spaces}"
+        + f", {newline}{spaces}".join(
+            [
+                "{} - {}".format(categoria["id"], categoria["nome"])
+                for categoria in classificacao["categorias"]
+            ]
+        )
+        for classificacao in json["classificacoes"]
+    ]
+)}
+    """
+    print(description)
 
 
 def date_filter(start, end):
