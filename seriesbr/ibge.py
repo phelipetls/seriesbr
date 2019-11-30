@@ -26,6 +26,19 @@ def get_series(
     url = f"{baseurl}{aggregate}{dates}{variables}{locality}"
     print(url)
     return custom_get(url).json()
+# Functions to help build url
+
+def build_classification_query(classifications=None):
+    if isinstance(classifications, dict):
+        s = []
+        for classification, category in classifications.items():
+            if not category or category == "all":
+                s.append(f"{classification}[all]")
+            else:
+                s.append(f"{classification}[{cat(category, ',') if isiterable(category) else category}]")
+        return "classificacao=" + "|".join(s)
+    else:
+        return ""
 
 
 def build_variables_query(variables):
