@@ -17,15 +17,22 @@ def get_series(
     macroregion=None,
     microregion=None,
     mesoregion=None,
+    classification=None
 ):
-    baseurl = "https://servicodados.ibge.gov.br/api/v3/"
-    aggregate = f"agregados/{code}/"
+    baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
     dates = build_dates_query(start, end, last_n)
     variables = build_variables_query(variables)
     locality = build_locality_query(city, state, macroregion, microregion, mesoregion)
-    url = f"{baseurl}{aggregate}{dates}{variables}{locality}"
-    print(url)
-    return custom_get(url).json()
+    classification = build_classification_query(classification)
+    url = f"{baseurl}{dates}{variables}?{classification}{locality}&view=flat"
+    try:
+        return parse_ibge_response(custom_get(url).json())
+    except requests.exceptions.HTTPError:
+        dates = build_dates_query(start, end, last_n, monthly=False)
+        url = f"{baseurl}{dates}{variables}?{classification}{locality}&view=flat"
+        return parse_ibge_response(custom_get(url).json())
+
+
 # Functions to help build url
 
 def build_classification_query(classifications=None):
