@@ -353,6 +353,7 @@ is already of type `datetime64[ns]` sou you can immediately enjoy
 pandas functionalities regarding dates, such as slicing and plotting.
 
 ```python
+
 from seriesbr import seriesbr
 
 dados = seriesbr.get_series(
@@ -370,18 +371,15 @@ import matplotlib
 
 matplotlib.style.use('seaborn-deep')
 
-dados.plot(subplots=True, layout=(2, 2), figsize=(10, 7))
+dados.plot(subplots=True, layout=(2, 2))
 plt.gcf().tight_layout()
 plt.suptitle("Séries do IPEADATA e do BCB")
 plt.subplots_adjust(top=.9)
+plt.savefig('example.png')
 ```
 
-![img](example.png)
-
-Hope you enjoy the package!!
-
-If you find any bugs or if you think something could be better, 
-feel free to open an issue / contribute by opening a pull request!
+<p align="center">
+  <img src="example.png"/></p>
 
 ## Instituto Brasileiro de Geografia e Estatística
 
@@ -421,11 +419,13 @@ The aggregate used was "IPCA - Variação mensal, acumulada no ano e acumulada e
 let's search for its code.
 
 ```python
+
 pd.set_option('max_colwidth', 200)
 
 from seriesbr import ibge
 
 ibge.list_aggregates("IPCA - Variação mensal, acumulada")
+
 ```
 
             id                                                                                                                                                                                       nome
@@ -511,7 +511,7 @@ Let's now do the manipulation needed to the plot.
 ```python
 ipca["2019-10"].pivot_table(
     index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
-).plot(kind="barh", figsize=(10, 6)).legend(
+).plot(kind="barh", figsize=(8, 6)).legend(
     loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.08)
 )
 
@@ -519,7 +519,9 @@ plt.tight_layout()
 plt.savefig('ipca.png', bbox_inches="tight")
 ```
     
-![img](ipca.png)
+<p align="center">
+  <img src="ipca.png"/></p>
+
 
 ## Conclusion
 
