@@ -210,11 +210,24 @@ def get_metadata(code):
     print(description)
 
 
-
-
 ## List Metadata Functions
 
 def list_aggregates(search=None, where="nome"):
+    """
+    Function to list all aggregated variables of IBGE.
+
+    Parameters
+    ----------
+    search : str
+    String to search.
+
+    search_in : str
+    Where to search.
+
+    Returns
+    -------
+    A DataFrame with information regarding the aggregates.
+    """
     json = requests.get("https://servicodados.ibge.gov.br/api/v3/agregados").json()
     df = pd.io.json.json_normalize(json, record_path="agregados")
     if search:
@@ -223,6 +236,21 @@ def list_aggregates(search=None, where="nome"):
 
 
 def list_variables(aggregate_code):
+    """
+    Function to list all variables associated with an aggregate of IBGE.
+
+    Parameters
+    ----------
+    search : str
+    String to search.
+
+    search_in : str
+    Where to search.
+
+    Returns
+    -------
+    A DataFrame with information regarding the variables.
+    """
     baseurl = "https://servicodados.ibge.gov.br/api/v3"
     query = f"/agregados/{aggregate_code}/variaveis/all?localidades=BR"
     url = f"{baseurl}{query}"
@@ -241,6 +269,16 @@ def list_classifications(aggregate_code, search=None, where="nome"):
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
     return df
+
+
+def list_states(search=None, where="nome"):
+    """
+    Function to list all states and their codes.
+
+    Returns
+    -------
+    A DataFrame with information about the states.
+    """
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
     json = custom_get(url).json()
     df = clean_json(json)
@@ -250,6 +288,13 @@ def list_classifications(aggregate_code, search=None, where="nome"):
 
 
 def list_macroregions(search=None, where="nome"):
+    """
+    Function to list all macroregions and their codes.
+
+    Returns
+    -------
+    A DataFrame with information about the states.
+    """
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
     json = custom_get(url).json()
     df = clean_json(json)
