@@ -231,6 +231,13 @@ def list_variables(aggregate_code):
 
 
 def list_classifications(aggregate_code, search=None, where="nome"):
+    baseurl = "https://servicodados.ibge.gov.br/api/v3/agregados"
+    url = f"{baseurl}/{aggregate_code}/metadados"
+    json = custom_get(url).json()
+    df1 = pd.io.json.json_normalize(json, ['classificacoes', 'categorias'], meta=['classificacoes'])
+    df2 = df1.classificacoes.apply(pd.Series).iloc[:, :2]
+    df2 = df2.rename(lambda x: "classificacao_" + x, axis='columns')
+    df = pd.concat([df1.drop('classificacoes', axis='columns'), df2], axis='columns')
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
     return df
