@@ -90,13 +90,6 @@ def search(name="", *filters, rows=10, skip=1):
     -------
     A DataFrame with the results.
     """
-    # The api also takes parameters (filter queries)
-    # but very often it returned nothing.
-    # It turned out that, when I tried withou specifying
-    # the queried parameters, I got better results in general
-    # so I've sticked with this.
-    # It doens't accept any keyword arguments, just positional arguments
-    # that are then joined and passed to the &fq= API parameter.
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"q={name}&rows={rows}&start={skip}&sort=score desc"
     filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
