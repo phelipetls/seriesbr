@@ -243,9 +243,7 @@ def list_classifications(aggregate_code, search=None, where="nome"):
     return df
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
     json = custom_get(url).json()
-    df = pd.io.json.json_normalize(json)
-    df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
-    return clean_json(json)
+    df = clean_json(json)
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
     return df
