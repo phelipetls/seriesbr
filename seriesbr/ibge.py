@@ -92,7 +92,7 @@ def build_classification_query(classifications=None):
             if not category or category == "all":
                 s.append(f"{classification}[all]")
             else:
-                s.append(f"{classification}[{cat(category, ',') if isiterable(category) else category}]")
+                s.append(f"{classification}[{cat(category, ',')}]")
         return "classificacao=" + "|".join(s)
     else:
         return ""
