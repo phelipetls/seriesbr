@@ -380,15 +380,13 @@ pandas functionalities regarding dates, such as slicing and plotting.
   import matplotlib.pyplot as plt
   import matplotlib
 
-  matplotlib.style.use('seaborndeep')
+  matplotlib.style.use('seaborn-deep')
 
-  ax = plt.subplots(figsize=(10, 10))
-
-  dados.plot(subplots=True, layout=(2, 2), ax=ax)
+  dados.plot(subplots=True, layout=(2, 2), figsize=(10, 7))
   plt.gcf().tight_layout()
   plt.suptitle("Séries do IPEADATA e do BCB")
   plt.subplots_adjust(top=.9)
-  plt.savefig('example.png', figsize=(10, 10))
+  plt.savefig('example.png')
   'example.png'
 #+END_SRC
 
@@ -401,20 +399,21 @@ If you find any bugs or if you think something could be better,
 feel free to open an issue / contribute by opening a pull request!
 
 ** Instituto Brasileiro de Geografia e Estatística
-IBGE has a very complex database, which allows you to get values for very
-specific things. For example, some variables may have different values for
-specific locations or categories.
 
-Regarding locations, it could be a city, a state, a macroregion (Sul, Sudeste),
-a microregion (for example, Lagos in Rio de Janeiro) or even a mesoregion 
-(e.g., Baixadas or Região Metropolitana in Rio).
+IBGE has a very complex database, which allows you to get values for
+very specific things. For example, some variables may have different
+values for specific locations or categories.
 
-The variables also has different categories.
-For example, the IPCA (Índice de Preços ao Consumidor Amplo) 
-has values for very specific products or kinds of products.
+Regarding locations, it could be a city, a state, a macroregion (Sul,
+Sudeste), a microregion (for example, Lagos in Rio de Janeiro) or even a
+mesoregion (e.g., Baixadas or Região Metropolitana in Rio).
 
-If you want such a detailed information, this package may be of help.
-It has functions to help you get the codes for all of those things so you
+The variables may also have different categories. For example, the IPCA
+(Índice de Preços ao Consumidor Amplo) has values for very specific
+products or kinds of products.
+
+If you want such a detailed information, this package may be of help. It
+has functions to help you get the codes for all of those things so you
 can just pass them to the =get_series= later on.
 
 To get a list of the locations, you can try =list_macroregions=, =list_states=,
@@ -423,14 +422,15 @@ To get a list of the locations, you can try =list_macroregions=, =list_states=,
 To search for an aggregated variable code, you would use =list_aggregates=.
 To see which variables are associated with an aggregate, you'd use =list_variables=.
 
-All "list_*" functions accepts two optional arguments =search= and =where=, which
-is just a convenient way to search for a regex in a given column ("nome" by default).
+All list functions accepts two optional arguments =search= and
+=where=, which is just a convenient way to search for a regex in a
+given column ("nome" by default).
 
 Also, you can get the metadata of a given aggregate with =get_metadata= function, which
 will print a lot of text to the screen depending on the complexity of the aggregate.
 
 To demonstrate how these come together in a typical workflow, let's recreate the first
-chart in this [[https://sidra.ibge.gov.br/home/ipca][page]], a bar plot of the IPCA in October 2019 by products' category.
+chart in this [page](https://sidra.ibge.gov.br/home/ipca), a bar plot of the IPCA in October 2019 by products' category.
 
 The aggregate used was "IPCA - Variação mensal, acumulada no ano e acumulada em 12 meses (%)",
 let's search for its code.
@@ -443,25 +443,14 @@ from seriesbr import ibge
 ibge.list_aggregates("IPCA - Variação mensal, acumulada")
 #+END_SRC
 
-#+RESULTS:
-:         id                                               nome
-: 2243  2938  IPCA - Variação mensal, acumulada no ano e pes...
-: 2244  1419  IPCA - Variação mensal, acumulada no ano, acum...
-
 After some reading, we will conclude that the code we need is 1419.
 
 Let's see the variables of this aggregate.
 
+
 #+BEGIN_SRC python :session
 ibge.list_variables(1419)
 #+END_SRC
-
-#+RESULTS:
-:      id                               variavel unidade
-: 0    63                 IPCA - Variação mensal       %
-: 1    69       IPCA - Variação acumulada no ano       %
-: 2  2265  IPCA - Variação acumulada em 12 meses       %
-: 3    66                     IPCA - Peso mensal       %
 
 In the IBGE's chart, they used all of them except for IPCA - Peso mensal.
 So, we will need to remember the codes 63, 69 and 66.
@@ -472,25 +461,17 @@ Let's use =list_classifications=.
 
 I'll use a regex to get the exact categories used in the chart.
 This isn't pretty, really, but does work.
- 
+
+
 #+BEGIN_SRC python :session
-df = ibge.list_classifications(1419, "^\d\.(.ndice geral|Alimenta..o e bebidas|Habita.ao|Artigos de resid.ncia|Vestu.rio|Transportes|Sa.de e cuidados pessoais|Despesas pessoais|Educa..o|Comunica..o)$")
+regex = "^\d\.(.ndice geral|Alimenta..o e bebidas|Habita.ao|Artigos de resid.ncia|Vestu.rio|Transportes|Sa.de e cuidados pessoais|Despesas pessoais|Educa..o|Comunica..o)$"
+
+df = ibge.list_classifications(1419, regex)
 
 df
 #+END_SRC
 
-#+RESULTS:
-:        id                         nome unidade  nivel  classificacao_id                      classificacao_nome
-: 1    7170      1.Alimentação e bebidas    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 227  7486      3.Artigos de residência    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 270  7558                  4.Vestuário    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 315  7625                5.Transportes    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 348  7660  6.Saúde e cuidados pessoais    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 395  7712          7.Despesas pessoais    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 428  7766                   8.Educação    None     -1               315  Geral, grupo, subgrupo, item e subitem
-: 453  7786                9.Comunicação    None     -1               315  Geral, grupo, subgrupo, item e subitem
-
-So, now  we have all that we need. Let's make the plot.
+So, now  we have all that we need. Let's get the data first, we will =get_series= as usual.
 
 #+BEGIN_SRC python :session
 ids = df.id.to_list()
@@ -500,42 +481,38 @@ ipca = ibge.get_series(1419, variables=[63, 69, 2265], classifications={315: ids
 ipca
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-           Nível Territorial  Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida Valor
-Data                                                ...                                                               
-2012-01-01            Brasil  Brasil  janeiro 2012  ...                1.Alimentação e bebidas                 %  0.86
-2012-01-01            Brasil  Brasil  janeiro 2012  ...                3.Artigos de residência                 %  0.16
-2012-01-01            Brasil  Brasil  janeiro 2012  ...                            4.Vestuário                 %  0.07
-2012-01-01            Brasil  Brasil  janeiro 2012  ...                          5.Transportes                 %  0.69
-2012-01-01            Brasil  Brasil  janeiro 2012  ...            6.Saúde e cuidados pessoais                 %  0.30
-...                      ...     ...           ...  ...                                    ...               ...   ...
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %  0.40
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %  4.34
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %  3.13
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %  4.72
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %  0.35
+This is what will look like before any manipulation. It also
+has parameters for dates (=start=, =end= and =last_n=.
+But also for the locations (=city=, =state=, =macroregion=,
+=microregion=, =mesoregion=). You will need to get the code for
+a given location and pass them as a list if there is more than one,
+or you can pass "all" and you'll get data for all of possible values
+of that location.
 
-[2256 rows x 7 columns]
-#+end_example
-
-This is what will look like before any manipulation. Let's now do the manipulation needed to the plot.
+Let's now do the manipulation needed to the plot.
 
 #+BEGIN_SRC python :session :results file
-ax = plt.subplots(figsize = (10, 10))
-
 ipca["2019-10"].pivot_table(
     index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
-).plot(kind="barh", ax=ax).legend(
+).plot(kind="barh", figsize=(10, 6)).legend(
     loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.08)
 )
 
-plt.savefig("ipca.png", figsize=(10, 10))
-"ipca.png"
+plt.tight_layout()
+plt.savefig('ipca.png', bbox_inches="tight")
+
+'ipca.png'
 #+END_SRC
 
 #+RESULTS:
 [[file:ipca.png]]
+
+** Conclusion
+
+Hope you enjoy the package!!
+
+If you find any bugs or if you think something could be better, 
+feel free to open an issue / contribute by opening a pull request!
 
 ** License
 
