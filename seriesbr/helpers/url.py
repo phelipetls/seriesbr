@@ -34,6 +34,7 @@ def ipea_make_filter_query(name, fields):
             filter_by_metadata += " and ".join(metadata_filters)
     return f"{prefix}{filter_by_name}{filter_by_metadata}"
 
+
 ## IBGE
 
 

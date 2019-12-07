@@ -1,5 +1,6 @@
 from pandas import concat, DataFrame
 from .helpers.utils import return_codes_and_names
+from .helpers.lists import list_metadata, ipea_metadata_list
 from .helpers.response import parse_ipea_response
 from .helpers.searching import return_search_results_ipea
 from .helpers.request import get_json
@@ -7,7 +8,6 @@ from .helpers.dates import parse_dates
 from .helpers.url import (
     ipea_make_select_query,
     ipea_make_filter_query,
-    ipea_metadata_list,
 )
 
 
@@ -111,7 +111,7 @@ def get_metadata(code):
     resource_path = f"Metadados('{code}')"
     url = f"{baseurl}{resource_path}"
     results = get_json(url)
-    return results["value"][0]
+    return DataFrame.from_dict(results["value"][0], orient="index", columns=["values"])
 
 
 def list_themes():
@@ -126,13 +126,6 @@ def list_countries():
     List all countries available in the database.
     """
     return list_metadata("Paises")
-
-
-def list_metadata(resource_path):
-    baseurl = "http://www.ipeadata.gov.br/api/odata4/"
-    url = f"{baseurl}{resource_path}"
-    json = get_json(url)["value"]
-    return DataFrame(json)
 
 
 def list_fields():

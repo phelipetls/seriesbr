@@ -17,6 +17,10 @@ def mocked_today_date():
     return datetime.datetime(2019, 12, 2)
 
 
+def mocked_search_results(url):
+    return url
+
+
 def mocked_utc_offset():
     return "-03:00"
 
@@ -132,3 +136,5 @@ class IPEAtest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+# vi: nowrap
