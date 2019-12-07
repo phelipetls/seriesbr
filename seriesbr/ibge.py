@@ -143,6 +143,34 @@ def list_variables(aggregate_code):
     return pd.io.json.json_normalize(json).iloc[:, :3]
 
 
+locations_dict = {
+    "N6": "city",
+    "N3": "state",
+    "N2": "macroregion",
+    "N7": "mesoregion",
+    "N9": "microregion",
+    "N1": "brazil",
+}
+
+
+def list_locations(aggregate_code):
+    """
+    Function to list periods of a given aggregate.
+
+    Returns
+    -------
+    A DataFrame with the frequency, initial and
+    final dates.
+    """
+    baseurl = "https://servicodados.ibge.gov.br/api/v3"
+    query = f"/agregados/{aggregate_code}/metadados"
+    url = f"{baseurl}{query}"
+    codes = get_json(url)["nivelTerritorial"]["Administrativo"]
+    df = pd.DataFrame({"codes": codes})
+    df["parameters"] = [locations_dict[code] for code in df.codes]
+    return df
+
+
 def list_periods(aggregate_code):
     """
     Function to list periods of a given aggregate.
