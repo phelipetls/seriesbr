@@ -1,69 +1,112 @@
 import os
 import sys
 import unittest
-import pandas
-from datetime import datetime
+import datetime
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seriesbr import ibge
+from seriesbr.helpers.url import (
+    ibge_build_classification_query,
+    ibge_build_variables_query,
+)
 
 
-class IBGEtest(unittest.TestCase):
+def mocked_parse_response(url):
+    return url
 
-    def test_simple_get_only_with_code(self):
-        self.assertIsInstance(ibge.get_series(1712), pandas.DataFrame)
 
-    def test_get_with_classifications(self):
-        self.assertIsInstance(ibge.get_series(1712, classifications={226: [4844, 96608, 96609], 218: 4780}), pandas.DataFrame)
+def mocked_today_date():
+    return datetime.datetime(2019, 12, 2)
 
-    def test_get_with_variables(self):
-        self.assertIsInstance(ibge.get_series(1712, variables=[214, 1982]), pandas.DataFrame)
-        self.assertIsInstance(ibge.get_series(1712, variables=214), pandas.DataFrame)
 
-    def test_get_with_locations(self):
-        self.assertIsInstance(ibge.get_series(1705, mesoregion=[3501, 3301], city=[5208707]), pandas.DataFrame)
+@patch('seriesbr.ibge.parse_ibge_response', mocked_parse_response)
+@patch('seriesbr.helpers.dates.today_date', mocked_today_date)
+class IPEAtest(unittest.TestCase):
 
-    def test_get_with_periods_with_month(self):
-        self.assertIsInstance(ibge.get_series(1705, start="201601", end="201701", mesoregion=[3501, 3301], city=[5208707]), pandas.DataFrame)
+    maxDiff = None
 
-    def test_get_with_periods_anual(self):
-        self.assertIsInstance(ibge.get_series(1732, start="2001", end="2006"), pandas.DataFrame)
+    def test_url_no_dates(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419), correct)
 
-    def test_get_with_wrong_date(self):
-        self.assertIsInstance(ibge.get_series(1732, start="200101", end="200601"), pandas.DataFrame)
+    ## Testing year-only date formats
 
-    def test_list_functions(self):
-        self.assertIsInstance(ibge.list_aggregates("Emprego"), pandas.DataFrame)
+    def test_url_with_start_date_year_only(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201901-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, start="2019"), correct)
 
-    def test_list_variables(self):
-        self.assertIsInstance(ibge.list_variables(1712), pandas.DataFrame)
+    def test_url_end_date_year_only(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201812/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, end="2018"), correct)
 
-    def test_list_states(self):
-        self.assertIsInstance(ibge.list_states(), pandas.DataFrame)
+    def test_url_start_and_end_date_year_only(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201701-201812/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, start="2017", end="2018"), correct)
 
-    def test_list_macroregions(self):
-        self.assertIsInstance(ibge.list_macroregions(), pandas.DataFrame)
+    ## Testing month-year date formats
 
-    def test_list_microregions(self):
-        self.assertIsInstance(ibge.list_microregions(), pandas.DataFrame)
+    def test_url_start_date_month_and_year(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201809-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, start="09-2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="09/2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="092018"), correct)
 
-    def test_list_cities(self):
-        self.assertIsInstance(ibge.list_cities(), pandas.DataFrame)
+    def test_url_end_date_month_and_year(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, end="09-2018"), correct)
+        self.assertEqual(ibge.get_series(1419, end="09/2018"), correct)
+        self.assertEqual(ibge.get_series(1419, end="092018"), correct)
 
-    def test_list_mesoregions(self):
-        self.assertIsInstance(ibge.list_mesoregions(), pandas.DataFrame)
+    def test_url_start_and_end_date_month_and_year(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, start="07-2017", end="09-2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="07-2017", end="09/2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="07-2017", end="092018"), correct)
 
-    def test_build_classification_for_url(self):
-        self.assertEqual(ibge.build_classification_query({26: [881, 9630], 25: [], 12: "all", "45": [236, 47]}), "classificacao=26[881,9630]|25[all]|12[all]|45[236,47]")
+    ## Testing complete dates -- shouldn't make any difference as days are ignore here
 
-    def test_build_dates_for_url(self):
-        today = datetime.today().strftime('%Y%m')
-        self.assertEqual(ibge.build_dates_query(last_n=100), "/periodos/-100")
-        self.assertEqual(ibge.build_dates_query(start=201802), f"/periodos/201802-{today}")
-        self.assertEqual(ibge.build_dates_query(start=201804, end=201901), "/periodos/201804-201901")
-        self.assertEqual(ibge.build_dates_query(end=2017), "/periodos/190001-2017")
+    def test_url_start_date_complete_dates(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201809-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, start="03-09-2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="03/09/2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="03092018"), correct)
+
+    def test_url_end_date_complete_dates(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, end="06-09-2018"), correct)
+        self.assertEqual(ibge.get_series(1419, end="06/09/2018"), correct)
+        self.assertEqual(ibge.get_series(1419, end="06092018"), correct)
+
+    def test_url_start_and_end_date_complete_dates(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(ibge.get_series(1419, start="05-07-2017", end="12-09-2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="05/07/2017", end="12/09/2018"), correct)
+        self.assertEqual(ibge.get_series(1419, start="05072017", end="12092018"), correct)
+
+    def test_ibge_build_classification_query(self):
+        self.assertEqual(ibge_build_classification_query({315: [7169, 7170, 7445], 22: [1, 3]}), "classificacao=315[7169,7170,7445]|22[1,3]")
+        self.assertEqual(ibge_build_classification_query(315), "classificacao=315[all]")
+        self.assertEqual(ibge_build_classification_query([315, 22]), "classificacao=315[all]|22[all]")
+
+    def test_ibge_build_variables_query(self):
+        self.assertEqual(ibge_build_variables_query(15), "/variaveis/15")
+        self.assertEqual(ibge_build_variables_query([15, 16, 12]), "/variaveis/15|16|12")
+        self.assertEqual(ibge_build_variables_query(None), "/variaveis")
+
+    def test_url_start_and_classifications(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201912/variaveis?classificacao=315[7169,7170]&localidades=BR&view=flat"
+        test = ibge.get_series(1419, start="07-2017", classifications={315: [7169, 7170]})
+        self.assertEqual(test, correct)
+
+    def test_url_start_classifications_and_regions(self):
+        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201912/variaveis/63?classificacao=315[7169,7170]&localidades=N7[all]|BR&view=flat"
+        test = ibge.get_series(1419, variables=63, start="07-2017", mesoregion="all", brazil="yes", classifications={315: [7169, 7170]})
+        self.assertEqual(test, correct)
 
 
 if __name__ == "__main__":
     unittest.main()
+
+# vi: nowrap
