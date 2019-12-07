@@ -40,7 +40,7 @@ def get_serie(code, name=None, start=None, end=None):
     start, end = parse_dates(start, end, api="ipeadata")
     dates = date_filter(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
-    serie = parse_response(custom_get(url), code, name, source="ipea")
+    serie = parse_ipea_response(url, code, name)
     return serie
 
 
