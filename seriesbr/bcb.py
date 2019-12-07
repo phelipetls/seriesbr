@@ -124,4 +124,4 @@ def get_metadata(code):
     params = f"fq=codigo_sgs:{code}"
     url = f"{baseurl}{params}"
     results = get_json(url)["result"]["results"]
-    return DataFrame.from_dict(results, orient="index", columns=["values"])
+    return DataFrame.from_dict(results[0], orient="index", columns=["values"])
