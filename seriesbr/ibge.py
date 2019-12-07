@@ -77,150 +77,24 @@ def get_series(
         In case of a bad request.
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
-    dates = build_dates_query(start, end, last_n)
-    variables = build_variables_query(variables)
-    locality = build_locality_query(city, state, macroregion, microregion, mesoregion)
-    classifications = build_classification_query(classifications)
-    url = f"{baseurl}{dates}{variables}?{classifications}{locality}&view=flat"
+    start, end = parse_dates(start, end, "ibge")
+    dates = ibge_build_dates_query(start, end, last_n)
+    variables = ibge_build_variables_query(variables)
+    locations = ibge_build_location_query(city, state, macroregion, microregion, mesoregion, brazil)
+    classifications = ibge_build_classification_query(classifications)
+    url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
     try:
-        return parse_ibge_response(custom_get(url).json())
+        return parse_ibge_response(url)
     except requests.exceptions.HTTPError:
-        dates = build_dates_query(start, end, last_n, monthly=False)
-        url = f"{baseurl}{dates}{variables}?{classifications}{locality}&view=flat"
-        return parse_ibge_response(custom_get(url).json())
-
-
-# Functions to help build url
-
-def build_classification_query(classifications=None):
-    if isinstance(classifications, dict):
-        s = []
-        for classification, category in classifications.items():
-            if not category or category == "all":
-                s.append(f"{classification}[all]")
-            else:
-                s.append(f"{classification}[{cat(category, ',')}]")
-        return "classificacao=" + "|".join(s)
-    else:
-        return ""
-
-
-def build_dates_query(start=None, end=None, last_n=None, monthly=True):
-    """
-    Auxiliary function to build the date part
-    of the url.
-
-    It depends if date
-    """
-    if monthly:
-        today = datetime.today().strftime('%Y%m')
-    else:
-        today = datetime.today().strftime('%Y')
-        start = start[:-2] if start else start
-        end = end[:-2] if end else end
-    if last_n:
-        return f"/periodos/-{last_n}"
-    elif start and end:
-        dates = f"/periodos/{start}-{end}"
-    elif start:
-        dates = f"/periodos/{start}-{today}"
-    elif end:
-        dates = f"/periodos/190001-{end}"
-    else:
-        dates = f"/periodos/-10000000"
-    return dates
-
-
-def build_variables_query(variables):
-    if isiterable(variables):
-        return f"/variaveis/{cat(variables, '|')}"
-    elif variables:
-        return f"/variaveis/{variables}"
-    else:
-        return f"/variaveis"
-
-
-def build_locality_query(city, state, macroregion, microregion, mesoregion):
-    # note-to-self: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
-    base = "&localidades="
-    query = []
-    if city:
-        query.append(f"N6[{cat(city, '|') if city != 'all' else city}]")
-    if state:
-        query.append(f"N3[{cat(state, ',') if state != 'all' else state}]")
-    if macroregion:
-        query.append(f"N2[{cat(macroregion, ',') if macroregion != 'all' else macroregion}]")
-    if mesoregion:
-        query.append(f"N7[{cat(mesoregion, ',') if mesoregion != 'all' else mesoregion}]")
-    if microregion:
-        query.append(f"N9[{cat(microregion, ',') if microregion != 'all' else microregion}]")
-    if all([local is None for local in [city, state, macroregion, microregion, mesoregion]]):
-        return f"{base}BR"
-    return base + "|".join(query)
-
-
-def get_metadata(code):
-    """
-    This function prints metadata information
-    about a given aggregated variable.
-
-    Parameters
-    ----------
-    code (str or int): variable's code.
-
-    Returns
-    -------
-    None.
-    """
-    baseurl = "https://servicodados.ibge.gov.br/api/v3/agregados"
-    url = f"{baseurl}/{code}/metadados"
-    json = custom_get(url).json()
-    newline = "\n"
-    double_newline = "\n\n"
-    spaces = "\t"
-    description = f"""
-    Id:   {json['id']}
-    Nome: {json['nome']}
-    Url:  {json['URL']}
-
-    Níveis Territoriais: {', '.join(json['nivelTerritorial']['Administrativo'])}
-
-    {', '.join(['{}: {}'.format(metadata.capitalize(), value) for metadata, value in json['periodicidade'].items()])}
-
-    Variáveis:
-
-    {
-    newline.join(
-            [
-                "{} {} {}".format(spaces, variavel["id"], variavel["nome"])
-                for variavel in json["variaveis"]
-            ]
-        )
-    }
-
-    Classificações e categorias:
-
-{double_newline.join(
-    [
-        "{} {} ({}): ".format(" " * 3, classificacao["nome"], classificacao["id"])
-        + f"{newline}{spaces}"
-        + f", {newline}{spaces}".join(
-            [
-                "{} - {}".format(categoria["id"], categoria["nome"])
-                for categoria in classificacao["categorias"]
-            ]
-        )
-        for classificacao in json["classificacoes"]
-    ]
-)}
-    """
-    print(description)
+        dates = ibge_build_dates_query(start, end, last_n, month=False)
+        url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
         return parse_ibge_response(get_json(url))
 
 
 ## List Metadata Functions
 
-def list_aggregates(search=None, where="nome"):
+
+def list_aggregates(*search, where="nome"):
     """
     Function to list all aggregated variables of IBGE.
 
