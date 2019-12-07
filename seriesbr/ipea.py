@@ -17,13 +17,17 @@ def get_serie(code, name=None, start=None, end=None):
 
     Parameters
     ----------
-    code (int or str): The code of the time series.
+    code : int or str
+        The code of the time series.
 
-    name (str): The name of the series.
+    name : str
+        The name of the series.
 
-    start (str): Initial date.
+    start : str
+        Initial date.
 
-    end (str): End date.
+    end : str
+        End date.
 
     Returns
     -------
@@ -62,14 +66,18 @@ def get_series(*codes, start=None, end=None, **kwargs):
 
     Parameters
     ----------
-    codes (dict, str, int): dictionary like {"name1": cod1, "name2": cod2}
-    or a bunch of code numbers like cod1, cod2.
+    codes : dict, str, int
+        Dictionary like {"name1": cod1, "name2": cod2}
+        or a bunch of code numbers like cod1, cod2.
 
-    start (str): Initial date.
+    start : str
+        Initial date.
 
-    end (str): End date.
+    end : str
+        End date.
 
-    **kwargs: passed to pandas.concat.
+    **kwargs
+        Arguments to pandas.concat.
 
     Returns
     -------

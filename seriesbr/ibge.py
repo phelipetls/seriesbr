@@ -32,47 +32,49 @@ def get_series(
     Parameters
     ----------
     code : int
-    The code of the aggregated variable.
+        The code of the aggregated variable.
 
     variables : int or list of ints
-    Which variables to select (if None, return all of them).
+        Which variables to select (if None, return all of them).
 
     start : int or str
-    Initial date in the format %Y or %Y%m.
+        Initial date in the format %Y or %Y%m.
 
     end : int or str
-    Final date in the format %Y or %Y%m.
+        Final date in the format %Y or %Y%m.
 
     last_n : int or str
-    Return only last n observations.
+        Return only last n observations.
 
     city : str or int a list of them
-    Codes of the cities to be selected.
+        Codes of the cities to be selected.
 
     state : str or int a list of them
-    Codes of the states to be selected.
+        Codes of the states to be selected.
 
     macroregion : str or int a list of them
-    Codes of the macroregions to be selected.
-
-    For example, Sudeste, Sul, etc.
+        Codes of the macroregions to be selected.
 
     microregion : str or int a list of them
-    Codes of the microregion to be selected.
-
-    For example, Lagos, Rio de Janeiro, Itaguaí are
-    microregions of the state of Rio de Janeiro.
+        Codes of the microregion to be selected.
 
     mesoregion : str or int a list of them
-    Codes of the mesoregions to be selected.
+        Codes of the mesoregions to be selected.
 
-    For example, Baixadas, Região Metropolitana,
-    Norte Fluminense etc. are mesoregions of the
-    state of Rio de Janeiro.
+    classifications : dict
+        { classification : [categories], ... }
 
     Returns
     -------
     A DataFrame with series values and metadata.
+
+    Raises
+    ------
+    ValueError
+        If query produces no values.
+
+    requests.HTTPError
+        In case of a bad request.
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
     dates = build_dates_query(start, end, last_n)
@@ -225,10 +227,10 @@ def list_aggregates(search=None, where="nome"):
     Parameters
     ----------
     search : str
-    String to search.
+        String to search.
 
-    search_in : str
-    Where to search.
+    where : str
+        Where to search.
 
     Returns
     -------
@@ -248,14 +250,14 @@ def list_variables(aggregate_code):
     Parameters
     ----------
     search : str
-    String to search.
+        String to search.
 
-    search_in : str
-    Where to search.
+    where : str
+        Where to search.
 
     Returns
     -------
-    A DataFrame with information regarding the variables.
+    A DataFrame with metadata about the variables.
     """
     baseurl = "https://servicodados.ibge.gov.br/api/v3"
     query = f"/agregados/{aggregate_code}/variaveis/all?localidades=BR"
@@ -297,9 +299,17 @@ def list_macroregions(search=None, where="nome"):
     """
     Function to list all macroregions and their codes.
 
+    Parameters
+    ----------
+    search : str
+        String to search.
+
+    where : str
+        Where to search.
+
     Returns
     -------
-    A DataFrame with information about the states.
+    A DataFrame with metadata about the about the states.
     """
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
     json = get_json(url)

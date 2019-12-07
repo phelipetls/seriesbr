@@ -13,16 +13,20 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
 
     Parameters
     ----------
-    code (int or str): The code of the time series.
+    code : int or str
+    The code of the time series.
 
-    name (str): The name of the series.
+    name : str
+    The name of the series.
 
-    start (str): Initial date.
+    start : str
+    Initial date.
 
-    end (str): End date.
+    end : str
+    End date.
 
-    last_n (int): Ignore other arguments and get the last
-    n observations.
+    last_n : inr
+    Ignore other arguments and get the last n observations.
 
     Returns
     -------
@@ -45,19 +49,20 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
 
     Parameters
     ----------
-    codes (dict, str, int): dictionary like {"name1": cod1, "name2": cod2}
-    or a bunch of code numbers like cod1, cod2.
+    codes : dict, str, int
+        Dictionary like {"name1": cod1, "name2": cod2} or a bunch of code numbers like cod1, cod2.
 
-    start (str): Initial date.
+    start : str
+        Initial date.
 
-    end (str): End date.
+    end : str
+        End date.
 
-    last_n (int): Get last_n observations.
+    last_n : int
+        Get last_n observations.
 
-    join (str): "outer" givess all observations and
-    "inner" gives the intersection of them.
-
-    **kwargs: passed to pandas.concat.
+    **kwargs
+        Passed to pandas.concat.
 
     Returns
     -------
@@ -80,11 +85,14 @@ def search(name="", *filters, rows=10, skip=1):
 
     Parameters
     ----------
-    name (str): string to search.
+    name : str
+        String to search.
 
-    skip (int or str): how many results to show.
+    skip : int or str
+        How many results to show.
 
-    start (int or str): start showing from this result.
+    start : int or str
+        Start showing from this result.
 
     Returns
     -------
@@ -105,7 +113,8 @@ def get_metadata(code):
 
     Parameters
     ----------
-    code (str): code to search.
+    code : str
+        Code to search.
 
     Returns
     -------
