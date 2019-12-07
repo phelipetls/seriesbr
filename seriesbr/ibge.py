@@ -1,9 +1,10 @@
-import re
 import requests
 import pandas as pd
 from .helpers.request import get_json
 from .helpers.response import parse_ibge_response
 from .helpers.dates import parse_dates
+from .helpers.utils import do_search
+from .helpers.lists import list_regions
 from .helpers.url import (
     ibge_build_dates_query,
     ibge_build_variables_query,
@@ -233,12 +234,7 @@ def list_states(*search, where="nome"):
     -------
     A DataFrame with metadata about the states.
     """
-    url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
-    json = get_json(url)
-    df = clean_json(json)
-    if search:
-        return do_search(df, search, where)
-    return df
+    return list_regions("estados", search, where)
 
 
 def list_macroregions(*search, where="nome"):
@@ -257,12 +253,7 @@ def list_macroregions(*search, where="nome"):
     -------
     A DataFrame with metadata about the about the states.
     """
-    url = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
-    json = get_json(url)
-    df = clean_json(json)
-    if search:
-        return do_search(df, search, where)
-    return df
+    return list_regions("regioes", search, where)
 
 
 def list_cities(*search, where="nome"):
@@ -281,12 +272,7 @@ def list_cities(*search, where="nome"):
     -------
     A DataFrame with metadata about the cities.
     """
-    url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
-    json = get_json(url)
-    df = clean_json(json)
-    if search:
-        return do_search(df, search, where)
-    return df
+    return list_regions("municipios", search, where)
 
 
 def list_microregions(*search, where="nome"):
@@ -305,34 +291,11 @@ def list_microregions(*search, where="nome"):
     -------
     A DataFrame with metadata about the microregions.
     """
-    url = "https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes"
-    json = get_json(url)
-    df = clean_json(json)
-    if search:
-        return do_search(df, search, where)
-    return df
+    return list_regions("microrregioes", search, where)
 
 
 def list_mesoregions(*search, where="nome"):
-    url = "https://servicodados.ibge.gov.br/api/v1/localidades/mesorregioes"
-    json = get_json(url)
-    df = clean_json(json)
-    if search:
-        return do_search(df, search, where)
-    return df
-
-## Helpers
-
-
-def clean_json(json):
     """
-    Helper function to transform JSON into
-    a DataFrame and clean its columns names.
-    """
-    df = pd.io.json.json_normalize(json, sep='_')
-    df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
-    df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
-    return df
     Function to list all mesoregions and their codes.
 
     Parameters
@@ -343,11 +306,8 @@ def clean_json(json):
     where : str, default "nome"
         Where to search.
 
-def do_search(df, search, where, prefix=""):
+    Returns
+    -------
+    A DataFrame with metadata about the mesoregions.
     """
-    Helper function to search for regex
-    in a given column
-    """
-    # (?iu) sets unicode and ignore case flags
-    to_search = r'(?iu)' + '|'.join(search)
-    return df.query(f"{where}.str.contains(@to_search)", engine='python')
+    return list_regions("mesorregioes", search, where)
