@@ -1,8 +1,8 @@
 from pandas import concat
 from .helpers.dates import parse_dates
-from .helpers.types import return_codes_and_names
-from .helpers.response import parse_response
-from .helpers.request import custom_get
+from .helpers.utils import return_codes_and_names
+from .helpers.response import parse_bcb_response
+from .helpers.request import get_json
 from .helpers.search_results import return_search_results_bcb
 
 
@@ -94,8 +94,8 @@ def search(name="", *filters, rows=10, skip=1):
     params = f"q={name}&rows={rows}&start={skip}&sort=score desc"
     filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
     url = f"{baseurl}{params}{filter_params}"
-    response = custom_get(url)
-    results = return_search_results_bcb(response)
+    json = get_json(url)
+    results = return_search_results_bcb(json)
     return results
 
 
@@ -114,5 +114,5 @@ def get_metadata(code):
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"fq=codigo_sgs:{code}"
     url = f"{baseurl}{params}"
-    results = custom_get(url).json()["result"]["results"][0]
+    results = get_json(url)["result"]["results"][0]
     return results

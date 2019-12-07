@@ -1,22 +1,16 @@
 import pandas as pd
 from datetime import datetime
+from .request import get_json
 
 
-def parse_response(response, code, name, source):
-    if source == "bcb":
-        return parse_bcb_json(response, code, name)
-    elif source == "ipea":
-        return parse_ipea_json(response, code, name)
-
-
-def parse_bcb_json(response, code, name):
-    json = response.json()
+def parse_bcb_response(url, code, name):
+    json = get_json(url)
     assert json, print(f"Request for {code} returned nothing.")
     return json_to_dataframe(json, code, name, "data", "valor", "%d/%m/%Y")
 
 
-def parse_ipea_json(response, code, name):
-    json = response.json()["value"]
+def parse_ipea_response(url, code, name):
+    json = get_json(url)["value"]
     assert json, print(f"Request for {code} returned nothing.")
     return json_to_dataframe(json, code, name, "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S")
 
@@ -38,7 +32,9 @@ def convert_to_datetime(date_string, date_fmt):
     return datetime.strptime(date_string, date_fmt).strftime("%d/%m/%Y")
 
 
-def parse_ibge_response(json):
+def parse_ibge_response(url):
+    json = get_json(url)
+    assert json[0].values(), "This request produced no value."
     df = pd.DataFrame(json[1:])
     date_key = json[0]["D2C"]
     df.columns = json[0].values()

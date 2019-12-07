@@ -1,10 +1,15 @@
 import re
 import requests
 import pandas as pd
-from .helpers.request import custom_get
-from .helpers.utils import cat, isiterable
+from .helpers.request import get_json
 from .helpers.response import parse_ibge_response
-from datetime import datetime
+from .helpers.dates import parse_dates
+from .helpers.url import (
+    ibge_build_dates_query,
+    ibge_build_variables_query,
+    ibge_build_location_query,
+    ibge_build_classification_query,
+)
 
 
 def get_series(
@@ -208,6 +213,7 @@ def get_metadata(code):
 )}
     """
     print(description)
+        return parse_ibge_response(get_json(url))
 
 
 ## List Metadata Functions
@@ -254,7 +260,7 @@ def list_variables(aggregate_code):
     baseurl = "https://servicodados.ibge.gov.br/api/v3"
     query = f"/agregados/{aggregate_code}/variaveis/all?localidades=BR"
     url = f"{baseurl}{query}"
-    json = custom_get(url).json()
+    json = get_json(url)
     return pd.io.json.json_normalize(json).iloc[:, :3]
 
 
@@ -280,7 +286,7 @@ def list_states(search=None, where="nome"):
     A DataFrame with information about the states.
     """
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados/"
-    json = custom_get(url).json()
+    json = get_json(url)
     df = clean_json(json)
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
@@ -296,7 +302,7 @@ def list_macroregions(search=None, where="nome"):
     A DataFrame with information about the states.
     """
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
-    json = custom_get(url).json()
+    json = get_json(url)
     df = clean_json(json)
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
@@ -305,7 +311,7 @@ def list_macroregions(search=None, where="nome"):
 
 def list_cities(search=None, where="nome"):
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
-    json = custom_get(url).json()
+    json = get_json(url)
     df = clean_json(json)
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
@@ -314,7 +320,7 @@ def list_cities(search=None, where="nome"):
 
 def list_microregions(search=None, where="nome"):
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes"
-    json = custom_get(url).json()
+    json = get_json(url)
     df = clean_json(json)
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')
@@ -323,7 +329,7 @@ def list_microregions(search=None, where="nome"):
 
 def list_mesoregions(search=None, where="nome"):
     url = "https://servicodados.ibge.gov.br/api/v1/localidades/mesorregioes"
-    json = custom_get(url).json()
+    json = get_json(url)
     df = clean_json(json)
     if search:
         return df.query(f'{where}.str.contains(@search)', engine='python')

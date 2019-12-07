@@ -1,11 +1,10 @@
 from pandas import concat, DataFrame
-from pprint import pprint
-from .helpers.types import return_codes_and_names
-from .helpers.request import custom_get
-from .helpers.response import parse_response
+from .helpers.utils import return_codes_and_names
+from .helpers.response import parse_ipea_response
 from .helpers.search_results import return_search_results_ipea
+from .helpers.request import get_json
 from .helpers.dates import parse_dates
-from .helpers.metadata import (
+from .helpers.url import (
     ipea_make_select_query,
     ipea_make_filter_query,
     ipea_metadata_list,
@@ -92,41 +91,41 @@ def search(SERNOME="", **fields):
     select_query = ipea_make_select_query(fields)
     filter_query = ipea_make_filter_query(SERNOME, fields)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    response = custom_get(url)
-    results = return_search_results_ipea(response)
+    json = get_json(url)
+    results = return_search_results_ipea(json)
     return results
 
 
-def get_metadata(cod):
+def get_metadata(code):
     """
-    Returns metadata of a series specified by cod.
+    Returns metadata of a series specified by the a code.
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    resource_path = f"Metadados('{cod}')"
+    resource_path = f"Metadados('{code}')"
     url = f"{baseurl}{resource_path}"
-    results = custom_get(url).json()["value"][0]
-    return results
+    results = get_json(url)
+    return results["value"][0]
 
 
 def list_themes():
     """
-    List all themes available.
+    List all themes available in the database.
     """
-    return DataFrame(list_metadata("Temas", "TEMCODIGO", "TEMNOME"))
+    return list_metadata("Temas")
 
 
 def list_countries():
     """
-    List all countries available
+    List all countries available in the database.
     """
-    return DataFrame(list_metadata("Paises", "PAICODIGO", "PAINOME"))
+    return list_metadata("Paises")
 
 
-def list_metadata(resource_path, code_key, value_key):
+def list_metadata(resource_path):
     baseurl = "http://www.ipeadata.gov.br/api/odata4/"
     url = f"{baseurl}{resource_path}"
-    response = custom_get(url).json()["value"]
-    return [{code_key: item[code_key], value_key: item[value_key]} for item in response]
+    json = get_json(url)["value"]
+    return DataFrame(json)
 
 
 def list_fields():

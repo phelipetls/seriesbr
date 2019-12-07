@@ -1,9 +1,13 @@
 import requests
+import json
 
 s = requests.Session()
 
 
-def custom_get(url, **kwargs):
+def get_json(url, **kwargs):
     response = s.get(url, timeout=120, **kwargs)
     response.raise_for_status()
-    return response
+    try:
+        return response.json()
+    except json.JSONDecodeError:
+        raise ValueError(f"The url {url} doesn't have any values.")
