@@ -86,7 +86,7 @@ def get_series(*codes, start=None, end=None, **kwargs):
     assert codes, "You must pass at least one code to be searched."
     codes, names = return_codes_and_names(*codes)
     return concat(
-        [get_serie(code, name, start, end) for code, name in zip(codes, names)],
+        (get_serie(code, name, start, end) for code, name in zip(codes, names)),
         axis="columns",
         sort=True,
         **kwargs,
