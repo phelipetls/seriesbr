@@ -3,7 +3,7 @@ from .helpers.dates import parse_dates
 from .helpers.utils import return_codes_and_names
 from .helpers.response import parse_bcb_response
 from .helpers.request import get_json
-from .helpers.search_results import return_search_results_bcb
+from .helpers.searching import return_search_results_bcb
 
 
 def get_serie(code, name=None, start=None, end=None, last_n=None):
@@ -103,8 +103,7 @@ def search(name="", *filters, rows=10, skip=1):
     params = f"q={name}&rows={rows}&start={skip}&sort=score desc"
     filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
     url = f"{baseurl}{params}{filter_params}"
-    json = get_json(url)
-    results = return_search_results_bcb(json)
+    results = return_search_results_bcb(url)
     return results
 
 

@@ -1,7 +1,7 @@
 from pandas import concat, DataFrame
 from .helpers.utils import return_codes_and_names
 from .helpers.response import parse_ipea_response
-from .helpers.search_results import return_search_results_ipea
+from .helpers.searching import return_search_results_ipea
 from .helpers.request import get_json
 from .helpers.dates import parse_dates
 from .helpers.url import (
@@ -99,8 +99,7 @@ def search(SERNOME="", **fields):
     select_query = ipea_make_select_query(fields)
     filter_query = ipea_make_filter_query(SERNOME, fields)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    json = get_json(url)
-    results = return_search_results_ipea(json)
+    results = return_search_results_ipea(url)
     return results
 
 

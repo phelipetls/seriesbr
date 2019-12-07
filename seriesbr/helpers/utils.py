@@ -1,3 +1,7 @@
+import re
+import pandas as pd
+
+
 def return_codes_and_names(*args):
     """
     Auxiliary function to return codes and names
@@ -35,3 +39,24 @@ def isiterable(something):
     except TypeError:
         return False
     return True
+
+
+def do_search(df, search, where, prefix=""):
+    """
+    Helper function to search for regex
+    in a given column
+    """
+    # (?iu) sets unicode and ignore case flags
+    to_search = r'(?iu)' + '|'.join(search)
+    return df.query(f"{where}.str.contains(@to_search)", engine='python')
+
+
+def clean_json(json):
+    """
+    Helper function to transform JSON into
+    a DataFrame and clean its columns names.
+    """
+    df = pd.io.json.json_normalize(json, sep='_')
+    df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
+    df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
+    return df
