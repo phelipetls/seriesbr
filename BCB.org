@@ -8,7 +8,6 @@
   pd.set_option('display.max_rows', 10)
 #+END_SRC
 
-#+RESULTS:
 
 #+BEGIN_SRC python :session :results value
   from seriesbr import bcb
@@ -16,7 +15,6 @@
   bcb.search("Selic")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
   codigo_sgs                                              title periodicidade                            unidade_medida
 0       1178          Taxa de juros - Selic anualizada base 252        diária                         Percentual ao ano
@@ -37,7 +35,6 @@
   bcb.search("Atividade", "Econômica", "Índice")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
   codigo_sgs                                              title periodicidade              unidade_medida
 0      24364  Índice de Atividade Econômica do Banco Central...        mensal                      Índice
@@ -63,7 +60,6 @@ The argument =rows= limits the search results (defaults to 10) while =skip= cont
   bcb.search("Monetária", rows=20, skip=1)
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
    codigo_sgs                                              title periodicidade                                   unidade_medida
 0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
@@ -88,7 +84,6 @@ The argument =rows= limits the search results (defaults to 10) while =skip= cont
   bcb.get_series({"Spread": 20786}) # or just 20786
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             Spread
 date              
@@ -113,7 +108,6 @@ date
   bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             Spread  Selic  PIB_Mensal
 date                                 
@@ -138,7 +132,6 @@ Or, if you don't mind the column names:
   bcb.get_series(20786, 4189, 4380)
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             20786  4189      4380 
 date                              
@@ -163,7 +156,6 @@ date
   bcb.get_series(20786, 4189, 4380, join="inner")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             20786  4189      4380 
 date                              
@@ -192,7 +184,6 @@ Another possibily is just calling =dropna()= afterwards.
   metadados
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
                                                                     values
 referencias                                                               
