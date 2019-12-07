@@ -304,7 +304,7 @@ plt.savefig('imgs/ipca_by_area.png', bbox_inches="tight")
 
 [[file:imgs/ipca_by_area.png]]
 
-** Inflation rate by category and month
+** Inflation rate by product and month
 
 #+BEGIN_SRC python :session
 ipca_by_month = ibge.get_series(1419, classifications={315: categories.id.to_list()})
@@ -329,6 +329,8 @@ Geral, grupo, subgrupo, item e subitem                                          
 [10 rows x 95 columns]
 #+end_example
 
+** Most recent inflation rate (november/19) by product
+
 #+BEGIN_SRC python :session :results file
 ibge.get_series(
     1419, classifications={315: categories.id.to_list()}, last_n=1
@@ -343,4 +345,3 @@ plt.savefig('imgs/recent_ipca.png', bbox_inches='tight')
 #+END_SRC
 
 [[file:imgs/recent_ipca.png]]
-
