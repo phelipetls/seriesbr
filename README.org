@@ -71,7 +71,7 @@ values from both IPEA and BCB at the same call.
 #+RESULTS:
 
 
-#+BEGIN_SRC python :session :results file
+#+BEGIN_SRC python :session :results file :exports both
   import matplotlib.pyplot as plt
   import matplotlib
 
