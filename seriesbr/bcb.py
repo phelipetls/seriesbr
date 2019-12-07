@@ -1,4 +1,4 @@
-from pandas import concat
+from pandas import concat, DataFrame
 from .helpers.dates import parse_dates
 from .helpers.utils import return_codes_and_names
 from .helpers.response import parse_bcb_response
@@ -123,5 +123,5 @@ def get_metadata(code):
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"fq=codigo_sgs:{code}"
     url = f"{baseurl}{params}"
-    results = get_json(url)["result"]["results"][0]
-    return results
+    results = get_json(url)["result"]["results"]
+    return DataFrame.from_dict(results, orient="index", columns=["values"])
