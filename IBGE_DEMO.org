@@ -26,7 +26,6 @@ pd.set_option('max_colwidth', 200)
 ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 #+END_SRC
 
-#+RESULTS:
 :         id                                                                                                                                                                                           nome
 : 2231  1100      INPC - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)
 : 2244  1419      IPCA - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)
@@ -38,7 +37,6 @@ ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 ibge.list_variables(1419)
 #+END_SRC
 
-#+RESULTS:
 :      id                               variavel unidade
 : 0    63                 IPCA - Variação mensal       %
 : 1    69       IPCA - Variação acumulada no ano       %
@@ -73,7 +71,6 @@ categories = ibge.list_classifications(
 categories
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
        id                         nome unidade  nivel  classificacao_id                      classificacao_nome
 0    7169                 Índice geral    None     -1               315  Geral, grupo, subgrupo, item e subitem
@@ -102,7 +99,6 @@ ipca = ibge.get_series(1419, start="10-2019", end="10-2019", classifications={31
 ipca
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
            Nível Territorial  Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida     Valor
 Data                                                ...                                                                   
@@ -159,7 +155,6 @@ ipca.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Variá
 
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
 Variável                                IPCA - Peso mensal  ...  IPCA - Variação mensal
 Geral, grupo, subgrupo, item e subitem                      ...                        
@@ -238,7 +233,6 @@ ipca_by_area
 
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
                Nível Territorial Região Metropolitana e Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida   Valor
 Data                                                                          ...                                                                 
@@ -317,7 +311,6 @@ ipca_by_month = ibge.get_series(1419, classifications={315: categories.id.to_lis
 ipca_by_month.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Mês", values="Valor")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
 Mês                                     abril 2012  abril 2013  abril 2014  abril 2015  ...  setembro 2016  setembro 2017  setembro 2018  setembro 2019
 Geral, grupo, subgrupo, item e subitem                                                  ...                                                            

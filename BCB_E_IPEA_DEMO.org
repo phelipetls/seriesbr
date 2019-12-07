@@ -10,7 +10,6 @@
   pd.set_option('display.max_rows', 10)
 #+END_SRC
 
-#+RESULTS:
 
 #+BEGIN_SRC python :session
   from seriesbr import bcb
@@ -18,7 +17,6 @@
   bcb.search("Selic")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
   codigo_sgs  ...                            unidade_medida
 0       1178  ...                         Percentual ao ano
@@ -41,7 +39,6 @@
   bcb.search("Atividade", "Econômica", "Índice")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
   codigo_sgs  ...              unidade_medida
 0      24364  ...                      Índice
@@ -71,7 +68,6 @@ The argument =rows= limits the search results (defaults to 10) while =skip= cont
   bcb.search("Monetária", rows=20, skip=1)
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
    codigo_sgs  ...                                   unidade_medida
 0       17633  ...        Milhares de unidades monetárias correntes
@@ -96,7 +92,6 @@ The argument =rows= limits the search results (defaults to 10) while =skip= cont
   bcb.get_series({"Spread": 20786}) # or just 20786
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             Spread
 date              
@@ -121,7 +116,6 @@ date
   bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             Spread  Selic  PIB_Mensal
 date                                 
@@ -146,7 +140,6 @@ Or, if you don't mind the column names:
   bcb.get_series(20786, 4189, 4380)
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             20786  4189      4380 
 date                              
@@ -171,7 +164,6 @@ date
   bcb.get_series(20786, 4189, 4380, join="inner")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             20786  4189      4380 
 date                              
@@ -200,7 +192,6 @@ Another possibily is just calling =dropna()= afterwards.
   metadados
 #+END_SRC
 
-#+RESULTS:
 
 * Instituto de Pesquisa Econômica Aplicada
    :PROPERTIES:
@@ -214,7 +205,6 @@ from seriesbr import ipea
 ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
              SERCODIGO                                                                  SERNOME PERNOME UNINOME         BASNOME
 0         BM12_CRDSD12                    Operações de crédito - recursos direcionados - spread  Mensal  (p.p.)  Macroeconômico
@@ -238,7 +228,6 @@ Another example:
   ipea.search("Juros", PERNOME="Mensal", UNINOME="(% a.m.)")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             SERCODIGO                                                           SERNOME PERNOME   UNINOME
 0   ANBIMA12_TJCDBP12                                    Taxa de juros - CDB pré-fixado  Mensal  (% a.m.)
@@ -262,7 +251,6 @@ Or even:
   ipea.search(FNTNOME="Instituto", PERNOME="mensal", SERNOME="Preço")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
          SERCODIGO  ...                                                                                                            FNTNOME
 0     GAC12_CARN12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
@@ -303,7 +291,6 @@ Or even:
   ipea.list_themes()  # also available: list_countries
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
     TEMCODIGO  TEMCODIGO_PAI                 TEMNOME
 0          28            NaN            Agropecuária
@@ -327,7 +314,6 @@ Supposing now we are interested in the theme of employment (at row 16, code 12),
   ipea.search(TEMCODIGO=12)
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             SERCODIGO                                                      SERNOME     PERNOME                   UNINOME  TEMCODIGO
 0               ADMIS                               Total da evolução de admissões      Mensal                    Pessoa         12
@@ -351,7 +337,6 @@ Supposing now we are interested in the theme of employment (at row 16, code 12),
   ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
             Taxa de juros - Over / Selic  Taxa de juros - CDB
 date                                                         
@@ -380,7 +365,6 @@ To get metadata you would do the same as in =bcb= module.
   metadados
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
 
 values
