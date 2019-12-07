@@ -24,10 +24,10 @@ def get_serie(code, name=None, start=None, end=None):
         The name of the series.
 
     start : str
-        Initial date.
+        Initial date, year last.
 
     end : str
-        End date.
+        End date, year last.
 
     Returns
     -------

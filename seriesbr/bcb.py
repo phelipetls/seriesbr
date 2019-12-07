@@ -20,10 +20,10 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
     The name of the series.
 
     start : str
-    Initial date.
+    Initial date, year last.
 
     end : str
-    End date.
+    End date, year last.
 
     last_n : inr
     Ignore other arguments and get the last n observations.

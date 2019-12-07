@@ -35,47 +35,42 @@ def get_series(
     code : int
         The code of the aggregated variable.
 
-    variables : int or list of ints
+    variables : int or list of ints, default None
         Which variables to select (if None, return all of them).
 
-    start : int or str
-        Initial date in the format %Y or %Y%m.
+    start : int or str, default None
+        Initial date, year last.
 
-    end : int or str
-        Final date in the format %Y or %Y%m.
+    end : int or str, default None
+        Final date, year last.
 
-    last_n : int or str
+    last_n : int or str, default None
         Return only last n observations.
 
-    city : str or int a list of them
+    city : str or int a list of them, default None
         Codes of the cities to be selected.
 
-    state : str or int a list of them
+    state : str or int or a list of them, default None
         Codes of the states to be selected.
 
-    macroregion : str or int a list of them
+    macroregion : str or int or a list of them, default None
         Codes of the macroregions to be selected.
 
-    microregion : str or int a list of them
+    microregion : str or int or a list of them, default None
         Codes of the microregion to be selected.
 
-    mesoregion : str or int a list of them
+    mesoregion : str or int or a list of them, default None
         Codes of the mesoregions to be selected.
 
-    classifications : dict
+    classifications : dict, int, str or list, default None
         { classification : [categories], ... }
+        classification1
+        "classification1"
+        list = [classification1, classification2, ... ]
 
     Returns
     -------
     A DataFrame with series values and metadata.
-
-    Raises
-    ------
-    ValueError
-        If query produces no values.
-
-    requests.HTTPError
-        In case of a bad request.
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
     start, end = parse_dates(start, end, "ibge")
@@ -95,16 +90,16 @@ def get_series(
 ## List Metadata Functions
 
 
-def list_aggregates(*search, where="nome"):
+def search(*search, where="nome"):
     """
     Function to list all aggregated variables of IBGE.
 
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -125,9 +120,9 @@ def list_variables(aggregate_code):
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -166,9 +161,9 @@ def list_classifications(aggregate_code, *search, where="nome"):
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -194,9 +189,9 @@ def list_states(*search, where="nome"):
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -218,9 +213,9 @@ def list_macroregions(*search, where="nome"):
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -237,14 +232,14 @@ def list_macroregions(*search, where="nome"):
 
 def list_cities(*search, where="nome"):
     """
-    Function to lsit all cities and their codes.
+    Function to list all cities and their codes.
 
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -261,14 +256,14 @@ def list_cities(*search, where="nome"):
 
 def list_microregions(*search, where="nome"):
     """
-    Function to lsit all microregions.
+    Function to list all microregions.
 
     Parameters
     ----------
     search : str
-        String to search.
+        Strings to search.
 
-    where : str
+    where : str, default "nome"
         Where to search.
 
     Returns
@@ -303,7 +298,15 @@ def clean_json(json):
     df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
     df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
     return df
+    Function to list all mesoregions and their codes.
 
+    Parameters
+    ----------
+    search : str
+        Strings to search.
+
+    where : str, default "nome"
+        Where to search.
 
 def do_search(df, search, where, prefix=""):
     """
