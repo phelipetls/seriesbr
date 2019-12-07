@@ -101,7 +101,7 @@ def search(name="", *filters, rows=10, skip=1):
     """
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"q={name}&rows={rows}&start={skip}&sort=score desc"
-    filter_params = "&fq=" + "+".join(f"{value}" for value in filters if filters)
+    filter_params = f"&fq={'+'.join([value for value in filters])}" if filters else ""
     url = f"{baseurl}{params}{filter_params}"
     results = return_search_results_bcb(url)
     return results
