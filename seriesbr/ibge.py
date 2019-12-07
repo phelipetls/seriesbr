@@ -86,6 +86,13 @@ def get_series(
         url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
         return parse_ibge_response(get_json(url))
 
+## Get metadata
+
+
+def get_metadata(aggregate_code):
+    url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate_code}/metadados"
+    json = get_json(url)
+    return pd.DataFrame.from_dict(json, orient="index", columns=["values"])
 
 ## List Metadata Functions
 
