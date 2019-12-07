@@ -10,4 +10,4 @@ def get_json(url, **kwargs):
     try:
         return response.json()
     except json.JSONDecodeError:
-        raise ValueError(f"The url {url} doesn't have any values.")
+        raise ValueError(f"A request to {url} didn't produce any JSON.")
