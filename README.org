@@ -43,10 +43,15 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 - Search in a given database with =search=.
 - Get metadata with =get_metadata=.
 
-** Example
+** Usage
 
-For convenience, there is a function to get values from both IPEA and BCB at the same call. 
-Like this:
+In the following links there are demonstrations files on how to use the package:
+
+- [[https://github.com/phelipetls/seriesbr/blob/master/BCB_E_IPEA_DEMO.org][BCB and IPEA]]
+- [[https://github.com/phelipetls/seriesbr/blob/master/IBGE_DEMO.org][IBGE]]
+
+For a quick example, check out function below, that allows you to get
+values from both IPEA and BCB at the same call.
 
 #+BEGIN_SRC python :session
   from seriesbr import seriesbr
@@ -80,10 +85,8 @@ Like this:
 
 [[imgs/example.png]]
 
-** Demonstrations
-
-- [[https://github.com/phelipetls/seriesbr/blob/master/BCB_E_IPEA_DEMO.org][BCB and IPEA]]
-- [[https://github.com/phelipetls/seriesbr/blob/master/IBGE_DEMO.org][IBGE]]
+Though desirable, it would be hard to do the same thing for IBGE.
+For more thorough demonstrations, check out the links above.
 
 ** Conclusion
 
