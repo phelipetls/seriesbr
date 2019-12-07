@@ -5,7 +5,8 @@
   :header-args:python: :exports both
   :END:
 
-[[https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]](https://travis-ci.org/phelipetls/seriesbr)
+[[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
+[[https://badge.fury.io/py/seriesbr.svg][file:https://badge.fury.io/py/seriesbr]]
 
  #+TOC: headlines 2
 
@@ -78,7 +79,7 @@ Like this:
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/example.png]]
+[[imgs/example.png]]
 
 ** Demonstrations
 
@@ -98,4 +99,4 @@ feel free to open an issue / contribute by opening a pull request!
 
 ** Support
 
-If you find it useful, give this repo a start :)
+If you find it useful, give this repo a star :)

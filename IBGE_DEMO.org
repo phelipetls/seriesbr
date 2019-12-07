@@ -169,7 +169,7 @@ plt.savefig('imgs/ipca.png', bbox_inches="tight")
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/ipca.png]]
+[[imgs/ipca.png]]
 
 ** Weight of each product in the inflation rate
 
@@ -185,7 +185,7 @@ plt.savefig('imgs/peso_mensal.png')
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/peso_mensal.png]]
+[[imgs/peso_mensal.png]]
 
 ** Inflation rate by metropolitan areas
 
@@ -248,7 +248,7 @@ plt.savefig('imgs/ipca_by_area.png', bbox_inches="tight")
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/ipca_by_area.png]]
+[[imgs/ipca_by_area.png]]
 
 ** Inflation rate by category and month
 
@@ -290,5 +290,5 @@ plt.savefig('imgs/recent_ipca.png', bbox_inches='tight')
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/recent_ipca.png]]
+[[imgs/recent_ipca.png]]
 
