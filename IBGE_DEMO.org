@@ -13,13 +13,17 @@ In this demonstration, we will try to replicate the visualizations of IPCA in
 october 2019 for various kinds of products, as it was done [[https://sidra.ibge.gov.br/home/ipca][here]].
 
 ** Searching for aggregates
+
+To stay consistent with the other modules, you can search for aggregates with the =search= function.
+It takes an arbitrary number of regexes.
+
 #+BEGIN_SRC python :session
 import pandas as pd
 from seriesbr import ibge
 
 pd.set_option('max_colwidth', 200)
 
-ibge.list_aggregates("Variação mensal, acumulada no ano, acumulada em 12 meses")
+ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 #+END_SRC
 
 #+RESULTS:
@@ -45,7 +49,7 @@ ibge.list_variables(1419)
 
 You can search for classifications and categories with the function =list_classifications=.
 
-All list functions takes an arbitrary number of strings (a regular expression)
+All =list_*= functions takes an arbitrary number of strings (a regular expression)
 as optional arguments to match the column "nome" by default, i.e.,
 the name of the categories, but you can change this with the argument =where=.
 
@@ -86,9 +90,11 @@ categories
 
 ** Retrieving data
 
-When filtering by classifications, you must pass a dictionary whose keys are a classification id and values the categories' id.
+When filtering by classifications, you can pass a dictionary whose keys
+are a classification id and values the categories' id.
 
-For example:
+Alternatively, you can just pass an int/str or a list of classifications,
+in which case all categories of the given classifications will be returned.
 
 #+BEGIN_SRC python :session
 ipca = ibge.get_series(1419, start="10-2019", end="10-2019", classifications={315: categories.id.to_list()})
@@ -98,53 +104,24 @@ ipca
 
 #+RESULTS:
 #+begin_example
-           Nível Territorial  Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida     Valor
-Data                                                ...                                                                   
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    0.1000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    0.0500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %   -0.6100
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %   -0.0900
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    0.6300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    0.4500
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    0.4000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    0.2000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    0.0300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %   -0.0100
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    2.6000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    2.1500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %    4.0200
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    0.4800
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    0.3900
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    1.7000
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    4.7500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    2.4600
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    4.4600
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    0.4200
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    2.5400
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    3.0100
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %    3.1300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    1.5300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    1.1000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    0.4000
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    4.3400
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    3.1300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    4.7200
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    0.3500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %  100.0000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %   24.5278
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %   16.1701
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    3.9050
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    5.6379
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %   18.1478
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %   12.2823
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %   10.8677
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    5.0180
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    3.4434
+           Nível Territorial  Brasil           Mês                Variável Geral, grupo, subgrupo, item e subitem Unidade de Medida    Valor
+Data                                                                                                                                        
+2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                           Índice geral                 %   0.1000
+2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                1.Alimentação e bebidas                 %   0.0500
+2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                            2.Habitação                 %  -0.6100
+2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                3.Artigos de residência                 %  -0.0900
+2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                            4.Vestuário                 %   0.6300
+...                      ...     ...           ...                     ...                                    ...               ...      ...
+2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                          5.Transportes                 %  18.1478
+2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal            6.Saúde e cuidados pessoais                 %  12.2823
+2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                    7.Despesas pessoais                 %  10.8677
+2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                             8.Educação                 %   5.0180
+2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                          9.Comunicação                 %   3.4434
 
 [40 rows x 7 columns]
 #+end_example
 
-** Pivot table of IPCA's variables by group of products/services
+** Inflation rate by products/services
 
 #+NAME: 
 #+BEGIN_SRC python :session
@@ -186,13 +163,13 @@ ipca.pivot_table(
 )
 
 plt.tight_layout()
-plt.savefig('ipca.png', bbox_inches="tight")
+plt.savefig('imgs/ipca.png', bbox_inches="tight")
 
-'ipca.png'
+'imgs/ipca.png'
 #+END_SRC
 
 #+RESULTS:
-[[file:ipca.png]]
+[[file:imgs/ipca.png]]
 
 ** Weight of each product in the inflation rate
 
@@ -202,15 +179,15 @@ ipca.pivot_table(
 ).loc[:, ["IPCA - Peso mensal"]].sort_values("IPCA - Peso mensal").plot(kind="barh")
 
 plt.tight_layout()
-plt.savefig('peso_mensal.png')
+plt.savefig('imgs/peso_mensal.png')
 
-'peso_mensal.png'
+'imgs/peso_mensal.png'
 #+END_SRC
 
 #+RESULTS:
-[[file:peso_mensal.png]]
+[[file:imgs/peso_mensal.png]]
 
-** IPCA by metropolitan areas
+** Inflation rate by metropolitan areas
 
 Now we want to plot the inflation rate by metropolitan area, which is a mesoregion.
 It turned out that we can just call =get_series= and assign the keyword argument
@@ -228,13 +205,30 @@ for Brazil as a whole, you can do the following:
 
 #+BEGIN_SRC python :session
 
-ipca_by_area = ibge.get_series(1419, mesoregion="all", brazil="yes" start="10-2019", end="10-2019")
+ipca_by_area = ibge.get_series(1419, mesoregion="all", brazil="yes", start="10-2019", end="10-2019")
 
 ipca_by_area
 
 #+END_SRC
 
 #+RESULTS:
+#+begin_example
+               Nível Territorial Região Metropolitana e Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida   Valor
+Data                                                                          ...                                                                 
+2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    0.22
+2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    2.71
+2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    3.21
+2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    0.04
+...                          ...                           ...           ...  ...                                    ...               ...     ...
+2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    0.10
+2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    2.60
+2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    2.54
+2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %  100.00
+
+[44 rows x 7 columns]
+#+end_example
 
 But really, you could pass for the =brazil= keyword any value that would be evaluated
 as =True= in Python.
@@ -243,19 +237,20 @@ as =True= in Python.
 
 ipca_by_area.pivot_table(
     index="Região Metropolitana", columns="Variável", values="Valor"
-).drop("IPCA - Peso mensal", axis="columns").plot.barh(figsize=(10, 7)).legend(
+).drop("IPCA - Peso mensal", axis="columns").plot.barh(figsize=(8, 7)).legend(
     loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.08)
 )
 
 plt.tight_layout()
-plt.savefig('ipca_by_area.png', bbox_to_inches="tight")
-'ipca_by_area.png'
+plt.savefig('imgs/ipca_by_area.png', bbox_inches="tight")
+'imgs/ipca_by_area.png'
+
 #+END_SRC
 
 #+RESULTS:
-[[file:ipca_by_area.png]]
+[[file:imgs/ipca_by_area.png]]
 
-** IPCA by category and month
+** Inflation rate by category and month
 
 #+BEGIN_SRC python :session
 ipca_by_month = ibge.get_series(1419, classifications={315: categories.id.to_list()})
@@ -280,3 +275,20 @@ Geral, grupo, subgrupo, item e subitem                                          
 
 [10 rows x 95 columns]
 #+end_example
+
+#+BEGIN_SRC python :session :results file
+ibge.get_series(
+    1419, classifications={315: categories.id.to_list()}, last_n=1
+).pivot_table(
+    index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
+).drop("IPCA - Peso mensal", axis="columns").plot.barh(figsize=(8, 7)).legend(
+    loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.08)
+)
+
+plt.savefig('imgs/recent_ipca.png', bbox_inches='tight')
+'imgs/recent_ipca.png'
+#+END_SRC
+
+#+RESULTS:
+[[file:imgs/recent_ipca.png]]
+

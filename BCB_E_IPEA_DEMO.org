@@ -20,17 +20,19 @@
 
 #+RESULTS:
 #+begin_example
-  codigo_sgs                                              title periodicidade                            unidade_medida
-0       1178          Taxa de juros - Selic anualizada base 252        diária                         Percentual ao ano
-1       4390             Taxa de juros - Selic acumulada no mês        mensal                         Percentual ao mês
-2       4189  Taxa de juros - Selic acumulada no mês anualiz...        mensal                         Percentual ao ano
-3       4177  Dívida mobiliária - Participação por indexador...        mensal                                Percentual
-4      10634  Dívida mobiliária federal (saldos) - Posição e...        mensal  Milhões de unidades monetárias correntes
-5             Estatísticas dos Sistemas de Liquidação de Tít...        Mensal                                          
-6             Negociação de Títulos Federais no Mercado Secu...                                                        
-7      10613  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
-8      10614  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
-9      10618  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
+  codigo_sgs  ...                            unidade_medida
+0       1178  ...                         Percentual ao ano
+1       4390  ...                         Percentual ao mês
+2       4189  ...                         Percentual ao ano
+3       4177  ...                                Percentual
+4      10634  ...  Milhões de unidades monetárias correntes
+5             ...                                          
+6             ...                                          
+7      10613  ...                                     Meses
+8      10614  ...                                     Meses
+9      10618  ...                                     Meses
+
+[10 rows x 4 columns]
 #+end_example
 
 *** Searching multiple terms
@@ -41,17 +43,19 @@
 
 #+RESULTS:
 #+begin_example
-  codigo_sgs                                              title periodicidade              unidade_medida
-0      24364  Índice de Atividade Econômica do Banco Central...        mensal                      Índice
-1       7414       Vendas do setor supermercadista (Jan/94=100)        mensal                      Índice
-2      11426  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
-3      11427  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
-4      10841  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
-5      10842  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
-6      11428  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
-7      10843  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
-8      10844  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
-9      16122  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+  codigo_sgs  ...              unidade_medida
+0      24364  ...                      Índice
+1       7414  ...                      Índice
+2      11426  ...  Variação percentual mensal
+3      11427  ...  Variação percentual mensal
+4      10841  ...  Variação percentual mensal
+5      10842  ...  Variação percentual mensal
+6      11428  ...  Variação percentual mensal
+7      10843  ...  Variação percentual mensal
+8      10844  ...  Variação percentual mensal
+9      16122  ...  Variação percentual mensal
+
+[10 rows x 4 columns]
 #+end_example
 
 By default, it only returns the first 10 results.
@@ -69,18 +73,18 @@ The argument =rows= limits the search results (defaults to 10) while =skip= cont
 
 #+RESULTS:
 #+begin_example
-   codigo_sgs                                              title periodicidade                                   unidade_medida
-0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-1        1849  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-2        1848  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-3        1850  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-4        1797  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-..        ...                                                ...           ...                                              ...
-15      10813  Taxa de câmbio - Livre - Dólar americano (compra)        diária  Taxa unidade monetária corrente/dólar americano
-16          1  Taxa de câmbio - Livre - Dólar americano (vend...        diária  Taxa unidade monetária corrente/dólar americano
-17      12150  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
-18      12106  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
-19      17620  Insuficiência de direcionamento de crédito - D...        mensal        Milhares de unidades monetárias correntes
+   codigo_sgs  ...                                   unidade_medida
+0       17633  ...        Milhares de unidades monetárias correntes
+1        1849  ...        Milhares de unidades monetárias correntes
+2        1848  ...        Milhares de unidades monetárias correntes
+3        1850  ...        Milhares de unidades monetárias correntes
+4        1797  ...        Milhares de unidades monetárias correntes
+..        ...  ...                                              ...
+15      10813  ...  Taxa unidade monetária corrente/dólar americano
+16          1  ...  Taxa unidade monetária corrente/dólar americano
+17      12150  ...         Milhões de unidades monetárias correntes
+18      12106  ...         Milhões de unidades monetárias correntes
+19      17620  ...        Milhares de unidades monetárias correntes
 
 [20 rows x 4 columns]
 #+end_example
@@ -193,15 +197,10 @@ Another possibily is just calling =dropna()= afterwards.
 #+BEGIN_SRC python :session
   metadados = bcb.get_metadata(11)
 
-  metadados["notes"]
+  metadados
 #+END_SRC
 
 #+RESULTS:
-: Taxa de juros que representa a taxa média ajustada das operações compromissadas com prazo de um dia útil lastreadas com títulos públicos federais custodiados no Sistema Especial de Liquidação e de Custódia (Selic). Divulgação em % a.d.
-: 
-: __Para mais informações sobre a série, clique no link abaixo:__
-: 
-: https://www3.bcb.gov.br/sgspub/consultarmetadados/consultarMetadadosSeries.do?method=consultarMetadadosSeriesInternet&hdOidSerieSelecionada=11
 
 * Instituto de Pesquisa Econômica Aplicada
    :PROPERTIES:
@@ -217,22 +216,20 @@ ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 
 #+RESULTS:
 #+begin_example
-             SERCODIGO                                            SERNOME PERNOME UNINOME         BASNOME
-0         BM12_CRDSD12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
-1       BM12_CRDSDPF12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
-2       BM12_CRDSDPJ12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
-3         BM12_CRLSD12    Operações de crédito - recursos livres - spread  Mensal  (p.p.)  Macroeconômico
-4       BM12_CRLSDPF12  Operações de crédito - recursos livres - sprea...  Mensal  (p.p.)  Macroeconômico
-5       BM12_CRLSDPJ12  Operações de crédito - recursos livres - sprea...  Mensal  (p.p.)  Macroeconômico
-6           BM12_CSD12                      Operações de crédito - spread  Mensal  (p.p.)  Macroeconômico
-7         BM12_CSDPF12      Operações de crédito - spread - pessoa física  Mensal  (p.p.)  Macroeconômico
-8         BM12_CSDPJ12    Operações de crédito - spread - pessoa jurídica  Mensal  (p.p.)  Macroeconômico
-9   VALOR12_GLOBAL1212               Bônus global República (12) - spread  Mensal  (p.p.)  Macroeconômico
-10  VALOR12_GLOBAL2412               Bônus global República (24) - spread  Mensal  (p.p.)  Macroeconômico
-11  VALOR12_GLOBAL2712               Bônus global República (27) - spread  Mensal  (p.p.)  Macroeconômico
-12  VALOR12_GLOBAL4012               Bônus global República (40) - spread  Mensal  (p.p.)  Macroeconômico
-13   VALOR12_GLOBAL912                Bônus global República (9) - spread  Mensal  (p.p.)  Macroeconômico
-14   VALOR12_TJCBOND12                                    C-Bond - spread  Mensal  (p.p.)  Macroeconômico
+             SERCODIGO                                                                  SERNOME PERNOME UNINOME         BASNOME
+0         BM12_CRDSD12                    Operações de crédito - recursos direcionados - spread  Mensal  (p.p.)  Macroeconômico
+1       BM12_CRDSDPF12    Operações de crédito - recursos direcionados - spread - pessoa física  Mensal  (p.p.)  Macroeconômico
+2       BM12_CRDSDPJ12  Operações de crédito - recursos direcionados - spread - pessoa jurídica  Mensal  (p.p.)  Macroeconômico
+3         BM12_CRLSD12                          Operações de crédito - recursos livres - spread  Mensal  (p.p.)  Macroeconômico
+4       BM12_CRLSDPF12          Operações de crédito - recursos livres - spread - pessoa física  Mensal  (p.p.)  Macroeconômico
+..                 ...                                                                      ...     ...     ...             ...
+10  VALOR12_GLOBAL2412                                     Bônus global República (24) - spread  Mensal  (p.p.)  Macroeconômico
+11  VALOR12_GLOBAL2712                                     Bônus global República (27) - spread  Mensal  (p.p.)  Macroeconômico
+12  VALOR12_GLOBAL4012                                     Bônus global República (40) - spread  Mensal  (p.p.)  Macroeconômico
+13   VALOR12_GLOBAL912                                      Bônus global República (9) - spread  Mensal  (p.p.)  Macroeconômico
+14   VALOR12_TJCBOND12                                                          C-Bond - spread  Mensal  (p.p.)  Macroeconômico
+
+[15 rows x 5 columns]
 #+end_example
 
 Another example:
@@ -243,24 +240,20 @@ Another example:
 
 #+RESULTS:
 #+begin_example
-            SERCODIGO                                            SERNOME PERNOME   UNINOME
-0   ANBIMA12_TJCDBP12                     Taxa de juros - CDB pré-fixado  Mensal  (% a.m.)
-1       BM12_TJCDBN12                                Taxa de juros - CDB  Mensal  (% a.m.)
-2        BM12_TJCDI12                         Taxa de juros - CDI / Over  Mensal  (% a.m.)
-3       BM12_TJLCMN12       Taxa de juros - letras de câmbio ao mutuário  Mensal  (% a.m.)
-4       BM12_TJLCTN12        Taxa de juros - letras de câmbio ao tomador  Mensal  (% a.m.)
-5         BM12_TJLP12                               Taxa de juros - TJLP  Mensal  (% a.m.)
-6       BM12_TJOVER12                       Taxa de juros - Over / Selic  Mensal  (% a.m.)
-7       BM12_TJTBAN12                               Taxa de juros - TBAN  Mensal  (% a.m.)
-8        BM12_TJTBC12                                Taxa de juros - TBC  Mensal  (% a.m.)
-9        BM12_TJTBF12                                Taxa de juros - TBF  Mensal  (% a.m.)
-10        BM12_TJTR12                                 Taxa de juros - TR  Mensal  (% a.m.)
-11     DIESP12_GIRO12  Taxa de juros - crédito - capital de giro - fi...  Mensal  (% a.m.)
-12       GM12_TJLFT12  Taxa de juros - Letras do Tesouro Nacional - f...  Mensal  (% a.m.)
-13   IBMEC12_OTNRTJ12  Taxa de juros - obrigações reajustáveis do Tes...  Mensal  (% a.m.)
-14    IBMEC12_TJEMP12  Taxa de juros paga pelo tomador do empréstimo ...  Mensal  (% a.m.)
-15     IBMEC12_TJLM12                Taxa de juros - letras imobiliárias  Mensal  (% a.m.)
-16    IBMEC12_TJTIT12                   Taxa de juros - letras de câmbio  Mensal  (% a.m.)
+            SERCODIGO                                                           SERNOME PERNOME   UNINOME
+0   ANBIMA12_TJCDBP12                                    Taxa de juros - CDB pré-fixado  Mensal  (% a.m.)
+1       BM12_TJCDBN12                                               Taxa de juros - CDB  Mensal  (% a.m.)
+2        BM12_TJCDI12                                        Taxa de juros - CDI / Over  Mensal  (% a.m.)
+3       BM12_TJLCMN12                      Taxa de juros - letras de câmbio ao mutuário  Mensal  (% a.m.)
+4       BM12_TJLCTN12                       Taxa de juros - letras de câmbio ao tomador  Mensal  (% a.m.)
+..                ...                                                               ...     ...       ...
+12       GM12_TJLFT12    Taxa de juros - Letras do Tesouro Nacional - financeiras (LFT)  Mensal  (% a.m.)
+13   IBMEC12_OTNRTJ12       Taxa de juros - obrigações reajustáveis do Tesouro Nacional  Mensal  (% a.m.)
+14    IBMEC12_TJEMP12  Taxa de juros paga pelo tomador do empréstimo por aceite cambial  Mensal  (% a.m.)
+15     IBMEC12_TJLM12                               Taxa de juros - letras imobiliárias  Mensal  (% a.m.)
+16    IBMEC12_TJTIT12                                  Taxa de juros - letras de câmbio  Mensal  (% a.m.)
+
+[17 rows x 4 columns]
 #+end_example
 
 Or even:
@@ -271,16 +264,18 @@ Or even:
 
 #+RESULTS:
 #+begin_example
-         SERCODIGO                                            SERNOME PERNOME   UNINOME                                            FNTNOME
-0     GAC12_CARN12  Commodities - carnes - preço - índice (jan. 20...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-1    GAC12_COMMO12  Commodities - geral - preço - índice (jan. 200...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-2   GAC12_EXPETR12  Commodities - geral (exceto petróleo) - preço ...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-3     GAC12_GRAO12  Commodities - grãos, oleaginosas e frutas - pr...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-4  GAC12_MATPRIM12  Commodities - materias primas - preço - índice...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-5      GAC12_MIN12  Commodities - minerais - preço - índice (jan. ...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-6   GAC12_PETROL12  Commodities - petróleo e derivados - preço - í...  Mensal         -    Instituto de Pesquisa Econômica Aplicada (Ipea)
-7             INPC   INPC - Índice Nacional de  Preços ao  Consumidor  Mensal      None  Instituto Brasileiro de Geografia e Estatístic...
-8    PAN12_IPCAG12     Índice de Preços ao Consumidor Ampliado (IPCA)  Mensal  (% a.a.)  Instituto Brasileiro de Geografia e Estatístic...
+         SERCODIGO  ...                                                                                                            FNTNOME
+0     GAC12_CARN12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+1    GAC12_COMMO12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+2   GAC12_EXPETR12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+3     GAC12_GRAO12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+4  GAC12_MATPRIM12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+5      GAC12_MIN12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+6   GAC12_PETROL12  ...                                                                    Instituto de Pesquisa Econômica Aplicada (Ipea)
+7             INPC  ...                                                              Instituto Brasileiro de Geografia e Estatística(IBGE)
+8    PAN12_IPCAG12  ...  Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC)
+
+[9 rows x 5 columns]
 #+end_example
 
 ** Valid filters
@@ -310,73 +305,42 @@ Or even:
 
 #+RESULTS:
 #+begin_example
-    TEMCODIGO  TEMCODIGO_PAI                  TEMNOME
-0          28            NaN             Agropecuária
-1          23            NaN       Assistência social
-2          10            NaN    Balanço de pagamentos
-3           7            NaN                   Câmbio
-4           5            NaN        Comércio exterior
-5           2            NaN         Consumo e vendas
-6           8            NaN         Contas nacionais
-7          81            NaN         Contas Regionais
-8          24            NaN       Correção monetária
-9          37            NaN               Demografia
-10         54           18.0        Deputado Estadual
-11         55           18.0         Deputado Federal
-12         38            NaN   Desenvolvimento humano
-13         11            NaN   Economia internacional
-14         29            NaN                 Educação
-15         63           18.0               Eleitorado
-16         12            NaN                  Emprego
-17         19            NaN       Estoque de capital
-18          6            NaN        Finanças públicas
-19         39            NaN              Financeiras
-20         32            NaN               Geográfico
-21         56           18.0               Governador
-22         31            NaN                Habitação
-23         79           38.0                 IDHm2000
-24         15            NaN      Indicadores sociais
-25         40            NaN      Mercado de trabalho
-26          3            NaN          Moeda e crédito
-27         27            NaN  Percepção e expectativa
-28         14            NaN                População
-29          9            NaN                   Preços
-30         57           18.0                 Prefeito
-31         58           18.0               Presidente
-32          1            NaN                 Produção
-33         16            NaN                Projeções
-34         30            NaN                    Renda
-35         13            NaN          Salário e renda
-36         41            NaN                    Saúde
-37         20            NaN        Segurança Pública
-38         59           18.0                  Senador
-39         17            NaN   Sinopse macroeconômica
-40         33            NaN               Transporte
-41         26            NaN                   Vendas
-42         60           18.0                 Vereador
+    TEMCODIGO  TEMCODIGO_PAI                 TEMNOME
+0          28            NaN            Agropecuária
+1          23            NaN      Assistência social
+2          10            NaN   Balanço de pagamentos
+3           7            NaN                  Câmbio
+4           5            NaN       Comércio exterior
+..        ...            ...                     ...
+38         59           18.0                 Senador
+39         17            NaN  Sinopse macroeconômica
+40         33            NaN              Transporte
+41         26            NaN                  Vendas
+42         60           18.0                Vereador
+
+[43 rows x 3 columns]
 #+end_example
 
 Supposing now we are interested in the theme of employment (at row 16, code 12), we could search for this kind of series:
 
-#+NAME: 
 #+BEGIN_SRC python :session
   ipea.search(TEMCODIGO=12)
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-            SERCODIGO                                            SERNOME     PERNOME                   UNINOME  TEMCODIGO
-0               ADMIS                     Total da evolução de admissões      Mensal                    Pessoa         12
-1       CAGED12_ADMIS                             Empregados - admissões      Mensal                    Pessoa         12
-2      CAGED12_DESLIG                             Empregados - demissões      Mensal                    Pessoa         12
-3     CAGED12_SALDO12                                 Empregados - saldo      Mensal                    Pessoa         12
-4                CN_C  Despesas com salários nas atividades da indúst...  Quinquenal  R$, a preços do ano 2000         12
-..                ...                                                ...         ...                       ...        ...
-208  SEADE12_TDAGSP12                 Taxa de desemprego - aberto - RMSP      Mensal                       (%)         12
-209  SEADE12_TDODSP12     Taxa de desemprego - oculto - desalento - RMSP      Mensal                       (%)         12
-210  SEADE12_TDOPSP12      Taxa de desemprego - oculto - precário - RMSP      Mensal                       (%)         12
-211  SEADE12_TDOTSP12                 Taxa de desemprego - oculto - RMSP      Mensal                       (%)         12
-212  SEADE12_TDTGSP12                          Taxa de desemprego - RMSP      Mensal                       (%)         12
+            SERCODIGO                                                      SERNOME     PERNOME                   UNINOME  TEMCODIGO
+0               ADMIS                               Total da evolução de admissões      Mensal                    Pessoa         12
+1       CAGED12_ADMIS                                       Empregados - admissões      Mensal                    Pessoa         12
+2      CAGED12_DESLIG                                       Empregados - demissões      Mensal                    Pessoa         12
+3     CAGED12_SALDO12                                           Empregados - saldo      Mensal                    Pessoa         12
+4                CN_C  Despesas com salários nas atividades da indústria extrativa  Quinquenal  R$, a preços do ano 2000         12
+..                ...                                                          ...         ...                       ...        ...
+208  SEADE12_TDAGSP12                           Taxa de desemprego - aberto - RMSP      Mensal                       (%)         12
+209  SEADE12_TDODSP12               Taxa de desemprego - oculto - desalento - RMSP      Mensal                       (%)         12
+210  SEADE12_TDOPSP12                Taxa de desemprego - oculto - precário - RMSP      Mensal                       (%)         12
+211  SEADE12_TDOTSP12                           Taxa de desemprego - oculto - RMSP      Mensal                       (%)         12
+212  SEADE12_TDTGSP12                                    Taxa de desemprego - RMSP      Mensal                       (%)         12
 
 [213 rows x 5 columns]
 #+end_example
@@ -413,45 +377,25 @@ To get metadata you would do the same as in =bcb= module.
 #+BEGIN_SRC python :session :results output
   metadados = ipea.get_metadata("BM12_TJOVER12")
 
-  metadados["SERCOMENTARIO"]
+  metadados
 #+END_SRC
 
 #+RESULTS:
-: 
-: 'Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.'
+#+begin_example
 
-* BCB + IPEA
+values
+SERCODIGO                                                                                                                                                                                                     BM12_TJOVER12
+SERNOME                                                                                                                                                                                        Taxa de juros - Over / Selic
+SERCOMENTARIO       Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos ...
+SERATUALIZACAO                                                                                                                                                                                2019-12-07T05:08:00.993-02:00
+BASNOME                                                                                                                                                                                                      Macroeconômico
+...
+SERMAXDATA                                                                                                                                                                                        2019-12-01T00:00:00-02:00
+FNTEXTURL                                                                                                                                                                                                              None
+SERPROGRAMAGERADOR                                                                                                                                                                                                     None
+SERDECIMAIS                                                                                                                                                                                                               4
+SERQNT                                                                                                                                                                                                                  552
 
-#+BEGIN_SRC python :session
-  from seriesbr import seriesbr
+[29 rows x 1 columns]
+#+end_example
 
-  dados = seriesbr.get_series(
-      {
-          "spread": 20786,
-          "pib_mensal": 4380,
-          "igp": "PAN12_IGPDIG12",
-          "inadimplência": "BM12_CRLIN12"
-      },
-      join="inner",
-  )
-#+END_SRC
-
-#+RESULTS:
-
-#+BEGIN_SRC python :session :results file
-  import matplotlib.pyplot as plt
-  import matplotlib
-
-  matplotlib.use('Agg')
-  matplotlib.style.use('seaborn-deep')
-
-  dados.plot(subplots=True, layout=(2, 2), figsize=(7, 5))
-  plt.gcf().tight_layout()
-  plt.suptitle("Séries do IPEADATA e do BCB")
-  plt.subplots_adjust(top=.9)
-  plt.savefig('example.png')
-  'example.png'
-#+END_SRC
-
-#+RESULTS:
-[[file:example.png]]
