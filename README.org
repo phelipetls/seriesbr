@@ -45,12 +45,13 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 
 ** Usage
 
-In the following links there are demonstrations files on how to use the package:
+In the following links there are demonstrations files on how to use each module:
 
-- [[https://github.com/phelipetls/seriesbr/blob/master/BCB_E_IPEA_DEMO.org][BCB and IPEA]]
-- [[https://github.com/phelipetls/seriesbr/blob/master/IBGE_DEMO.org][IBGE]]
+- [[https://github.com/phelipetls/seriesbr/blob/master/BCB.org][BCB]]
+- [[https://github.com/phelipetls/seriesbr/blob/master/IPEA.org][IPEA]]
+- [[https://github.com/phelipetls/seriesbr/blob/master/IBGE.org][IBGE]]
 
-For a quick example, check out function below, that allows you to get
+For a quick example, check out the function below, which allows you to get
 values from both IPEA and BCB at the same call.
 
 #+BEGIN_SRC python :session

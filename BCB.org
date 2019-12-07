@@ -1,0 +1,215 @@
+* Banco Central do Brasil
+   :PROPERTIES:
+   :CUSTOM_ID: banco-central-do-brasil
+   :header-args:python: :exports both
+   :END:
+** Searching
+*** Searching for brazilian interest rate
+
+#+BEGIN_SRC python :session
+  import pandas as pd
+  pd.set_option('display.max_rows', 10)
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC python :session :results value
+  from seriesbr import bcb
+
+  bcb.search("Selic")
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+  codigo_sgs                                              title periodicidade                            unidade_medida
+0       1178          Taxa de juros - Selic anualizada base 252        diária                         Percentual ao ano
+1       4390             Taxa de juros - Selic acumulada no mês        mensal                         Percentual ao mês
+2       4189  Taxa de juros - Selic acumulada no mês anualiz...        mensal                         Percentual ao ano
+3       4177  Dívida mobiliária - Participação por indexador...        mensal                                Percentual
+4      10634  Dívida mobiliária federal (saldos) - Posição e...        mensal  Milhões de unidades monetárias correntes
+5             Estatísticas dos Sistemas de Liquidação de Tít...        Mensal                                          
+6             Negociação de Títulos Federais no Mercado Secu...                                                        
+7      10613  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
+8      10614  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
+9      10618  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
+#+end_example
+
+*** Searching multiple terms
+
+#+BEGIN_SRC python :session
+  bcb.search("Atividade", "Econômica", "Índice")
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+  codigo_sgs                                              title periodicidade              unidade_medida
+0      24364  Índice de Atividade Econômica do Banco Central...        mensal                      Índice
+1       7414       Vendas do setor supermercadista (Jan/94=100)        mensal                      Índice
+2      11426  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+3      11427  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+4      10841  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+5      10842  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+6      11428  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+7      10843  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+8      10844  Índice de Preços ao Consumidor-Amplo (IPCA) - ...        mensal  Variação percentual mensal
+9      16122  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
+#+end_example
+
+By default, it only returns the first 10 results. If you didn't find what you're looking for,
+you can specify the number of returned results with =rows= and how many results to skip with =skip=.
+
+*** Controlling the number of search results
+
+The argument =rows= limits the search results (defaults to 10) while =skip= controls where to start showing.
+
+#+BEGIN_SRC python :session
+  bcb.search("Monetária", rows=20, skip=1)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+   codigo_sgs                                              title periodicidade                                   unidade_medida
+0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+1        1849  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+2        1848  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+3        1850  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+4        1797  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
+..        ...                                                ...           ...                                              ...
+15      10813  Taxa de câmbio - Livre - Dólar americano (compra)        diária  Taxa unidade monetária corrente/dólar americano
+16          1  Taxa de câmbio - Livre - Dólar americano (vend...        diária  Taxa unidade monetária corrente/dólar americano
+17      12150  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
+18      12106  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
+19      17620  Insuficiência de direcionamento de crédito - D...        mensal        Milhares de unidades monetárias correntes
+
+[20 rows x 4 columns]
+#+end_example
+
+** Retrieving data
+*** Getting a single series values
+
+#+BEGIN_SRC python :session
+  bcb.get_series({"Spread": 20786}) # or just 20786
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+            Spread
+date              
+2011-03-01   26.22
+2011-04-01   27.01
+2011-05-01   26.84
+2011-06-01   26.72
+2011-07-01   26.91
+...            ...
+2019-06-01   31.43
+2019-07-01   31.63
+2019-08-01   31.57
+2019-09-01   30.84
+2019-10-01   30.35
+
+[104 rows x 1 columns]
+#+end_example
+
+*** Getting multiple series values and filtering by period
+
+#+BEGIN_SRC python :session
+  bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+            Spread  Selic  PIB_Mensal
+date                                 
+2011-01-01     NaN  10.85    333330.5
+2011-02-01     NaN  11.17    335117.5
+2011-03-01   26.22  11.62    348082.9
+2011-04-01   27.01  11.74    349255.0
+2011-05-01   26.84  11.92    366411.2
+...            ...    ...         ...
+2012-03-01   27.42   9.82    393868.0
+2012-04-01   26.84   9.35    382581.2
+2012-05-01   25.20   8.87    401072.7
+2012-06-01   24.42   8.39    399470.5
+2012-07-01   24.17   8.07    415385.2
+
+[19 rows x 3 columns]
+#+end_example
+
+Or, if you don't mind the column names:
+
+#+BEGIN_SRC python :session
+  bcb.get_series(20786, 4189, 4380)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+            20786  4189      4380 
+date                              
+1986-06-01    NaN  18.23       NaN
+1986-07-01    NaN  23.51       NaN
+1986-08-01    NaN  35.55       NaN
+1986-09-01    NaN  39.39       NaN
+1986-10-01    NaN  23.65       NaN
+...           ...    ...       ...
+2019-08-01  31.57   5.90  603944.8
+2019-09-01  30.84   5.71  566361.6
+2019-10-01  30.35   5.38  613627.6
+2019-11-01    NaN   4.90       NaN
+2019-12-01    NaN   4.90       NaN
+
+[403 rows x 3 columns]
+#+end_example
+
+*** Getting rid of NaN
+
+#+BEGIN_SRC python :session
+  bcb.get_series(20786, 4189, 4380, join="inner")
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+            20786  4189      4380 
+date                              
+2011-03-01  26.22  11.62  348082.9
+2011-04-01  27.01  11.74  349255.0
+2011-05-01  26.84  11.92  366411.2
+2011-06-01  26.72  12.10  371046.4
+2011-07-01  26.91  12.25  373333.7
+...           ...    ...       ...
+2019-06-01  31.43   6.40  594163.0
+2019-07-01  31.63   6.40  619395.2
+2019-08-01  31.57   5.90  603944.8
+2019-09-01  30.84   5.71  566361.6
+2019-10-01  30.35   5.38  613627.6
+
+[104 rows x 3 columns]
+#+end_example
+
+Another possibily is just calling =dropna()= afterwards.
+
+** Getting metadata
+
+#+BEGIN_SRC python :session
+  metadados = bcb.get_metadata(11)
+
+  metadados
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+                                                                    values
+referencias                                                               
+license_title            Licença Aberta para Bases de Dados (ODbL) do O...
+maintainer               Banco Central do Brasil/Departamento de Operaç...
+relationships_as_object                                                 []
+vcge                     Sistema financeiro [http://vocab.e.gov.br/2011...
+...                                                                    ...
+license_url                http://www.opendefinition.org/licenses/odc-odbl
+frequencia                                                                
+title                                                Taxa de juros - Selic
+revision_id                           67db17b5-70d3-4f23-af39-afa50ee1b451
+fim_periodo                                                               
+
+[43 rows x 1 columns]
+#+end_example
+
