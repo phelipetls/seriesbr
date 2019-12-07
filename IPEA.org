@@ -1,8 +1,5 @@
+#+PROPERTY: :header-args:python: :exports both
 * Instituto de Pesquisa Econômica Aplicada
-   :PROPERTIES:
-   :CUSTOM_ID: instituto-de-pesquisa-econômica-aplicada
-   :header-args:python: :exports both
-   :END:
 ** Searching in the database
 
 #+BEGIN_SRC python :session

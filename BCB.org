@@ -1,8 +1,5 @@
+#+PROPERTY: :header-args:python: :exports both
 * Banco Central do Brasil
-   :PROPERTIES:
-   :CUSTOM_ID: banco-central-do-brasil
-   :header-args:python: :exports both
-   :END:
 ** Searching
 *** Searching for brazilian interest rate
 
