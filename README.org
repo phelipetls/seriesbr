@@ -68,6 +68,8 @@ values from both IPEA and BCB at the same call.
   )
 #+END_SRC
 
+#+RESULTS:
+
 
 #+BEGIN_SRC python :session :results file
   import matplotlib.pyplot as plt
@@ -83,7 +85,7 @@ values from both IPEA and BCB at the same call.
   'imgs/example.png'
 #+END_SRC
 
-#+RESULTS
+#+RESULTS:
 [[file:imgs/example.png]]
 
 Though desirable, it would be hard to do the same thing for IBGE.
