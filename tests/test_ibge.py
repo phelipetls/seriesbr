@@ -21,6 +21,11 @@ def mocked_today_date():
     return datetime.datetime(2019, 12, 2)
 
 
+def mocked_list_regions(kind_of_region, search=None, where="nome"):
+    url = f"https://servicodados.ibge.gov.br/api/v1/localidades/{kind_of_region}"
+    return url
+
+
 @patch('seriesbr.ibge.parse_ibge_response', mocked_parse_response)
 @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
 class IPEAtest(unittest.TestCase):
@@ -104,6 +109,33 @@ class IPEAtest(unittest.TestCase):
         correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201912/variaveis/63?classificacao=315[7169,7170]&localidades=N7[all]|BR&view=flat"
         test = ibge.get_series(1419, variables=63, start="07-2017", mesoregion="all", brazil="yes", classifications={315: [7169, 7170]})
         self.assertEqual(test, correct)
+
+
+    def test_crazy_date(self):
+        with self.assertRaises(ValueError):
+            ibge.get_series(1419, start="asfhajksfsa")
+            ibge.get_series(1419, start="002562345645")
+            ibge.get_series(1419, start="###$%#RG")
+
+
+@patch('seriesbr.ibge.list_regions', mocked_list_regions)
+class TestListsFunctions(unittest.TestCase):
+
+    def test_list_cities(self):
+        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
+        self.assertEqual(ibge.list_cities(), correct)
+
+    def test_list_regions(self):
+        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
+        self.assertEqual(ibge.list_macroregions(), correct)
+
+    def test_list_mesoregions(self):
+        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/mesorregioes"
+        self.assertEqual(ibge.list_mesoregions(), correct)
+
+    def test_list_microregions(self):
+        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes"
+        self.assertEqual(ibge.list_microregions(), correct)
 
 
 if __name__ == "__main__":
