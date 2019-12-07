@@ -140,4 +140,4 @@ def list_fields():
     """
     Pretty print dictionary of metadata with their description as values
     """
-    pprint(ipea_metadata_list)
+    return DataFrame.from_dict(ipea_metadata_list, orient='index', columns=["Descrição"])
