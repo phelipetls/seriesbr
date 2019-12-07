@@ -1,5 +1,5 @@
 #+OPTIONS: toc:nil
-#+PROPERTY: header-args:python :exports both
+#+PROPERTY: :exports both
 * SeriesBR: A Python package to get brazilian economic time series into a DataFrame
   :PROPERTIES:
   :CUSTOM_ID: seriesbr-a-python :session-package-to-get-brazilian-economic-time-series
@@ -83,6 +83,7 @@ values from both IPEA and BCB at the same call.
   'imgs/example.png'
 #+END_SRC
 
+#+RESULTS
 [[file:imgs/example.png]]
 
 Though desirable, it would be hard to do the same thing for IBGE.
