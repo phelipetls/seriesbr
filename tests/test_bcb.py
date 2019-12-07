@@ -17,6 +17,10 @@ def mocked_today_date():
     return datetime.datetime(2019, 12, 2)
 
 
+def mocked_search_results(url):
+    return url
+
+
 @patch('seriesbr.bcb.parse_bcb_response', mocked_parse_response)
 @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
 class BCBtest(unittest.TestCase):
@@ -65,8 +69,8 @@ class BCBtest(unittest.TestCase):
 
     ## Testing start and end dates arguments
 
-    def test_url_start_and_end_date_month_and_year(self):
-        correct = self.baseurl + "&dataInicial=01/01/2013&dataFinal=31/09/2014"
+    def test_url_start_and_end_date_year_only(self):
+        correct = self.baseurl + "&dataInicial=01/01/2013&dataFinal=30/09/2014"
         self.assertEqual(bcb.get_serie(11, start="2013", end="09/2014"), correct)
         self.assertEqual(bcb.get_serie(11, start="2013", end="09-2014"), correct)
         self.assertEqual(bcb.get_serie(11, start="2013", end="092014"), correct)
@@ -98,5 +102,23 @@ class BCBtest(unittest.TestCase):
             bcb.get_serie(11, start="###$%#RG")
 
 
+@patch('seriesbr.bcb.return_search_results_bcb', mocked_search_results)
+class TestBCBSearch(unittest.TestCase):
+
+    def test_search(self):
+        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc"
+        self.assertEqual(bcb.search("spread"), correct)
+
+    def test_search_with_more_args(self):
+        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
+        self.assertEqual(bcb.search("spread", "mensal", "livre"), correct)
+
+    def test_search_with_more_args_and_rows(self):
+        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
+        self.assertEqual(bcb.search("spread", "mensal", "livre", rows=30, skip=5), correct)
+
+
 if __name__ == "__main__":
     unittest.main()
+
+# vi: nowrap
