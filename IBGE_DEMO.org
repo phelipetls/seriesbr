@@ -104,19 +104,48 @@ ipca
 
 #+RESULTS:
 #+begin_example
-           Nível Territorial  Brasil           Mês                Variável Geral, grupo, subgrupo, item e subitem Unidade de Medida    Valor
-Data                                                                                                                                        
-2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                           Índice geral                 %   0.1000
-2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                1.Alimentação e bebidas                 %   0.0500
-2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                            2.Habitação                 %  -0.6100
-2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                3.Artigos de residência                 %  -0.0900
-2019-10-01            Brasil  Brasil  outubro 2019  IPCA - Variação mensal                            4.Vestuário                 %   0.6300
-...                      ...     ...           ...                     ...                                    ...               ...      ...
-2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                          5.Transportes                 %  18.1478
-2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal            6.Saúde e cuidados pessoais                 %  12.2823
-2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                    7.Despesas pessoais                 %  10.8677
-2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                             8.Educação                 %   5.0180
-2019-10-01            Brasil  Brasil  outubro 2019      IPCA - Peso mensal                          9.Comunicação                 %   3.4434
+           Nível Territorial  Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida     Valor
+Data                                                ...                                                                   
+2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    0.1000
+2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    0.0500
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %   -0.6100
+2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %   -0.0900
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    0.6300
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    0.4500
+2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    0.4000
+2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    0.2000
+2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    0.0300
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %   -0.0100
+2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    2.6000
+2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    2.1500
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %    4.0200
+2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    0.4800
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    0.3900
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    1.7000
+2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    4.7500
+2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    2.4600
+2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    4.4600
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    0.4200
+2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    2.5400
+2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    3.0100
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %    3.1300
+2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    1.5300
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    1.1000
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    0.4000
+2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    4.3400
+2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    3.1300
+2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    4.7200
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    0.3500
+2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %  100.0000
+2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %   24.5278
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %   16.1701
+2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    3.9050
+2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    5.6379
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %   18.1478
+2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %   12.2823
+2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %   10.8677
+2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    5.0180
+2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    3.4434
 
 [40 rows x 7 columns]
 #+end_example
@@ -218,7 +247,40 @@ Data                                                                          ..
 2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    3.21
 2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %  100.00
 2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    0.04
-...                          ...                           ...           ...  ...                                    ...               ...     ...
+2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    3.45
+2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    3.45
+2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %   -0.07
+2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %    2.58
+2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %    2.65
+2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %    0.08
+2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %    2.40
+2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %    2.66
+2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %    0.17
+2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %    2.66
+2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %    2.57
+2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %    0.29
+2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %    2.02
+2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %    1.71
+2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %    0.27
+2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %    2.64
+2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %    3.03
+2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %    0.14
+2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %    2.91
+2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %    2.63
+2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %   -0.12
+2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %    1.99
+2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %    1.55
+2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %  100.00
+2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %   -0.01
+2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %    2.42
+2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %    2.25
 2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %  100.00
 2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    0.10
 2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    2.60
@@ -228,13 +290,13 @@ Data                                                                          ..
 [44 rows x 7 columns]
 #+end_example
 
-But really, you could pass for the =brazil= keyword any value that would be evaluated
+But really, you could pass to the =brazil= keyword any value that would be evaluated
 as =True= in Python.
 
 #+BEGIN_SRC python :session :results file
 
 ipca_by_area.pivot_table(
-    index="Região Metropolitana", columns="Variável", values="Valor"
+    index="Região Metropolitana e Brasil", columns="Variável", values="Valor"
 ).drop("IPCA - Peso mensal", axis="columns").plot.barh(figsize=(8, 7)).legend(
     loc="upper center", ncol=3, bbox_to_anchor=(0.5, 1.08)
 )
