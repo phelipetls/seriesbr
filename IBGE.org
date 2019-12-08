@@ -1,4 +1,3 @@
-#+PROPERTY: :header-args:python: :exports both
 * Instituto Brasileiro de Geografia e Estatística
 
 IBGE's database is very complex and allows you to get data for specific
@@ -18,7 +17,7 @@ october 2019 for various kinds of products, as it was done [[https://sidra.ibge.
 To stay consistent with the other modules, you can search for aggregates with the =search= function.
 It takes an arbitrary number of regexes.
 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 import pandas as pd
 from seriesbr import ibge
 
@@ -27,6 +26,7 @@ pd.set_option('max_colwidth', 200)
 ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 #+END_SRC
 
+#+RESULTS:
 :         id                                                                                                                                                                                           nome
 : 2231  1100      INPC - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)
 : 2244  1419      IPCA - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)
@@ -34,10 +34,11 @@ ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 
 ** Searching for variables
 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 ibge.list_variables(1419)
 #+END_SRC
 
+#+RESULTS:
 :      id                               variavel unidade
 : 0    63                 IPCA - Variação mensal       %
 : 1    69       IPCA - Variação acumulada no ano       %
@@ -54,7 +55,7 @@ the name of the categories, but you can change this with the argument =where=.
 
 So to search for the ones used in the IBGE's site we could do:
 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 categories = ibge.list_classifications(
     1419,
     "Índice geral",
@@ -72,6 +73,7 @@ categories = ibge.list_classifications(
 categories
 #+END_SRC
 
+#+RESULTS:
 #+begin_example
        id                         nome unidade  nivel  classificacao_id                      classificacao_nome
 0    7169                 Índice geral    None     -1               315  Geral, grupo, subgrupo, item e subitem
@@ -94,12 +96,13 @@ are a classification id and values the categories' id.
 Alternatively, you can just pass an int/str or a list of classifications,
 in which case all categories of the given classifications will be returned.
 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 ipca = ibge.get_series(1419, start="10-2019", end="10-2019", classifications={315: categories.id.to_list()})
 
 ipca
 #+END_SRC
 
+#+RESULTS:
 #+begin_example
            Nível Territorial  Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida     Valor
 Data                                                ...                                                                   
@@ -150,12 +153,13 @@ Data                                                ...
 ** Inflation rate by products/services
 
 #+NAME: 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 
 ipca.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor")
 
 #+END_SRC
 
+#+RESULTS:
 #+begin_example
 Variável                                IPCA - Peso mensal  ...  IPCA - Variação mensal
 Geral, grupo, subgrupo, item e subitem                      ...                        
@@ -175,7 +179,7 @@ Geral, grupo, subgrupo, item e subitem                      ...
 
 Now let's visualize this.
 
-#+BEGIN_SRC python :session :results file
+#+BEGIN_SRC python :session :results file :exports both
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -193,11 +197,12 @@ plt.savefig('imgs/ipca.png', bbox_inches="tight")
 'imgs/ipca.png'
 #+END_SRC
 
+#+RESULTS:
 [[file:imgs/ipca.png]]
 
 ** Weight of each product in the inflation rate
 
-#+BEGIN_SRC python :session :results file
+#+BEGIN_SRC python :session :results file :exports both
 ipca.pivot_table(
     index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
 ).loc[:, ["IPCA - Peso mensal"]].sort_values("IPCA - Peso mensal").plot(kind="barh")
@@ -208,6 +213,7 @@ plt.savefig('imgs/peso_mensal.png')
 'imgs/peso_mensal.png'
 #+END_SRC
 
+#+RESULTS:
 [[file:imgs/peso_mensal.png]]
 
 ** Inflation rate by metropolitan areas
@@ -226,7 +232,7 @@ just for these.
 By default, it will get data for the whole country. If you want data for other regions and also
 for Brazil as a whole, you can do the following:
 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 
 ipca_by_area = ibge.get_series(1419, mesoregion="all", brazil="yes", start="10-2019", end="10-2019")
 
@@ -234,6 +240,7 @@ ipca_by_area
 
 #+END_SRC
 
+#+RESULTS:
 #+begin_example
                Nível Territorial Região Metropolitana e Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida   Valor
 Data                                                                          ...                                                                 
@@ -288,7 +295,7 @@ Data                                                                          ..
 But really, you could pass to the =brazil= keyword any value that would be evaluated
 as =True= in Python.
 
-#+BEGIN_SRC python :session :results file
+#+BEGIN_SRC python :session :results file :exports both
 
 ipca_by_area.pivot_table(
     index="Região Metropolitana e Brasil", columns="Variável", values="Valor"
@@ -302,16 +309,18 @@ plt.savefig('imgs/ipca_by_area.png', bbox_inches="tight")
 
 #+END_SRC
 
+#+RESULTS:
 [[file:imgs/ipca_by_area.png]]
 
 ** Inflation rate by product and month
 
-#+BEGIN_SRC python :session
+#+BEGIN_SRC python :session :exports both
 ipca_by_month = ibge.get_series(1419, classifications={315: categories.id.to_list()})
 
 ipca_by_month.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Mês", values="Valor")
 #+END_SRC
 
+#+RESULTS:
 #+begin_example
 Mês                                     abril 2012  abril 2013  abril 2014  abril 2015  ...  setembro 2016  setembro 2017  setembro 2018  setembro 2019
 Geral, grupo, subgrupo, item e subitem                                                  ...                                                            
@@ -331,7 +340,7 @@ Geral, grupo, subgrupo, item e subitem                                          
 
 ** Most recent inflation rate (november/19) by product
 
-#+BEGIN_SRC python :session :results file
+#+BEGIN_SRC python :session :results file :exports both
 ibge.get_series(
     1419, classifications={315: categories.id.to_list()}, last_n=1
 ).pivot_table(
@@ -344,4 +353,6 @@ plt.savefig('imgs/recent_ipca.png', bbox_inches='tight')
 'imgs/recent_ipca.png'
 #+END_SRC
 
+#+RESULTS:
 [[file:imgs/recent_ipca.png]]
+
