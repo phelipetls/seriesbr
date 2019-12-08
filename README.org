@@ -5,6 +5,7 @@
 
 [[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
 [[https://badge.fury.io/py/seriesbr][file:https://badge.fury.io/py/seriesbr.svg]]
+[[https://codecov.io/gh/codecov/seriesbr][file:https://codecov.io/gh/codecov/seriesbr/branch/master/graph/badge.svg]]
 
  #+TOC: headlines 2
 
@@ -100,6 +101,10 @@ feel free to open an issue / contribute by opening a pull request!
 
 [[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][MIT]]
 
+** Development
+
+- Improve code coverage (in order to not depend on the external servers, the tests use [[https://docs.python.org/3/library/unittest.mock.html][mock]] very heavily. This, for me, made it difficult to increase code coverage).
+
 ** Support
 
-If you find it useful, give this repo a star :)
+If you find it useful, consider giving this repo a star :)
