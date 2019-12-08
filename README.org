@@ -5,7 +5,7 @@
 
 [[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
 [[https://badge.fury.io/py/seriesbr][file:https://badge.fury.io/py/seriesbr.svg]]
-[[https://codecov.io/gh/codecov/seriesbr][file:https://codecov.io/gh/codecov/seriesbr/branch/master/graph/badge.svg]]
+[[https://codecov.io/gh/phelipetls/seriesbr][file:https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg]]
 
  #+TOC: headlines 2
 
