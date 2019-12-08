@@ -41,7 +41,7 @@ def isiterable(something):
     return True
 
 
-def do_search(df, search, where, prefix=""):
+def do_search(df, search, where):
     """
     Helper function to search for regex
     in a given column
