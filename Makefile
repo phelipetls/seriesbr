@@ -13,3 +13,6 @@ lint:
 
 clean:
 	rm -rf build dist .egg *.egg-info
+
+cov:
+	pytest --cov=seriesbr --cov-report term-missing
