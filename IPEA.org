@@ -83,9 +83,9 @@ Or even:
 | PAICODIGO      | Location code                                  |
 | SERATUALIZACAO | Last updated                                   |
 | MULNOME        | Multiplicative factor                          |
-| SERCOMENTARIO  | Notes/comments, in portuguese.                 |
-| FNTNOME        | Source's name, in portuguese.                  |
-| FNTSIGLA       | Source's initials.                             |
+| SERCOMENTARIO  | Notes/comments, in portuguese                  |
+| FNTNOME        | Source's name, in portuguese                   |
+| FNTSIGLA       | Source's initials                              |
 | FNTURL         | Source's url                                   |
 | SERSTATUS      | Still being updated (1), not being updated (0) |
 | SERNUMERICA    | Numeric (1), alphanumeric (0)                  |
