@@ -3,8 +3,8 @@
   :CUSTOM_ID: seriesbr-a-python :session-package-to-get-brazilian-economic-time-series
   :END:
 
+[[https://pypi.org/project/seriesbr/][file:https://img.shields.io/pypi/v/seriesbr.svg]]
 [[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
-[[https://pypi.python.org/pypi/seriesbr][file:https://img.shields.io/pypi/v/seriesbr.svg]]
 [[https://codecov.io/gh/phelipetls/seriesbr][file:https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg]]
 
  #+TOC: headlines 2
