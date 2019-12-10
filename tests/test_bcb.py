@@ -2,11 +2,17 @@ import os
 import sys
 import unittest
 import datetime
+import pandas
+import json
+import pytest
+
+from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seriesbr import bcb
+from seriesbr.helpers.response import json_to_dataframe
 
 
 def mocked_parse_response(url, code, name):
@@ -19,6 +25,14 @@ def mocked_today_date():
 
 def mocked_search_results(url):
     return url
+
+
+@pytest.fixture
+def load_sample_json():
+    json_path = Path(__file__).resolve().parent / "sample_jsons" / "bcb_json"
+    with json_path.open() as json_file:
+        sample_json = json.load(json_file)
+    return sample_json
 
 
 @patch('seriesbr.bcb.parse_bcb_response', mocked_parse_response)
@@ -42,12 +56,6 @@ class BCBtest(unittest.TestCase):
         self.assertEqual(bcb.get_serie(11, start="07-2013"), correct)
         self.assertEqual(bcb.get_serie(11, start="07/2013"), correct)
         self.assertEqual(bcb.get_serie(11, start="072013"), correct)
-
-    def test_url_start_date_month_and_year(self):
-        correct = self.baseurl + "&dataInicial=01/07/2013&dataFinal=02/12/2019"
-        self.assertEqual(bcb.get_serie(11, start="01-07-2013"), correct)
-        self.assertEqual(bcb.get_serie(11, start="01/07/2013"), correct)
-        self.assertEqual(bcb.get_serie(11, start="01072013"), correct)
 
     ## Testing end dates argument
 
@@ -116,6 +124,12 @@ class TestBCBSearch(unittest.TestCase):
     def test_search_with_more_args_and_rows(self):
         correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
         self.assertEqual(bcb.search("spread", "mensal", "livre", rows=30, skip=5), correct)
+
+
+def test_json_parser(load_sample_json):
+    json = load_sample_json
+    df = json_to_dataframe(json, 11, "Selic", "data", "valor", "%d/%m/%Y")
+    assert isinstance(df, pandas.DataFrame)
 
 
 if __name__ == "__main__":
