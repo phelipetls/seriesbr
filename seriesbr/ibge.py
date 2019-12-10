@@ -114,7 +114,7 @@ def search(*search, where="nome"):
     -------
     A DataFrame with metadata about the aggregates.
     """
-    json = requests.get("https://servicodados.ibge.gov.br/api/v3/agregados").json()
+    json = get_json("https://servicodados.ibge.gov.br/api/v3/agregados")
     df = pd.io.json.json_normalize(json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_")
     if search:
         return do_search(df, search, where)
