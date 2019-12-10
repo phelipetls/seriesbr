@@ -51,8 +51,7 @@ def parse_dates(start, end, api):
 
 def api_date_format_of(date, api):
     if api == "ipeadata":
-        utc_offset = get_utc_offset()
-        return date.strftime("%Y-%m-%dT00:00:00") + utc_offset  # 01-12-2010T00:00:00-03:00
+        return date.strftime("%Y-%m-%dT00:00:00") + "-00:00"  # 01-12-2010T00:00:00-00:00
     if api == "bcb":
         return date.strftime("%d/%m/%Y")  # 01/12/2010
     if api == "ibge":
@@ -68,10 +67,6 @@ def last_day_of_month(date):
     """
     next_month = date.replace(day=28) + datetime.timedelta(days=4)
     return (next_month - datetime.timedelta(days=next_month.day)).day
-
-
-def get_utc_offset():
-    return datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat()[-6:]
 
 
 def very_old_date():
