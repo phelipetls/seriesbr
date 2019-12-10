@@ -35,6 +35,10 @@ def convert_to_datetime(date_string, date_fmt):
 def parse_ibge_response(url):
     json = get_json(url)
     assert len(json) > 1, "This request produced no value."
+    return ibge_json_to_dataframe(json)
+
+
+def ibge_json_to_dataframe(json):
     df = pd.DataFrame(json[1:])
     date_key = json[0]["D2C"]
     df.columns = json[0].values()
