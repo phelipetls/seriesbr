@@ -52,5 +52,6 @@ def ibge_json_to_dataframe(json):
     df = df.drop(
         [c for c in df.columns if c.endswith("(Código)")] + ["Mês", "Brasil"],
         axis="columns",
+        errors="ignore"
     )
     return df
