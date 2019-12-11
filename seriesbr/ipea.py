@@ -5,10 +5,7 @@ from .helpers.response import parse_ipea_response
 from .helpers.searching import return_search_results_ipea
 from .helpers.request import get_json
 from .helpers.dates import parse_dates
-from .helpers.url import (
-    ipea_make_select_query,
-    ipea_make_filter_query,
-)
+from .helpers.url import ipea_make_select_query, ipea_make_filter_query
 
 
 def get_serie(code, name=None, start=None, end=None):
