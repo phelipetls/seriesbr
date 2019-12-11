@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1100015,
+        "nome": "Alta Floresta D'Oeste",
+        "microrregiao": {
+            "id": 11006,
+            "nome": "Cacoal",
+            "mesorregiao": {
+                "id": 1102,
+                "nome": "Leste Rondoniense",
+                "UF": {
+                    "id": 11,
+                    "sigla": "RO",
+                    "nome": "Rondônia",
+                    "regiao": {
+                        "id": 1,
+                        "sigla": "N",
+                        "nome": "Norte"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "id": 1100023,
+        "nome": "Ariquemes",
+        "microrregiao": {
+            "id": 11003,
+            "nome": "Ariquemes",
+            "mesorregiao": {
+                "id": 1102,
+                "nome": "Leste Rondoniense",
+                "UF": {
+                    "id": 11,
+                    "sigla": "RO",
+                    "nome": "Rondônia",
+                    "regiao": {
+                        "id": 1,
+                        "sigla": "N",
+                        "nome": "Norte"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "id": 1100031,
+        "nome": "Cabixi",
+        "microrregiao": {
+            "id": 11008,
+            "nome": "Colorado do Oeste",
+            "mesorregiao": {
+                "id": 1102,
+                "nome": "Leste Rondoniense",
+                "UF": {
+                    "id": 11,
+                    "sigla": "RO",
+                    "nome": "Rondônia",
+                    "regiao": {
+                        "id": 1,
+                        "sigla": "N",
+                        "nome": "Norte"
+                    }
+                }
+            }
+        }
+    }
+]
