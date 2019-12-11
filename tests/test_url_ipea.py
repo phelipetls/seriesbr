@@ -2,17 +2,12 @@ import os
 import sys
 import unittest
 import datetime
-import json
-import pandas
-import pytest
 
-from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seriesbr import ipea
-from seriesbr.helpers.response import json_to_dataframe
 
 
 def mocked_parse_response(url, code, name):
@@ -21,10 +16,6 @@ def mocked_parse_response(url, code, name):
 
 def mocked_today_date():
     return datetime.datetime(2019, 12, 2)
-
-
-def mocked_search_results(url):
-    return url
 
 
 def mocked_get_metadata(cod):
@@ -38,19 +29,6 @@ def mocked_list_metadata(resource_path):
     baseurl = "http://www.ipeadata.gov.br/api/odata4/"
     url = f"{baseurl}{resource_path}"
     return url
-
-
-def mocked_ipea_search_only_filter(SERNOME="", **fields):
-    filter_query = ipea.ipea_make_filter_query(SERNOME, fields)
-    return filter_query
-
-
-@pytest.fixture
-def load_sample_json():
-    json_path = Path(__file__).resolve().parent / "sample_jsons" / "ipea_json"
-    with json_path.open() as json_file:
-        sample_json = json.load(json_file)
-    return sample_json
 
 
 @patch('seriesbr.ipea.parse_ipea_response', mocked_parse_response)
@@ -133,22 +111,6 @@ class IPEAtest(unittest.TestCase):
     def test_list_themes(self):
         self.assertEqual(ipea.list_themes(), "http://www.ipeadata.gov.br/api/odata4/Temas")
 
-    @patch('seriesbr.ipea.search', mocked_ipea_search_only_filter)
-    def test_search_filters(self):
-        self.assertEqual(ipea.search(SERNOME="Spread"), "&$filter=contains(SERNOME,'Spread')")
-        self.assertEqual(ipea.search(SERNOME="Spread", TEMCODIGO=12), "&$filter=contains(SERNOME,'Spread') and TEMCODIGO eq 12")
-        self.assertEqual(ipea.search(SERNOME="Spread", TEMCODIGO=12, FNTNOME="IBGE"), "&$filter=contains(SERNOME,'Spread') and TEMCODIGO eq 12 and contains(FNTNOME,'IBGE')")
-        self.assertEqual(ipea.search(TEMCODIGO=12, FNTNOME="IBGE"), "&$filter=TEMCODIGO eq 12 and contains(FNTNOME,'IBGE')")
-        self.assertEqual(ipea.search(TEMCODIGO=12, FNTNOME="IBGE", SERNUMERICA=1), "&$filter=TEMCODIGO eq 12 and contains(FNTNOME,'IBGE') and SERNUMERICA eq 1")
-        self.assertEqual(ipea.search(SERNOME="Selic", TEMCODIGO=12, FNTNOME="IBGE", SERNUMERICA=1), "&$filter=contains(SERNOME,'Selic') and TEMCODIGO eq 12 and contains(FNTNOME,'IBGE') and SERNUMERICA eq 1")
-
-
-def test_json_parser(load_sample_json):
-    json = load_sample_json["value"]
-    df = json_to_dataframe(
-        json, "Código", "Nome", "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S"
-    )
-    assert isinstance(df, pandas.DataFrame)
 
 
 if __name__ == "__main__":

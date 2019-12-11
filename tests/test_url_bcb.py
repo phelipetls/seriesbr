@@ -2,17 +2,12 @@ import os
 import sys
 import unittest
 import datetime
-import pandas
-import json
-import pytest
 
-from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seriesbr import bcb
-from seriesbr.helpers.response import json_to_dataframe
 
 
 def mocked_parse_response(url, code, name):
@@ -21,18 +16,6 @@ def mocked_parse_response(url, code, name):
 
 def mocked_today_date():
     return datetime.datetime(2019, 12, 2)
-
-
-def mocked_search_results(url):
-    return url
-
-
-@pytest.fixture
-def load_sample_json():
-    json_path = Path(__file__).resolve().parent / "sample_jsons" / "bcb_json"
-    with json_path.open() as json_file:
-        sample_json = json.load(json_file)
-    return sample_json
 
 
 @patch('seriesbr.bcb.parse_bcb_response', mocked_parse_response)
@@ -108,28 +91,6 @@ class BCBtest(unittest.TestCase):
             bcb.get_serie(11, start="asfhajksfsa")
             bcb.get_serie(11, start="002562345645")
             bcb.get_serie(11, start="###$%#RG")
-
-
-@patch('seriesbr.bcb.return_search_results_bcb', mocked_search_results)
-class TestBCBSearch(unittest.TestCase):
-
-    def test_search(self):
-        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc"
-        self.assertEqual(bcb.search("spread"), correct)
-
-    def test_search_with_more_args(self):
-        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
-        self.assertEqual(bcb.search("spread", "mensal", "livre"), correct)
-
-    def test_search_with_more_args_and_rows(self):
-        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
-        self.assertEqual(bcb.search("spread", "mensal", "livre", rows=30, skip=5), correct)
-
-
-def test_json_parser(load_sample_json):
-    json = load_sample_json
-    df = json_to_dataframe(json, 11, "Selic", "data", "valor", "%d/%m/%Y")
-    assert isinstance(df, pandas.DataFrame)
 
 
 if __name__ == "__main__":

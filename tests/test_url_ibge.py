@@ -2,17 +2,12 @@ import os
 import sys
 import unittest
 import datetime
-import pytest
-import json
-import pandas
 
-from pathlib import Path
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from seriesbr import ibge
-from seriesbr.helpers.response import ibge_json_to_dataframe
 from seriesbr.helpers.url import (
     ibge_build_classification_query,
     ibge_build_variables_query,
@@ -30,14 +25,6 @@ def mocked_today_date():
 def mocked_list_regions(kind_of_region, search=None, where="nome"):
     url = f"https://servicodados.ibge.gov.br/api/v1/localidades/{kind_of_region}"
     return url
-
-
-@pytest.fixture
-def load_sample_json():
-    json_path = Path(__file__).resolve().parent / "sample_jsons" / "ibge_json"
-    with json_path.open() as json_file:
-        sample_json = json.load(json_file)
-    return sample_json
 
 
 @patch('seriesbr.ibge.parse_ibge_response', mocked_parse_response)
@@ -149,12 +136,6 @@ class TestListsFunctions(unittest.TestCase):
     def test_list_microregions(self):
         correct = "https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes"
         self.assertEqual(ibge.list_microregions(), correct)
-
-
-def test_json_parser(load_sample_json):
-    json = load_sample_json
-    df = ibge_json_to_dataframe(json)
-    assert isinstance(df, pandas.DataFrame)
 
 
 if __name__ == "__main__":
