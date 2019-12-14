@@ -86,7 +86,7 @@ def get_series(
     except requests.exceptions.HTTPError:
         dates = ibge_build_dates_query(start, end, last_n, month=False)
         url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
-        return parse_ibge_response(get_json(url))
+        return parse_ibge_response(url)
 
 ## Get metadata
 
@@ -308,3 +308,5 @@ def list_mesoregions(*search, where="nome"):
     A DataFrame with metadata about the mesoregions.
     """
     return list_regions("mesorregioes", search, where)
+
+# vi: nowrap
