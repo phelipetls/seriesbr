@@ -51,7 +51,7 @@ def ibge_build_classification_query(classifications=None):
             else:
                 s.append(f"{classification}[{cat(category, ',')}]")
         return "classificacao=" + "|".join(s)
-    elif isinstance(classifications, int) or isinstance(classifications, str):
+    elif isinstance(classifications, (int, str)):
         return f"classificacao={classifications}[all]"
     elif isinstance(classifications, list):
         piped_classifications = '|'.join([f"{classification}[all]" for classification in classifications])
