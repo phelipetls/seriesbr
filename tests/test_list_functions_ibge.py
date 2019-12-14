@@ -26,8 +26,8 @@ def get_sample_json(resource):
         json_path /= "ibge_estados"
     if resource == "municipios":
         json_path /= "ibge_municipios"
-    with json_path.open() as search_input:
-        return json.load(search_input)
+    with json_path.open() as json_file:
+        return json.load(json_file)
 
 
 class TestListMetadataFunctions(unittest.TestCase):

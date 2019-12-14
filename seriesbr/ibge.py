@@ -10,6 +10,7 @@ from .helpers.url import (
     ibge_build_variables_query,
     ibge_build_location_query,
     ibge_build_classification_query,
+    locations_dict
 )
 
 
@@ -146,16 +147,6 @@ def list_variables(aggregate_code):
     return pd.io.json.json_normalize(json).iloc[:, :3]
 
 
-locations_dict = {
-    "N6": "city",
-    "N3": "state",
-    "N2": "macroregion",
-    "N7": "mesoregion",
-    "N9": "microregion",
-    "N1": "brazil",
-}
-
-
 def list_locations(aggregate_code):
     """
     Function to list periods of a given aggregate.
@@ -170,7 +161,7 @@ def list_locations(aggregate_code):
     url = f"{baseurl}{query}"
     codes = get_json(url)["nivelTerritorial"]["Administrativo"]
     df = pd.DataFrame({"codes": codes})
-    df["parameters"] = [locations_dict[code] for code in df.codes]
+    df["parameters"] = [locations_dict.get(code) for code in df.codes]
     return df
 
 

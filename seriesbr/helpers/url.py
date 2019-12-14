@@ -91,13 +91,17 @@ def ibge_build_variables_query(variables):
         return f"/variaveis"
 
 
-location_ids = {
-    "city": "N6",
-    "state": "N3",
-    "macroregion": "N2",
-    "mesoregion": "N7",
-    "microregion": "N9",
+locations_dict = {
+    "N6": "city",
+    "N3": "state",
+    "N2": "macroregion",
+    "N7": "mesoregion",
+    "N9": "microregion",
+    "N1": "brazil",
 }
+
+
+location_ids = {location: code for code, location in locations_dict.items()}
 
 
 def ibge_build_location_query(city=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
