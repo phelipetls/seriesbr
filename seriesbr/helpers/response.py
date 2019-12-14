@@ -50,7 +50,7 @@ def ibge_json_to_dataframe(json):
     df = df.rename(columns={date_key: "Data"})
     df = df.set_index("Data")
     df = df.drop(
-        [c for c in df.columns if c.endswith("(Código)")] + ["Mês", "Brasil"],
+        [c for c in df.columns if c.endswith("(Código)")] + ["Mês", "Unidade de Medida", "Brasil"],
         axis="columns",
         errors="ignore"
     )
