@@ -91,22 +91,31 @@ def ibge_build_variables_query(variables):
         return f"/variaveis"
 
 
-def ibge_build_location_query(city, state, macroregion, microregion, mesoregion, brazil):
+location_ids = {
+    "city": "N6",
+    "state": "N3",
+    "macroregion": "N2",
+    "mesoregion": "N7",
+    "microregion": "N9",
+}
+
+
+def ibge_build_location_query(city=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
     # note-to-self: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
-    base = "&localidades="
+    locations = vars()
+    prefix = "&localidades="
     query = []
-    if city:
-        query.append(f"N6[{cat(city, '|') if city != 'all' else city}]")
-    if state:
-        query.append(f"N3[{cat(state, ',') if state != 'all' else state}]")
-    if macroregion:
-        query.append(f"N2[{cat(macroregion, ',') if macroregion != 'all' else macroregion}]")
-    if mesoregion:
-        query.append(f"N7[{cat(mesoregion, ',') if mesoregion != 'all' else mesoregion}]")
-    if microregion:
-        query.append(f"N9[{cat(microregion, ',') if microregion != 'all' else microregion}]")
-    if brazil:
-        query.append("BR")
-    if all([location is None for location in [city, state, macroregion, microregion, mesoregion]]):
-        return f"{base}BR"
-    return base + "|".join(query)
+    if all([code is None for code in locations.values()]):
+        return prefix + "BR"
+    for location, codes in locations.items():
+        if location == "brazil" and codes:
+            query.append("BR")
+        elif isinstance(codes, list):
+            query.append(f"{location_ids[location]}[{cat(codes, ',')}]")
+        elif type(codes) == int:
+            query.append(f"{location_ids[location]}[{codes}]")
+        elif codes:
+            query.append(f"{location_ids[location]}[all]")
+    return prefix + "|".join(query)
+
+# vi: nowrap
