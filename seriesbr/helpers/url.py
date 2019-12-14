@@ -1,6 +1,6 @@
 import re
-from datetime import datetime
 from .utils import cat, isiterable
+from .dates import today_date
 from .ipea_metadata_list import ipea_metadata_list
 
 ## IPEA
@@ -66,9 +66,9 @@ def ibge_build_dates_query(start=None, end=None, last_n=None, month=True):
     of the URL.
     """
     if month:
-        today = datetime.today().strftime("%Y%m")
+        today = today_date().strftime("%Y%m")
     else:
-        today = datetime.today().strftime("%Y")
+        today = today_date().strftime("%Y")
         start = start[:-2]
         end = end[:-2]
     if last_n:
