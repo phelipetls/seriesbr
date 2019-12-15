@@ -22,7 +22,7 @@ def json_to_dataframe(json, code, name, date_key, value_key, date_fmt):
     df[value_key] = df[value_key].astype('float64')
     df = df.set_index(date_key)
     df.columns = [name if name else code]
-    df = df.rename_axis("date")
+    df = df.rename_axis("Date")
     return df
 
 
@@ -41,8 +41,8 @@ def ibge_json_to_dataframe(json):
     except ValueError:
         df[date_key] = pd.to_datetime(df[date_key], format="%Y")
     df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
-    df = df.rename(columns={date_key: "Data"})
-    df = df.set_index("Data")
+    df = df.rename(columns={date_key: "Date"})
+    df = df.set_index("Date")
     df = df.drop(
         [c for c in df.columns if c.endswith("(Código)")] + ["Mês", "Unidade de Medida", "Brasil"],
         axis="columns",
