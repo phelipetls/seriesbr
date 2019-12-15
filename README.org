@@ -27,7 +27,7 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 
 #+NAME: Installation
 
-=pip3 install seriesbr=
+=pip3 install --upgrade seriesbr=
 
 #+END_NAME:
 

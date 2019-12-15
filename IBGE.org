@@ -21,16 +21,19 @@ It takes an arbitrary number of regexes.
 import pandas as pd
 from seriesbr import ibge
 
-pd.set_option('max_colwidth', 200)
+pd.set_option('display.expand_frame_repr', False, 'display.max_colwidth', -1, 'display.max_rows', 10)
 
 ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 #+END_SRC
 
 #+RESULTS:
-:         id                                                                                                                                                                                           nome
-: 2231  1100      INPC - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)
-: 2244  1419      IPCA - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)
-: 2260  1705  IPCA15 - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de fevereiro/2012)
+:         id                                                                                                                                                                                           nome pesquisa_id                                     pesquisa_nome
+: 2231  1100  INPC - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)      PC          Índice Nacional de Preços ao Consumidor         
+: 2244  1419  IPCA - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)      IA          Índice Nacional de Preços ao Consumidor Amplo   
+: 2260  1705  IPCA15 - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de fevereiro/2012)  IQ          Índice Nacional de Preços ao Consumidor Amplo 15
+
+If you want, it is also possible to search for all aggregates of a research by 
+assigning to the =where= parameter the value "pesquisa_nome".
 
 ** Searching for variables
 
@@ -40,10 +43,10 @@ ibge.list_variables(1419)
 
 #+RESULTS:
 :      id                               variavel unidade
-: 0    63                 IPCA - Variação mensal       %
-: 1    69       IPCA - Variação acumulada no ano       %
-: 2  2265  IPCA - Variação acumulada em 12 meses       %
-: 3    66                     IPCA - Peso mensal       %
+: 0  63    IPCA - Variação mensal                 %     
+: 1  69    IPCA - Variação acumulada no ano       %     
+: 2  2265  IPCA - Variação acumulada em 12 meses  %     
+: 3  66    IPCA - Peso mensal                     %     
 
 ** Searching for classifications and categories
 
@@ -75,17 +78,17 @@ categories
 
 #+RESULTS:
 #+begin_example
-       id                         nome unidade  nivel  classificacao_id                      classificacao_nome
-0    7169                 Índice geral    None     -1               315  Geral, grupo, subgrupo, item e subitem
-1    7170      1.Alimentação e bebidas    None     -1               315  Geral, grupo, subgrupo, item e subitem
-191  7445                  2.Habitação    None     -1               315  Geral, grupo, subgrupo, item e subitem
-227  7486      3.Artigos de residência    None     -1               315  Geral, grupo, subgrupo, item e subitem
-270  7558                  4.Vestuário    None     -1               315  Geral, grupo, subgrupo, item e subitem
-315  7625                5.Transportes    None     -1               315  Geral, grupo, subgrupo, item e subitem
-348  7660  6.Saúde e cuidados pessoais    None     -1               315  Geral, grupo, subgrupo, item e subitem
-395  7712          7.Despesas pessoais    None     -1               315  Geral, grupo, subgrupo, item e subitem
-428  7766                   8.Educação    None     -1               315  Geral, grupo, subgrupo, item e subitem
-453  7786                9.Comunicação    None     -1               315  Geral, grupo, subgrupo, item e subitem
+       id                         nome unidade  nivel classificacao_id                      classificacao_nome
+0    7169  Índice geral                 None   -1      315              Geral, grupo, subgrupo, item e subitem
+1    7170  1.Alimentação e bebidas      None   -1      315              Geral, grupo, subgrupo, item e subitem
+191  7445  2.Habitação                  None   -1      315              Geral, grupo, subgrupo, item e subitem
+227  7486  3.Artigos de residência      None   -1      315              Geral, grupo, subgrupo, item e subitem
+270  7558  4.Vestuário                  None   -1      315              Geral, grupo, subgrupo, item e subitem
+315  7625  5.Transportes                None   -1      315              Geral, grupo, subgrupo, item e subitem
+348  7660  6.Saúde e cuidados pessoais  None   -1      315              Geral, grupo, subgrupo, item e subitem
+395  7712  7.Despesas pessoais          None   -1      315              Geral, grupo, subgrupo, item e subitem
+428  7766  8.Educação                   None   -1      315              Geral, grupo, subgrupo, item e subitem
+453  7786  9.Comunicação                None   -1      315              Geral, grupo, subgrupo, item e subitem
 #+end_example
 
 ** Retrieving data
@@ -104,50 +107,21 @@ ipca
 
 #+RESULTS:
 #+begin_example
-           Nível Territorial  Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida     Valor
-Data                                                ...                                                                   
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    0.1000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    0.0500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %   -0.6100
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %   -0.0900
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    0.6300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    0.4500
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    0.4000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    0.2000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    0.0300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %   -0.0100
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    2.6000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    2.1500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %    4.0200
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    0.4800
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    0.3900
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    1.7000
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    4.7500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    2.4600
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    4.4600
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    0.4200
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %    2.5400
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %    3.0100
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %    3.1300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    1.5300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    1.1000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %    0.4000
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %    4.3400
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %    3.1300
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    4.7200
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    0.3500
-2019-10-01            Brasil  Brasil  outubro 2019  ...                           Índice geral                 %  100.0000
-2019-10-01            Brasil  Brasil  outubro 2019  ...                1.Alimentação e bebidas                 %   24.5278
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            2.Habitação                 %   16.1701
-2019-10-01            Brasil  Brasil  outubro 2019  ...                3.Artigos de residência                 %    3.9050
-2019-10-01            Brasil  Brasil  outubro 2019  ...                            4.Vestuário                 %    5.6379
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          5.Transportes                 %   18.1478
-2019-10-01            Brasil  Brasil  outubro 2019  ...            6.Saúde e cuidados pessoais                 %   12.2823
-2019-10-01            Brasil  Brasil  outubro 2019  ...                    7.Despesas pessoais                 %   10.8677
-2019-10-01            Brasil  Brasil  outubro 2019  ...                             8.Educação                 %    5.0180
-2019-10-01            Brasil  Brasil  outubro 2019  ...                          9.Comunicação                 %    3.4434
+           Nível Territorial                Variável Geral, grupo, subgrupo, item e subitem    Valor
+Data                                                                                                
+2019-10-01  Brasil            IPCA - Variação mensal  Índice geral                           0.1000 
+2019-10-01  Brasil            IPCA - Variação mensal  1.Alimentação e bebidas                0.0500 
+2019-10-01  Brasil            IPCA - Variação mensal  2.Habitação                           -0.6100 
+2019-10-01  Brasil            IPCA - Variação mensal  3.Artigos de residência               -0.0900 
+2019-10-01  Brasil            IPCA - Variação mensal  4.Vestuário                            0.6300 
+...            ...                               ...                      ...                   ... 
+2019-10-01  Brasil            IPCA - Peso mensal      5.Transportes                          18.1478
+2019-10-01  Brasil            IPCA - Peso mensal      6.Saúde e cuidados pessoais            12.2823
+2019-10-01  Brasil            IPCA - Peso mensal      7.Despesas pessoais                    10.8677
+2019-10-01  Brasil            IPCA - Peso mensal      8.Educação                             5.0180 
+2019-10-01  Brasil            IPCA - Peso mensal      9.Comunicação                          3.4434 
 
-[40 rows x 7 columns]
+[40 rows x 4 columns]
 #+end_example
 
 ** Inflation rate by products/services
@@ -161,20 +135,18 @@ ipca.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Variá
 
 #+RESULTS:
 #+begin_example
-Variável                                IPCA - Peso mensal  ...  IPCA - Variação mensal
-Geral, grupo, subgrupo, item e subitem                      ...                        
-1.Alimentação e bebidas                            24.5278  ...                    0.05
-2.Habitação                                        16.1701  ...                   -0.61
-3.Artigos de residência                             3.9050  ...                   -0.09
-4.Vestuário                                         5.6379  ...                    0.63
-5.Transportes                                      18.1478  ...                    0.45
-6.Saúde e cuidados pessoais                        12.2823  ...                    0.40
-7.Despesas pessoais                                10.8677  ...                    0.20
-8.Educação                                          5.0180  ...                    0.03
-9.Comunicação                                       3.4434  ...                   -0.01
-Índice geral                                      100.0000  ...                    0.10
-
-[10 rows x 4 columns]
+Variável                                IPCA - Peso mensal  IPCA - Variação acumulada em 12 meses  IPCA - Variação acumulada no ano  IPCA - Variação mensal
+Geral, grupo, subgrupo, item e subitem                                                                                                                     
+1.Alimentação e bebidas                 24.5278             3.01                                   2.15                              0.05                  
+2.Habitação                             16.1701             3.13                                   4.02                             -0.61                  
+3.Artigos de residência                 3.9050              1.53                                   0.48                             -0.09                  
+4.Vestuário                             5.6379              1.10                                   0.39                              0.63                  
+5.Transportes                           18.1478             0.40                                   1.70                              0.45                  
+6.Saúde e cuidados pessoais             12.2823             4.34                                   4.75                              0.40                  
+7.Despesas pessoais                     10.8677             3.13                                   2.46                              0.20                  
+8.Educação                              5.0180              4.72                                   4.46                              0.03                  
+9.Comunicação                           3.4434              0.35                                   0.42                             -0.01                  
+Índice geral                            100.0000            2.54                                   2.60                              0.10                  
 #+end_example
 
 Now let's visualize this.
@@ -242,54 +214,21 @@ ipca_by_area
 
 #+RESULTS:
 #+begin_example
-               Nível Territorial Região Metropolitana e Brasil           Mês  ... Geral, grupo, subgrupo, item e subitem Unidade de Medida   Valor
-Data                                                                          ...                                                                 
-2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    0.22
-2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    2.71
-2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %    3.21
-2019-10-01  Região Metropolitana                    Belém - PA  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    0.04
-2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    3.45
-2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %    3.45
-2019-10-01  Região Metropolitana                Fortaleza - CE  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %   -0.07
-2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %    2.58
-2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %    2.65
-2019-10-01  Região Metropolitana                   Recife - PE  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %    0.08
-2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %    2.40
-2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %    2.66
-2019-10-01  Região Metropolitana                 Salvador - BA  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %    0.17
-2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %    2.66
-2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %    2.57
-2019-10-01  Região Metropolitana           Belo Horizonte - MG  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %    0.29
-2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %    2.02
-2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %    1.71
-2019-10-01  Região Metropolitana           Grande Vitória - ES  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %    0.27
-2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %    2.64
-2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %    3.03
-2019-10-01  Região Metropolitana           Rio de Janeiro - RJ  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %    0.14
-2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %    2.91
-2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %    2.63
-2019-10-01  Região Metropolitana                São Paulo - SP  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %   -0.12
-2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %    1.99
-2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %    1.55
-2019-10-01  Região Metropolitana                 Curitiba - PR  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %   -0.01
-2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %    2.42
-2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %    2.25
-2019-10-01  Região Metropolitana             Porto Alegre - RS  outubro 2019  ...                           Índice geral                 %  100.00
-2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    0.10
-2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    2.60
-2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %    2.54
-2019-10-01                Brasil                        Brasil  outubro 2019  ...                           Índice geral                 %  100.00
+               Nível Territorial Região Metropolitana e Brasil                               Variável Geral, grupo, subgrupo, item e subitem   Valor
+Data                                                                                                                                                
+2019-10-01  Região Metropolitana  Belém - PA                    IPCA - Variação mensal                 Índice geral                           0.22  
+2019-10-01  Região Metropolitana  Belém - PA                    IPCA - Variação acumulada no ano       Índice geral                           2.71  
+2019-10-01  Região Metropolitana  Belém - PA                    IPCA - Variação acumulada em 12 meses  Índice geral                           3.21  
+2019-10-01  Região Metropolitana  Belém - PA                    IPCA - Peso mensal                     Índice geral                           100.00
+2019-10-01  Região Metropolitana  Fortaleza - CE                IPCA - Variação mensal                 Índice geral                           0.04  
+...                          ...         ...                                   ...                              ...                              ...
+2019-10-01  Região Metropolitana  Porto Alegre - RS             IPCA - Peso mensal                     Índice geral                           100.00
+2019-10-01  Brasil                Brasil                        IPCA - Variação mensal                 Índice geral                           0.10  
+2019-10-01  Brasil                Brasil                        IPCA - Variação acumulada no ano       Índice geral                           2.60  
+2019-10-01  Brasil                Brasil                        IPCA - Variação acumulada em 12 meses  Índice geral                           2.54  
+2019-10-01  Brasil                Brasil                        IPCA - Peso mensal                     Índice geral                           100.00
 
-[44 rows x 7 columns]
+[44 rows x 5 columns]
 #+end_example
 
 But really, you could pass to the =brazil= keyword any value that would be evaluated
@@ -317,28 +256,28 @@ plt.savefig('imgs/ipca_by_area.png', bbox_inches="tight")
 #+BEGIN_SRC python :session :exports both
 ipca_by_month = ibge.get_series(1419, classifications={315: categories.id.to_list()})
 
-ipca_by_month.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Mês", values="Valor")
+ipca_by_month.assign(Mês=ipca_by_month.index.strftime("%m-%B")).pivot_table(
+    index="Geral, grupo, subgrupo, item e subitem", columns="Mês", values="Valor"
+)
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-Mês                                     abril 2012  abril 2013  abril 2014  abril 2015  ...  setembro 2016  setembro 2017  setembro 2018  setembro 2019
-Geral, grupo, subgrupo, item e subitem                                                  ...                                                            
-1.Alimentação e bebidas                   8.490033   11.303950    9.499550    9.572500  ...      11.987300       5.112700       7.454000       7.464050
-2.Habitação                               5.967500    4.004100    6.340575   10.862250  ...       5.845750       5.888425       7.419700       6.187400
-3.Artigos de residência                   0.946733    2.956325    3.424775    2.886500  ...       3.317275       0.560075       1.752125       1.530825
-4.Vestuário                               2.572533    3.616250    2.984950    2.725525  ...       3.541950       2.395050       1.638375       1.612725
-5.Transportes                             7.041667    5.417575    6.098075    7.571900  ...       6.533150       6.142875       7.870325       5.065100
-6.Saúde e cuidados pessoais               4.810233    5.497675    5.374700    5.650850  ...       8.184750       6.075775       5.475700       5.328975
-7.Despesas pessoais                       5.564033    5.824075    5.800000    5.698500  ...       6.356575       4.848525       4.134700       4.079425
-8.Educação                                3.761700    4.706800    5.142775    5.164850  ...       5.708350       4.691650       3.868000       3.555975
-9.Comunicação                             1.828867    1.148275    0.982125    0.602150  ...       1.897400       1.784925       0.962075       1.063050
-Índice geral                             34.170000   27.385000   27.452500   28.360000  ...      28.517500      26.120000      27.087500      26.335000
-
-[10 rows x 95 columns]
+Mês                                     01-janeiro  02-fevereiro   03-março   04-abril    05-maio   06-junho   07-julho  08-agosto  09-setembro  10-outubro  11-novembro  12-dezembro
+Geral, grupo, subgrupo, item e subitem                                                                                                                                               
+1.Alimentação e bebidas                 8.546465    8.560529      8.952268   9.136429   9.119994   9.190871   9.183029   9.034494   9.070097     9.243645    9.409110     9.905182   
+2.Habitação                             5.777100    5.697597      6.138848   6.030632   6.552597   6.585306   6.987842   7.087619   7.222994     7.300371    7.474406     7.506743   
+3.Artigos de residência                 2.058810    2.238619      2.210503   2.228890   2.342300   2.384110   2.537071   2.691987   2.581219     2.668752    2.619958     2.886350   
+4.Vestuário                             2.170284    2.195916      2.376755   2.588481   2.806016   2.785529   2.499332   2.656742   2.827084     3.065239    3.074406     3.653657   
+5.Transportes                           6.261558    6.299523      6.363255   6.382029   6.209974   6.292545   6.236535   6.227129   6.479532     6.701594    6.719277     7.046018   
+6.Saúde e cuidados pessoais             4.836790    5.032335      5.141158   5.694274   5.847416   5.940139   5.972000   6.108165   6.213819     6.339248    6.370881     6.608986   
+7.Despesas pessoais                     4.929177    4.938994      5.013568   5.101632   5.238626   5.433213   5.556832   5.649971   5.697529     5.761777    6.032184     6.568954   
+8.Educação                              3.109158    5.618071      4.636894   4.543513   4.547090   4.583171   4.567684   4.816703   4.763432     4.755590    4.787587     5.108593   
+9.Comunicação                           1.335494    1.384529      0.984161   1.291223   1.240510   1.261558   1.287403   1.256229   1.306545     1.347006    1.433161     1.465193   
+Índice geral                            27.500645   27.642903     27.790000  27.911613  28.004516  28.079032  28.133226  28.163548  28.263871    28.399677   28.505806    28.142143  
 #+end_example
 
-** Most recent inflation rate (november/19) by product
+** Most recent inflation rate (nov/19) by product
 
 #+BEGIN_SRC python :session :results file :exports both
 ibge.get_series(
@@ -355,4 +294,120 @@ plt.savefig('imgs/recent_ipca.png', bbox_inches='tight')
 
 #+RESULTS:
 [[file:imgs/recent_ipca.png]]
+
+** Bonus: Was 50% fo brazilian GDP produced by 69 cities alone?
+
+Let's try to assert the statement, made [[https://g1.globo.com/economia/noticia/2019/12/13/em-2017-quase-metade-do-pib-do-pais-foi-gerado-por-apenas-69-municipios-aponta-ibge.ghtml][here]], that in 2017 the brazilian GDP was produced by 69 cities.
+
+To do that, I needed to look for a GDP aggregate that had cities as one of its classifications.
+This aggregate's code turned out to be 5938 and the relevant variable's code (nominal GDP by current price) to be 37.
+
+So that's how I've done it.
+
+#+BEGIN_SRC python :session :exports both
+
+pib_per_city = ibge.get_series(5938, 37, start="2017", end="2017", city=True)
+
+pib_per_city.sort_values("Valor", ascending=False).assign(ParticipacaoAcumulada = lambda x: (x.Valor / sum(x.Valor)).cumsum()).query('ParticipacaoAcumulada <= .5')
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+           Nível Territorial              Município   Ano                                  Variável      Valor  ParticipacaoAcumulada
+Data                                                                                                                                 
+2017-01-01  Município         São Paulo - SP         2017  Produto Interno Bruto a preços correntes  699288352  0.106221             
+2017-01-01  Município         Rio de Janeiro - RJ    2017  Produto Interno Bruto a preços correntes  337594462  0.157502             
+2017-01-01  Município         Brasília - DF          2017  Produto Interno Bruto a preços correntes  244682756  0.194669             
+2017-01-01  Município         Belo Horizonte - MG    2017  Produto Interno Bruto a preços correntes  88951168   0.208180             
+2017-01-01  Município         Curitiba - PR          2017  Produto Interno Bruto a preços correntes  84702357   0.221046             
+...               ...                         ...     ...                                       ...       ...        ...             
+2017-01-01  Município         Anápolis - GO          2017  Produto Interno Bruto a preços correntes  14204319   0.489972             
+2017-01-01  Município         Louveira - SP          2017  Produto Interno Bruto a preços correntes  13805962   0.492069             
+2017-01-01  Município         Bauru - SP             2017  Produto Interno Bruto a preços correntes  13771753   0.494161             
+2017-01-01  Município         Sumaré - SP            2017  Produto Interno Bruto a preços correntes  13744576   0.496249             
+2017-01-01  Município         Feira de Santana - BA  2017  Produto Interno Bruto a preços correntes  13657295   0.498323             
+
+[69 rows x 6 columns]
+#+end_example
+
+A look at the row numbers confirms the statement. 
+69 out of 5570 cities from Brazil was responsible for 50% of the GDP,
+with 10% being São Paulo alone. Pretty impressive.
+
+** Bonus: Unemployment in Brazil
+
+Let's try to check out the recent evolution of unemployment in Brazil.
+
+For this, we will first search for an aggregate with "emprego"
+in its name from the research "Pesquisa Nacional por Amostra de
+Domicílios Contínua trimestral", whose id is "DD".
+
+We can search for it like this:
+
+#+BEGIN_SRC python :session :exports both
+ibge.search("emprego", pesquisa_id="DD")
+#+END_SRC
+
+#+RESULTS:
+:         id                                                                                                                                                                                                                                                                                                                                                                                                      nome pesquisa_id                                                    pesquisa_nome
+: 5574  6464  Pessoas de 14 anos ou mais de idade, ocupadas na semana de referência - Total, coeficiente de variação, variações percentuais e absolutas em relação ao trimestre anterior e ao mesmo trimestre do ano anterior, e média anual - por posição na ocupação e categoria do emprego no trabalho principal                                                                                                     DD          Pesquisa Nacional por Amostra de Domicílios Contínua trimestral
+: 5577  6382  Pessoas de 14 anos ou mais de idade, ocupadas na semana de referência como militares ou empregados do setor público no trabalho principal, por área do emprego                                                                                                                                                                                                                                            DD          Pesquisa Nacional por Amostra de Domicílios Contínua trimestral
+: 5590  4097  Pessoas de 14 anos ou mais de idade, ocupadas na semana de referência, por posição na ocupação e categoria do emprego no trabalho principal                                                                                                                                                                                                                                                               DD          Pesquisa Nacional por Amostra de Domicílios Contínua trimestral
+: 5612  5433  Rendimento médio nominal, habitualmente recebido por mês e efetivamente recebido no mês de referência, do trabalho principal, por posição na ocupação e categoria do emprego no trabalho principal                                                                                                                                                                                                        DD          Pesquisa Nacional por Amostra de Domicílios Contínua trimestral
+: 5620  5440  Rendimento médio real, habitualmente recebido por mês e efetivamente recebido no mês de referência, do trabalho principal, por posição na ocupação e categoria do emprego no trabalho principal                                                                                                                                                                                                           DD          Pesquisa Nacional por Amostra de Domicílios Contínua trimestral
+: 5626  6471  Rendimento médio, real e nominal, do trabalho principal, habitualmente recebido por mês, pelas pessoas de 14 anos ou mais de idade, ocupadas na semana de referência, com rendimento de trabalho - Total, coeficiente de variação, variações em relação ao trimestre anterior e ao mesmo trimestre do ano anterior, e média anual - por posição na ocupação e categoria do emprego no trabalho principal  DD          Pesquisa Nacional por Amostra de Domicílios Contínua trimestral
+
+#+BEGIN_SRC python :session :exports both
+ibge.list_variables(4097)
+#+END_SRC
+
+#+RESULTS:
+:      id                                                                                                                     variavel      unidade
+: 0  4090  Pessoas de 14 anos ou mais de idade, ocupadas na semana de referência                                                        Mil pessoas
+: 1  4091  Coeficiente de variação - Pessoas de 14 anos ou mais de idade, ocupadas na semana de referência                              %          
+: 2  4108  Distribuição percentual das pessoas de 14 anos ou mais de idade, ocupadas na semana de referência                            %          
+: 3  4109  Coeficiente de variação - Distribuição percentual das pessoas de 14 anos ou mais de idade, ocupadas na semana de referência  %          
+
+#+BEGIN_SRC python :session :exports both
+ibge.list_classifications(4097)
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+       id                                                                                                                 nome unidade  nivel classificacao_id                                                classificacao_nome
+0   96165  Total                                                                                                                None    0      11913            Posição na ocupação e categoria do emprego no trabalho principal
+1   31721  Empregado no setor privado, exclusive trabalhador doméstico                                                          None    1      11913            Posição na ocupação e categoria do emprego no trabalho principal
+2   31722  Empregado no setor privado, exclusive trabalhador doméstico - com carteira de trabalho assinada                      None    2      11913            Posição na ocupação e categoria do emprego no trabalho principal
+3   31723  Empregado no setor privado, exclusive trabalhador doméstico - sem carteira de trabalho assinada                      None    2      11913            Posição na ocupação e categoria do emprego no trabalho principal
+4   31724  Trabalhador doméstico                                                                                                None    1      11913            Posição na ocupação e categoria do emprego no trabalho principal
+..    ...                    ...                                                                                                 ...   ..        ...                                                                         ...
+9   31729  Empregado no setor público, exclusive militar e funcionário público estatutário - sem carteira de trabalho assinada  None    2      11913            Posição na ocupação e categoria do emprego no trabalho principal
+10  31730  Empregado no setor público - militar e funcionário público estatutário                                               None    2      11913            Posição na ocupação e categoria do emprego no trabalho principal
+11  96170  Empregador                                                                                                           None    1      11913            Posição na ocupação e categoria do emprego no trabalho principal
+12  96171  Conta própria                                                                                                        None    1      11913            Posição na ocupação e categoria do emprego no trabalho principal
+13  31731  Trabalhador familiar auxiliar                                                                                        None    1      11913            Posição na ocupação e categoria do emprego no trabalho principal
+
+[14 rows x 6 columns]
+#+end_example
+
+#+BEGIN_SRC python :session :exports both :results file
+emprego = ibge.get_series(4097, 4090, classifications={11913: [31722, 31723]}).pivot_table(
+    index="Data",
+    columns="Posição na ocupação e categoria do emprego no trabalho principal",
+    values="Valor",
+)
+
+emprego.columns = ["Formal", "Informal"]
+
+emprego.plot(subplots=True, figsize=(7, 5))
+
+plt.suptitle("Emprego no setor privado")
+plt.tight_layout(bbox_inches='tight')
+plt.savefig('imgs/employment.png')
+'imgs/employment.png'
+#+END_SRC
+
+#+RESULTS:
+[[file:imgs/employment.png]]
 
