@@ -1,6 +1,12 @@
-* Banco Central do Brasil						:TOC:
+* Banco Central do Brasil					      :TOC_3:
   - [[#searching][Searching]]
+    - [[#searching-for-brazilian-interest-rate][Searching for brazilian interest rate]]
+    - [[#searching-multiple-terms][Searching multiple terms]]
+    - [[#controlling-the-number-of-search-results][Controlling the number of search results]]
   - [[#retrieving-data][Retrieving data]]
+    - [[#getting-a-single-series-values][Getting a single series values]]
+    - [[#getting-multiple-series-values-and-filtering-by-period][Getting multiple series values and filtering by period]]
+    - [[#getting-rid-of-nan][Getting rid of NaN]]
   - [[#getting-metadata][Getting metadata]]
 
 ** Searching

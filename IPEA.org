@@ -1,13 +1,38 @@
 * Instituto de Pesquisa Econômica Aplicada				:TOC:
-  - [[#searching-in-the-database][Searching in the database]]
-  - [[#valid-filters][Valid filters]]
-  - [[#lists-of-metadata-codes][Lists of metadata codes]]
+  - [[#filtering][Filtering]]
+  - [[#examples-of-searching-in-the-database][Examples of searching in the database]]
+  - [[#listing-available-themes-and-countries][Listing available themes and countries]]
   - [[#getting-multiple-values][Getting multiple values]]
   - [[#getting-metadata][Getting metadata]]
 
-** Searching in the database
+** Filtering
+   
+To help you search the desired time series, you can use these filters below in the =ipea.search= function, as we soon will see.
+   
+| Code           | Description                   |
+|----------------+-------------------------------|
+| SERNOME        | Name                          |
+| SERCODIGO      | Code                          |
+| PERNOME        | Frequency                     |
+| TEMCODIGO      | Theme code                    |
+| UNINOME        | Unit measure                  |
+| PAICODIGO      | Country code                  |
+| SERATUALIZACAO | Last updated                  |
+| MULNOME        | Multiplicative factor         |
+| SERCOMENTARIO  | Notes/comments, in portuguese |
+| FNTNOME        | Source's name, in portuguese  |
+| FNTSIGLA       | Source's initials             |
+| FNTURL         | Source's url                  |
+| SERSTATUS      | Active ('A'), Inactive ('I')  |
+| SERNUMERICA    | Numeric (1), Alphanumeric (0) |
+
+** Examples of searching in the database
 
 #+BEGIN_SRC python :session :exports both
+import pandas as pd
+
+pd.set_option('max_rows', 10)
+
 from seriesbr import ipea
 
 ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
@@ -15,18 +40,18 @@ ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 
 #+RESULTS:
 #+begin_example
-             SERCODIGO                                                                  SERNOME PERNOME UNINOME         BASNOME
-0   BM12_CRDSD12        Operações de crédito - recursos direcionados - spread                    Mensal  (p.p.)  Macroeconômico
-1   BM12_CRDSDPF12      Operações de crédito - recursos direcionados - spread - pessoa física    Mensal  (p.p.)  Macroeconômico
-2   BM12_CRDSDPJ12      Operações de crédito - recursos direcionados - spread - pessoa jurídica  Mensal  (p.p.)  Macroeconômico
-3   BM12_CRLSD12        Operações de crédito - recursos livres - spread                          Mensal  (p.p.)  Macroeconômico
-4   BM12_CRLSDPF12      Operações de crédito - recursos livres - spread - pessoa física          Mensal  (p.p.)  Macroeconômico
-..             ...                                                                  ...             ...     ...             ...
-10  VALOR12_GLOBAL2412  Bônus global República (24) - spread                                     Mensal  (p.p.)  Macroeconômico
-11  VALOR12_GLOBAL2712  Bônus global República (27) - spread                                     Mensal  (p.p.)  Macroeconômico
-12  VALOR12_GLOBAL4012  Bônus global República (40) - spread                                     Mensal  (p.p.)  Macroeconômico
-13  VALOR12_GLOBAL912   Bônus global República (9) - spread                                      Mensal  (p.p.)  Macroeconômico
-14  VALOR12_TJCBOND12   C-Bond - spread                                                          Mensal  (p.p.)  Macroeconômico
+             SERCODIGO                                            SERNOME PERNOME UNINOME         BASNOME
+0         BM12_CRDSD12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
+1       BM12_CRDSDPF12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
+2       BM12_CRDSDPJ12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
+3         BM12_CRLSD12    Operações de crédito - recursos livres - spread  Mensal  (p.p.)  Macroeconômico
+4       BM12_CRLSDPF12  Operações de crédito - recursos livres - sprea...  Mensal  (p.p.)  Macroeconômico
+..                 ...                                                ...     ...     ...             ...
+10  VALOR12_GLOBAL2412               Bônus global República (24) - spread  Mensal  (p.p.)  Macroeconômico
+11  VALOR12_GLOBAL2712               Bônus global República (27) - spread  Mensal  (p.p.)  Macroeconômico
+12  VALOR12_GLOBAL4012               Bônus global República (40) - spread  Mensal  (p.p.)  Macroeconômico
+13   VALOR12_GLOBAL912                Bônus global República (9) - spread  Mensal  (p.p.)  Macroeconômico
+14   VALOR12_TJCBOND12                                    C-Bond - spread  Mensal  (p.p.)  Macroeconômico
 
 [15 rows x 5 columns]
 #+end_example
@@ -34,112 +59,149 @@ ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 Another example:
 
 #+BEGIN_SRC python :session :exports both
-  ipea.search("Juros", PERNOME="Mensal", UNINOME="(% a.m.)")
+  ipea.search("Juros", PAICODIGO=["BRA", "USA"], SERSTATUS="A")
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-            SERCODIGO                                                           SERNOME PERNOME   UNINOME
-0   ANBIMA12_TJCDBP12  Taxa de juros - CDB pré-fixado                                    Mensal  (% a.m.)
-1   BM12_TJCDBN12      Taxa de juros - CDB                                               Mensal  (% a.m.)
-2   BM12_TJCDI12       Taxa de juros - CDI / Over                                        Mensal  (% a.m.)
-3   BM12_TJLCMN12      Taxa de juros - letras de câmbio ao mutuário                      Mensal  (% a.m.)
-4   BM12_TJLCTN12      Taxa de juros - letras de câmbio ao tomador                       Mensal  (% a.m.)
-..            ...                                              ...                          ...       ...
-12  GM12_TJLFT12       Taxa de juros - Letras do Tesouro Nacional - financeiras (LFT)    Mensal  (% a.m.)
-13  IBMEC12_OTNRTJ12   Taxa de juros - obrigações reajustáveis do Tesouro Nacional       Mensal  (% a.m.)
-14  IBMEC12_TJEMP12    Taxa de juros paga pelo tomador do empréstimo por aceite cambial  Mensal  (% a.m.)
-15  IBMEC12_TJLM12     Taxa de juros - letras imobiliárias                               Mensal  (% a.m.)
-16  IBMEC12_TJTIT12    Taxa de juros - letras de câmbio                                  Mensal  (% a.m.)
+             SERCODIGO                                            SERNOME PERNOME   UNINOME PAICODIGO SERSTATUS
+0         BM12_CRDTJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)       BRA         A
+1       BM12_CRDTJPF12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)       BRA         A
+2       BM12_CRDTJPJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)       BRA         A
+3         BM12_CRLTJ12  Operações de crédito - recursos livres - taxa ...  Mensal  (% a.a.)       BRA         A
+4       BM12_CRLTJPF12  Operações de crédito - recursos livres - taxa ...  Mensal  (% a.a.)       BRA         A
+..                 ...                                                ...     ...       ...       ...       ...
+55  BMF366_FUT3DI1V366  Taxa de juros - DI de 1 dia - futuro: vencimen...  Diária         -       BRA         A
+56   BMF366_FUT6DI1366  Taxa de juros - DI de 1 dia - futuro: vencimen...  Diária  (% a.a.)       BRA         A
+57     GM366_TJOVER366                       Taxa de juros - Over / Selic  Diária  (% a.a.)       BRA         A
+58    GM366_TJOVERV366        Taxa de juros - Over / Selic - volatilidade  Diária         -       BRA         A
+59       GM366_TJTR366                                 Taxa de juros - TR  Diária  (% a.m.)       BRA         A
 
-[17 rows x 4 columns]
+[60 rows x 6 columns]
 #+end_example
 
 Or even:
 
 #+BEGIN_SRC python :session :exports both
-  ipea.search(FNTNOME="Instituto", PERNOME="mensal", SERNOME="Preço")
+  ipea.search("Emprego", TEMCODIGO=[12, 14], PAICODIGO=["BRA", "USA"])
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-         SERCODIGO                                                                       SERNOME PERNOME   UNINOME                                                                                                            FNTNOME
-0  GAC12_CARN12     Commodities - carnes - preço - índice (jan. 2002 = 100)                       Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-1  GAC12_COMMO12    Commodities - geral - preço - índice (jan. 2002 = 100)                        Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-2  GAC12_EXPETR12   Commodities - geral (exceto petróleo) - preço - índice (jan. 2002 = 100)      Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-3  GAC12_GRAO12     Commodities - grãos, oleaginosas e frutas - preço - índice (jan. 2002 = 100)  Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-4  GAC12_MATPRIM12  Commodities - materias primas - preço - índice (jan. 2002 = 100)              Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-5  GAC12_MIN12      Commodities - minerais - preço - índice (jan. 2002 = 100)                     Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-6  GAC12_PETROL12   Commodities - petróleo e derivados - preço - índice (jan. 2002 = 100)         Mensal  -         Instituto de Pesquisa Econômica Aplicada (Ipea)                                                                  
-7  INPC             INPC - Índice Nacional de  Preços ao  Consumidor                              Mensal  None      Instituto Brasileiro de Geografia e Estatística(IBGE)                                                            
-8  PAN12_IPCAG12    Índice de Preços ao Consumidor Ampliado (IPCA)                                Mensal  (% a.a.)  Instituto Brasileiro de Geografia e Estatística, Sistema Nacional de Índices de Preços ao Consumidor (IBGE/SNIPC)
+           SERCODIGO                                            SERNOME PERNOME UNINOME  TEMCODIGO PAICODIGO
+0         DISOC_DESE                                 Taxa de desemprego   Anual     (%)         12       BRA
+1     DISOC_DESEMETR          Taxa de desemprego - áreas metropolitanas   Anual     (%)         12       BRA
+2     DISOC_DESENAOM      Taxa de desemprego - áreas não-metropolitanas   Anual     (%)         12       BRA
+3     DISOC_DESERURA                  Taxa de desemprego - áreas rurais   Anual     (%)         12       BRA
+4     DISOC_DESEURBA  Taxa de desemprego - áreas urbanas não-metropo...   Anual     (%)         12       BRA
+..               ...                                                ...     ...     ...        ...       ...
+10  SEADE12_TDAGSP12                 Taxa de desemprego - aberto - RMSP  Mensal     (%)         12       BRA
+11  SEADE12_TDODSP12     Taxa de desemprego - oculto - desalento - RMSP  Mensal     (%)         12       BRA
+12  SEADE12_TDOPSP12      Taxa de desemprego - oculto - precário - RMSP  Mensal     (%)         12       BRA
+13  SEADE12_TDOTSP12                 Taxa de desemprego - oculto - RMSP  Mensal     (%)         12       BRA
+14  SEADE12_TDTGSP12                          Taxa de desemprego - RMSP  Mensal     (%)         12       BRA
+
+[15 rows x 6 columns]
 #+end_example
 
-** Valid filters
+** Listing available themes and countries
 
-| BASNOME        | Series' metadata                               |
-|----------------+------------------------------------------------|
-| SERNOME        | Name                                           |
-| SERCODIGO      | Code                                           |
-| PERNOME        | Frequency                                      |
-| TEMCODIGO      | Theme code                                     |
-| UNINOME        | Unit measure                                   |
-| PAICODIGO      | Location code                                  |
-| SERATUALIZACAO | Last updated                                   |
-| MULNOME        | Multiplicative factor                          |
-| SERCOMENTARIO  | Notes/comments, in portuguese                  |
-| FNTNOME        | Source's name, in portuguese                   |
-| FNTSIGLA       | Source's initials                              |
-| FNTURL         | Source's url                                   |
-| SERSTATUS      | Still being updated (1), not being updated (0) |
-| SERNUMERICA    | Numeric (1), alphanumeric (0)                  |
-
-** Lists of metadata codes
+You can take a look at the available themes and countries with the functions =list_themes= and =list_countries=.
 
 #+BEGIN_SRC python :session :exports both
-  ipea.list_themes()  # also available: list_countries
+  ipea.list_themes()
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
     TEMCODIGO  TEMCODIGO_PAI                 TEMNOME
-0   28        NaN             Agropecuária          
-1   23        NaN             Assistência social    
-2   10        NaN             Balanço de pagamentos 
-3   7         NaN             Câmbio                
-4   5         NaN             Comércio exterior     
-.. ..          ..                           ...     
-38  59         18.0           Senador               
-39  17        NaN             Sinopse macroeconômica
-40  33        NaN             Transporte            
-41  26        NaN             Vendas                
-42  60         18.0           Vereador              
+0          28            NaN            Agropecuária
+1          23            NaN      Assistência social
+2          10            NaN   Balanço de pagamentos
+3           7            NaN                  Câmbio
+4           5            NaN       Comércio exterior
+..        ...            ...                     ...
+38         59           18.0                 Senador
+39         17            NaN  Sinopse macroeconômica
+40         33            NaN              Transporte
+41         26            NaN                  Vendas
+42         60           18.0                Vereador
 
 [43 rows x 3 columns]
 #+end_example
 
-Supposing now we are interested in the theme of employment (at row 16, code 12), we could search for this kind of series:
+Supposing now we are interested in the theme of employment and macroeconomics, we could search for these type of series like this:
 
 #+BEGIN_SRC python :session :exports both
-  ipea.search(TEMCODIGO=12)
+  ipea.search(TEMCODIGO=[12, 17])
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-            SERCODIGO                                                      SERNOME     PERNOME                   UNINOME  TEMCODIGO
-0    ADMIS             Total da evolução de admissões                               Mensal      Pessoa                    12       
-1    CAGED12_ADMIS     Empregados - admissões                                       Mensal      Pessoa                    12       
-2    CAGED12_DESLIG    Empregados - demissões                                       Mensal      Pessoa                    12       
-3    CAGED12_SALDO12   Empregados - saldo                                           Mensal      Pessoa                    12       
-4    CN_C              Despesas com salários nas atividades da indústria extrativa  Quinquenal  R$, a preços do ano 2000  12       
-..    ...                                                                      ...         ...                       ...  ..       
-208  SEADE12_TDAGSP12  Taxa de desemprego - aberto - RMSP                           Mensal      (%)                       12       
-209  SEADE12_TDODSP12  Taxa de desemprego - oculto - desalento - RMSP               Mensal      (%)                       12       
-210  SEADE12_TDOPSP12  Taxa de desemprego - oculto - precário - RMSP                Mensal      (%)                       12       
-211  SEADE12_TDOTSP12  Taxa de desemprego - oculto - RMSP                           Mensal      (%)                       12       
-212  SEADE12_TDTGSP12  Taxa de desemprego - RMSP                                    Mensal      (%)                       12       
+           SERCODIGO                                            SERNOME     PERNOME                   UNINOME  TEMCODIGO
+0              ADMIS                     Total da evolução de admissões      Mensal                    Pessoa         12
+1      CAGED12_ADMIS                             Empregados - admissões      Mensal                    Pessoa         12
+2     CAGED12_DESLIG                             Empregados - demissões      Mensal                    Pessoa         12
+3    CAGED12_SALDO12                                 Empregados - saldo      Mensal                    Pessoa         12
+4               CN_C  Despesas com salários nas atividades da indúst...  Quinquenal  R$, a preços do ano 2000         12
+..               ...                                                ...         ...                       ...        ...
+281         PAN4_TD4                                 Taxa de desemprego  Trimestral                       (%)         17
+282     PAN4_TDESOC4                                Taxa de desocupação  Trimestral                       (%)         17
+283     PAN4_TJOVER4               Taxa de juros nominal - Over / Selic  Trimestral                  (% a.a.)         17
+284        PAN4_TPR4          Tendência prospectiva para 4 meses - IPCA  Trimestral                  (% a.a.)         17
+285        PAN4_XTV4             Balança comercial - Exportações (BPM6)  Trimestral                       US$         17
 
-[213 rows x 5 columns]
+[286 rows x 5 columns]
+#+end_example
+
+Of course, you can search for just one of them as well.
+
+If you're interested in particular countries, try =list_countries=.
+
+#+BEGIN_SRC python :session :exports both
+ipea.list_countries()
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+   PAICODIGO                      PAINOME
+0        ZAF                África do Sul
+1        DEU                     Alemanha
+2       LATI               América Latina
+3        AGO                       Angola
+4        SAU               Arábia Saudita
+..       ...                          ...
+62       THA                    Tailândia
+63       TLS  Timor Leste (Ex-East Timor)
+64       URY                      Uruguai
+65       VEN                    Venezuela
+66      ZEUR                 Zona do Euro
+
+[67 rows x 2 columns]
+#+end_example
+
+You will then be able to search for how many you like.
+
+#+BEGIN_SRC python :session :exports both
+ipea.search(PAICODIGO=["VEN", "DEU", "LATI"])
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+           SERCODIGO                                            SERNOME PERNOME      UNINOME PAICODIGO
+0   ECONMI12_ALBCY12         balança comercial - saldo (acum. 12 meses)  Mensal          US$       DEU
+1   ECONMI12_ALCCY12  balanço - conta corrente - saldo (acum. 12 meses)  Mensal          US$       DEU
+2   ECONMI12_ALPCG12            preços ao consumidor - var. em 12 meses  Mensal     (% a.a.)       DEU
+3   ECONMI12_ALPIG12             produção industrial - var. em 12 meses  Mensal     (% a.a.)       DEU
+4   ECONMI12_ALPPG12              preços ao produtor - var. em 12 meses  Mensal     (% a.a.)       DEU
+..               ...                                                ...     ...          ...       ...
+44     WDI_PIBPPCLCN            PIB - paridade do poder de compra (PPC)   Anual          US$      LATI
+45    WDI_PIBPPCRDEU            PIB - paridade do poder de compra (PPC)   Anual  US$ de 2011       DEU
+46    WDI_PIBPPCRLCN            PIB - paridade do poder de compra (PPC)   Anual  US$ de 2011      LATI
+47    WDI_PIBPPCRVEN            PIB - paridade do poder de compra (PPC)   Anual  US$ de 2011       VEN
+48     WDI_PIBPPCVEN            PIB - paridade do poder de compra (PPC)   Anual          US$       VEN
+
+[49 rows x 5 columns]
 #+end_example
 
 ** Getting multiple values
@@ -151,18 +213,18 @@ Supposing now we are interested in the theme of employment (at row 16, code 12),
 #+RESULTS:
 #+begin_example
             Taxa de juros - Over / Selic  Taxa de juros - CDB
-date                                                         
-1974-01-01  1.46                          1.800000           
-1974-02-01  1.15                          1.800000           
-1974-03-01  1.16                          1.800000           
-1974-04-01  1.21                          1.800000           
-1974-05-01  1.24                          1.800000           
-...          ...                               ...           
-2009-06-01  0.76                          0.711593           
-2009-07-01  0.79                          0.776809           
-2009-08-01  0.69                          0.692135           
-2009-09-01  0.69                          0.718573           
-2009-10-01  0.69                          0.693355           
+Date                                                         
+1974-01-01                          1.46             1.800000
+1974-02-01                          1.15             1.800000
+1974-03-01                          1.16             1.800000
+1974-04-01                          1.21             1.800000
+1974-05-01                          1.24             1.800000
+...                                  ...                  ...
+2009-06-01                          0.76             0.711593
+2009-07-01                          0.79             0.776809
+2009-08-01                          0.69             0.692135
+2009-09-01                          0.69             0.718573
+2009-10-01                          0.69             0.693355
 
 [430 rows x 2 columns]
 #+end_example
@@ -181,18 +243,34 @@ To get metadata you would do the same as in =bcb= module.
 #+begin_example
 
 values
-SERCODIGO           BM12_TJOVER12                                                                                                                                                                                                                                                                                                                                                                
-SERNOME             Taxa de juros - Over / Selic                                                                                                                                                                                                                                                                                                                                                 
-SERCOMENTARIO       Quadro: Taxas de juros efetivas.  Para 1974-1979: fonte Andima.  Dados mais recentes atualizados pela Sinopse da Andima.  Obs.: A taxa Overnight / Selic é a média dos juros que o Governo paga aos bancos que lhe emprestaram dinheiro. Refere-se à média do mês. Serve de referência para outras taxas de juros do país. A taxa Selic é a taxa básica de juros da economia.
-SERATUALIZACAO      2019-12-14T05:06:00.543-02:00                                                                                                                                                                                                                                                                                                                                                
-BASNOME             Macroeconômico
-...                                                                                                                                                                                                                                                                                                                                                               
-SERMAXDATA          2019-12-01T00:00:00-02:00                                                                                                                                                                                                                                                                                                                                                    
-FNTEXTURL           None                                                                                                                                                                                                                                                                                                                                                                         
-SERPROGRAMAGERADOR  None                                                                                                                                                                                                                                                                                                                                                                         
-SERDECIMAIS         4                                                                                                                                                                                                                                                                                                                                                                            
-SERQNT              552                                                                                                                                                                                                                                                                                                                                                                          
-
-[29 rows x 1 columns]
+SERCODIGO                                               BM12_TJOVER12
+SERNOME                                  Taxa de juros - Over / Selic
+SERCOMENTARIO       Quadro: Taxas de juros efetivas.  Para 1974-19...
+SERATUALIZACAO                          2019-12-14T05:06:00.543-02:00
+BASNOME                                                Macroeconômico
+FNTID                                                      1333430857
+FNTSIGLA                                      Bacen/Boletim/M. Finan.
+FNTNOME             Banco Central do Brasil, Boletim, Seção mercad...
+FNTURL                                          http://www.bcb.gov.br
+PERNOME                                                        Mensal
+UNINOME                                                      (% a.m.)
+MULNOME                                                          None
+SERSTATUS                                                           A
+TEMCODIGO                                                          39
+TEMNOME                                                   Financeiras
+TEMCODIGOPAI                                                     None
+PAICODIGO                                                         BRA
+SERNUMERICA                                                      True
+SERTEMBR                                                         None
+SERTEMEST                                                        None
+SERTEMMUN                                                        None
+SERTEMAMC                                                        None
+SERTEMMET                                                        None
+SERMINDATA                                  1974-01-01T00:00:00-02:00
+SERMAXDATA                                  2019-12-01T00:00:00-02:00
+FNTEXTURL                                                        None
+SERPROGRAMAGERADOR                                               None
+SERDECIMAIS                                                         4
+SERQNT                                                            552
 #+end_example
 
