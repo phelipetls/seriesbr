@@ -28,25 +28,21 @@ class TestUtils(unittest.TestCase):
     @patch.object(pandas.DataFrame, "query")
     def test_do_search(self, mocked_query):
         mocked_query.side_effect = return_argument
-        df = pandas.DataFrame(
-            {"nome": [1, 2], "pesquisa_nome": [2, 3], "pesquisa_id": [3, 4]}
-        )
+        df = pandas.DataFrame({"id": [1, 2], "nome": [2, 3], "pesquisa_nome": [4, 5], "pesquisa_id": [3, 4]})
         test = [
             utils.do_search(df, "oi", {"pesquisa_nome": "DD"}),
             utils.do_search(df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"]}),
             utils.do_search(df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"], "pesquisa_id": "AA"}),
         ]
         correct = [
-            "nome.str.contains('(?iu)(oi)') and pesquisa_nome.str.contains('(?iu)(DD)')",
-            "nome.str.contains('(?iu)(oi|tudo)') and pesquisa_nome.str.contains('(?iu)(DD|DI)')",
-            "nome.str.contains('(?iu)(oi|tudo)') and pesquisa_nome.str.contains('(?iu)(DD|DI)') and pesquisa_id.str.contains('(?iu)(AA)')",
+            "nome.str.contains('(?iu)oi') and pesquisa_nome.str.contains('(?iu)DD')",
+            "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI')",
+            "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI') and pesquisa_id.str.contains('(?iu)AA')",
         ]
         self.assertListEqual(test, correct)
 
     def test_if_raises_do_search_invalid_filter(self):
-        df = pandas.DataFrame(
-            {"nome": [1, 2], "pesquisa_nome": [2, 3], "pesquisa_id": [3, 4]}
-        )
+        df = pandas.DataFrame({"id": [1, 2], "nome": [2, 3], "pesquisa_nome": [4, 5], "pesquisa_id": [3, 4]})
         with self.assertRaises(ValueError):
             utils.do_search(df, "oi", {"non_existent_col": "a"})
 
