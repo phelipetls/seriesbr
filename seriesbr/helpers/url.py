@@ -15,32 +15,42 @@ def ipea_make_select_query(fields):
     return f"?$select={','.join(selected)}"
 
 
-def ipea_make_filter_query(name, fields):
+def ipea_make_filter_query(names, fields):
     # to get the string "&$filter=contains(SERNOME,'name')
     # and contains(ANOTHER,'value') and contains(ANOTHER,'value')"
     if any([field not in ipea_metadata_list for field in fields]):
         raise ValueError(f"Can't search for {' or '.join(fields)}. Call ipea.list_fields() if you need help.")
     prefix = "&$filter="
-    filter_by_name = f"contains(SERNOME,'{name}')" if name else ""
+    filter_by_name = contains_operator("SERNOME", names) if names else ""
     filter_by_metadata = ""
     metadata_filters = []
     if fields:
         for metadata, value in fields.items():
             if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
-                if isinstance(value, list):
-                    metadata_filters.append("(" + " or ".join([f"{metadata} eq {quote_if_str(item)}" for item in value]) + ")")
-                else:
-                    metadata_filters.append(f"{metadata} eq {quote_if_str(value)}")
+                metadata_filters.append(equal_operator(metadata, value))
             else:
-                metadata_filters.append(f"contains({metadata},'{value}')")
-            filter_by_metadata = " and " if filter_by_name else ""
-            filter_by_metadata += " and ".join(metadata_filters)
+                metadata_filters.append(contains_operator(metadata, value))
+        filter_by_metadata = " and " if filter_by_name else ""
+        filter_by_metadata += " and ".join(metadata_filters)
     return f"{prefix}{filter_by_name}{filter_by_metadata}"
+
+
+def contains_operator(metadata, values):
+    if isinstance(values, (list, tuple)):
+        return "(" + " or ".join([f"contains({metadata},'{item}')" for item in values]) + ")"
+    else:
+        return f"contains({metadata},'{values}')"
+
+
+def equal_operator(metadata, values):
+    if isinstance(values, (list, tuple)):
+        return "(" + " or ".join([f"{metadata} eq {quote_if_str(item)}" for item in values]) + ")"
+    else:
+        return f"{metadata} eq {quote_if_str(values)}"
 
 
 def quote_if_str(something):
     return f"'{something}'" if isinstance(something, str) else f"{something}"
-
 
 ## IBGE
 
