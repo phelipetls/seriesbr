@@ -1,16 +1,15 @@
-* Instituto Brasileiro de Geografia e Estatística
-
-IBGE's database is very complex and allows you to get data for specific
-locations, classifications, categories and periods.
-
-The database has several "aggregated variables" and its different measures
-are called "variables".
-
-For example, IPCA is an aggregate and has as variables the monthly and cumulative
-variation, among others.
-
-In this demonstration, we will try to replicate the visualizations of IPCA in 
-october 2019 for various kinds of products, as it was done [[https://sidra.ibge.gov.br/home/ipca][here]].
+* Instituto Brasileiro de Geografia e Estatística			:TOC:
+  - [[#searching-for-aggregates][Searching for aggregates]]
+  - [[#searching-for-variables][Searching for variables]]
+  - [[#searching-for-classifications-and-categories][Searching for classifications and categories]]
+  - [[#retrieving-data][Retrieving data]]
+  - [[#inflation-rate-by-productsservices][Inflation rate by products/services]]
+  - [[#weight-of-each-product-in-the-inflation-rate][Weight of each product in the inflation rate]]
+  - [[#inflation-rate-by-metropolitan-areas][Inflation rate by metropolitan areas]]
+  - [[#inflation-rate-by-product-and-month][Inflation rate by product and month]]
+  - [[#most-recent-inflation-rate-nov19-by-product][Most recent inflation rate (nov/19) by product]]
+  - [[#bonus-was-50-fo-brazilian-gdp-produced-by-69-cities-alone][Bonus: Was 50% fo brazilian GDP produced by 69 cities alone?]]
+  - [[#bonus-private-sectors-employment-in-brazil][Bonus: Private sector's employment in Brazil]]
 
 ** Searching for aggregates
 

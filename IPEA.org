@@ -1,4 +1,10 @@
-* Instituto de Pesquisa Econômica Aplicada
+* Instituto de Pesquisa Econômica Aplicada				:TOC:
+  - [[#searching-in-the-database][Searching in the database]]
+  - [[#valid-filters][Valid filters]]
+  - [[#lists-of-metadata-codes][Lists of metadata codes]]
+  - [[#getting-multiple-values][Getting multiple values]]
+  - [[#getting-metadata][Getting metadata]]
+
 ** Searching in the database
 
 #+BEGIN_SRC python :session :exports both

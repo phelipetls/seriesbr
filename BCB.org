@@ -1,4 +1,8 @@
-* Banco Central do Brasil
+* Banco Central do Brasil						:TOC:
+  - [[#searching][Searching]]
+  - [[#retrieving-data][Retrieving data]]
+  - [[#getting-metadata][Getting metadata]]
+
 ** Searching
 *** Searching for brazilian interest rate
 
