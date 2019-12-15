@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 from .request import get_json
 
 
@@ -17,19 +16,14 @@ def parse_ipea_response(url, code, name):
 
 def json_to_dataframe(json, code, name, date_key, value_key, date_fmt):
     df = pd.DataFrame(json)
-    df[date_key] = convert_to_datetime(df[date_key].values, date_fmt=date_fmt)
-    df[date_key] = pd.to_datetime(df[date_key])
+    if date_fmt == "%Y-%m-%dT%H:%M:%S":
+        df[date_key] = df[date_key].str[:-6]
+    df[date_key] = pd.to_datetime(df[date_key], format=date_fmt)
     df[value_key] = df[value_key].astype('float64')
     df = df.set_index(date_key)
     df.columns = [name if name else code]
     df = df.rename_axis("date")
     return df
-
-
-@pd.np.vectorize
-def convert_to_datetime(date_string, date_fmt):
-    date_string = date_string[:-6] if date_fmt == "%Y-%m-%dT%H:%M:%S" else date_string
-    return datetime.strptime(date_string, date_fmt)
 
 
 def parse_ibge_response(url):
