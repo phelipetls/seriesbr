@@ -41,14 +41,40 @@ def isiterable(something):
     return True
 
 
-def do_search(df, search, where):
+def do_search(df, search, searches):
     """
     Helper function to search for regex
     in a given column
     """
+    df_cols = df.columns.tolist()
+    for field in searches.keys():
+        if field not in df_cols:
+            raise ValueError("{} is a non-existing column.".format(field))
+    regex = build_regex(search)
+    name_search = f"{df_cols[1]}.str.contains('{regex}')"
+    if searches:
+        other_searches = []
+        for field, search in searches.items():
+            regex = build_regex(search)
+            other_searches.append(f"{field}.str.contains('{regex}')")
+        other_searches = " and " + " and ".join(other_searches)
+        return df.query(name_search + other_searches, engine='python')
+    return df.query(name_search, engine='python')
+
+
+def build_regex(strings):
+    """
+    Build regex by joining strings by sep
+    if it is an iterable but don't do it
+    if just a string.
+    """
     # (?iu) sets unicode and ignore case flags
-    to_search = r'(?iu)' + '|'.join(search)
-    return df.query(f"{where}.str.contains(@to_search)", engine='python')
+    flags = r'(?iu)'
+    if isinstance(strings, str):
+        regex = f"{flags}{strings}"
+    elif isiterable(strings):
+        regex = f"{flags}{'|'.join(strings)}"
+    return regex
 
 
 def clean_json(json):

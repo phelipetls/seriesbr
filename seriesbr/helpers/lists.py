@@ -6,12 +6,12 @@ from .utils import clean_json, do_search
 # IBGE
 
 
-def list_regions(kind_of_region, search, where):
+def list_regions(kind_of_region, search, searches):
     url = f"https://servicodados.ibge.gov.br/api/v1/localidades/{kind_of_region}"
     json = get_json(url)
     df = clean_json(json)
-    if search:
-        return do_search(df, search, where)
+    if search or searches:
+        return do_search(df, search, searches)
     return df
 
 

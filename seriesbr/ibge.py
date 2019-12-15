@@ -99,7 +99,7 @@ def get_metadata(aggregate_code):
 ## List Metadata Functions
 
 
-def search(*search, where="nome"):
+def search(*search, **searches):
     """
     Function to list all aggregated variables of IBGE.
 
@@ -119,12 +119,12 @@ def search(*search, where="nome"):
     df = pd.io.json.json_normalize(
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
-    if search:
-        return do_search(df, search, where)
+    if search or searches:
+        return do_search(df, search, searches)
     return df
 
 
-def list_variables(aggregate_code):
+def list_variables(aggregate_code, *search, **searches):
     """
     Function to list all variables associated with an aggregate of IBGE.
 
@@ -144,7 +144,10 @@ def list_variables(aggregate_code):
     query = f"/agregados/{aggregate_code}/variaveis/all?localidades=BR"
     url = f"{baseurl}{query}"
     json = get_json(url)
-    return pd.io.json.json_normalize(json).iloc[:, :3]
+    df = pd.io.json.json_normalize(json).iloc[:, :3]
+    if search or searches:
+        return do_search(df, search, searches)
+    return df
 
 
 def list_locations(aggregate_code):
@@ -183,7 +186,7 @@ def list_periods(aggregate_code):
     return df
 
 
-def list_classifications(aggregate_code, *search, where="categoria_nome"):
+def list_classifications(aggregate_code, *search, **searches):
     """
     Function to list all classification of a given aggregate.
 
@@ -207,15 +210,14 @@ def list_classifications(aggregate_code, *search, where="categoria_nome"):
         classifications,
         "categorias",
         meta=["id", "nome"],
-        meta_prefix="classificacao_",
-        record_prefix="categoria_",
+        meta_prefix="classificacao_"
     )
-    if search:
-        return do_search(df, search, where)
+    if search or searches:
+        return do_search(df, search, searches)
     return df
 
 
-def list_states(*search, where="nome"):
+def list_states(*search, **searches):
     """
     Function to list all states and their codes.
 
@@ -231,10 +233,10 @@ def list_states(*search, where="nome"):
     -------
     A DataFrame with metadata about the states.
     """
-    return list_regions("estados", search, where)
+    return list_regions("estados", search, searches)
 
 
-def list_macroregions(*search, where="nome"):
+def list_macroregions(*search, **searches):
     """
     Function to list all macroregions and their codes.
 
@@ -250,10 +252,10 @@ def list_macroregions(*search, where="nome"):
     -------
     A DataFrame with metadata about the about the states.
     """
-    return list_regions("regioes", search, where)
+    return list_regions("regioes", search, searches)
 
 
-def list_cities(*search, where="nome"):
+def list_cities(*search, **searches):
     """
     Function to list all cities and their codes.
 
@@ -269,10 +271,10 @@ def list_cities(*search, where="nome"):
     -------
     A DataFrame with metadata about the cities.
     """
-    return list_regions("municipios", search, where)
+    return list_regions("municipios", search, searches)
 
 
-def list_microregions(*search, where="nome"):
+def list_microregions(*search, **searches):
     """
     Function to list all microregions.
 
@@ -288,10 +290,10 @@ def list_microregions(*search, where="nome"):
     -------
     A DataFrame with metadata about the microregions.
     """
-    return list_regions("microrregioes", search, where)
+    return list_regions("microrregioes", search, searches)
 
 
-def list_mesoregions(*search, where="nome"):
+def list_mesoregions(*search, **searches):
     """
     Function to list all mesoregions and their codes.
 
@@ -307,6 +309,6 @@ def list_mesoregions(*search, where="nome"):
     -------
     A DataFrame with metadata about the mesoregions.
     """
-    return list_regions("mesorregioes", search, where)
+    return list_regions("mesorregioes", search, searches)
 
 # vi: nowrap

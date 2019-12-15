@@ -1,10 +1,16 @@
 import os
 import sys
 import unittest
+import pandas
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import seriesbr.helpers.utils as utils
+
+
+def return_argument(arg, **kwargs):
+    return arg
 
 
 class TestUtils(unittest.TestCase):
@@ -18,6 +24,31 @@ class TestUtils(unittest.TestCase):
         test = list(map(utils.isiterable, to_test))
         correct = [True, True, False, True, True]
         self.assertListEqual(test, correct)
+
+    @patch.object(pandas.DataFrame, "query")
+    def test_do_search(self, mocked_query):
+        mocked_query.side_effect = return_argument
+        df = pandas.DataFrame(
+            {"nome": [1, 2], "pesquisa_nome": [2, 3], "pesquisa_id": [3, 4]}
+        )
+        test = [
+            utils.do_search(df, "oi", {"pesquisa_nome": "DD"}),
+            utils.do_search(df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"]}),
+            utils.do_search(df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"], "pesquisa_id": "AA"}),
+        ]
+        correct = [
+            "nome.str.contains('(?iu)(oi)') and pesquisa_nome.str.contains('(?iu)(DD)')",
+            "nome.str.contains('(?iu)(oi|tudo)') and pesquisa_nome.str.contains('(?iu)(DD|DI)')",
+            "nome.str.contains('(?iu)(oi|tudo)') and pesquisa_nome.str.contains('(?iu)(DD|DI)') and pesquisa_id.str.contains('(?iu)(AA)')",
+        ]
+        self.assertListEqual(test, correct)
+
+    def test_if_raises_do_search_invalid_filter(self):
+        df = pandas.DataFrame(
+            {"nome": [1, 2], "pesquisa_nome": [2, 3], "pesquisa_id": [3, 4]}
+        )
+        with self.assertRaises(ValueError):
+            utils.do_search(df, "oi", {"non_existent_col": "a"})
 
 
 if __name__ == "__main__":
