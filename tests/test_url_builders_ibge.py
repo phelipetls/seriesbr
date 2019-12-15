@@ -83,6 +83,7 @@ class TestUrlBuildersDatesIBGE(unittest.TestCase):
 
 class TestUrlBuildersLocationsIBGE(unittest.TestCase):
 
+    @unittest.skipIf(sys.version_info.minor < 7, "Incompatible order of locations")
     def test_build_cities_query(self):
         correct = [
             "&localidades=N6[1]",
