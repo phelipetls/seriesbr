@@ -80,7 +80,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     )
 
 
-def search(name="", *filters, rows=10, skip=1):
+def search(name="", *filters, rows=10, start=1):
     """
     Search for a name in the SGS database.
 
@@ -89,7 +89,7 @@ def search(name="", *filters, rows=10, skip=1):
     name : str
         String to search.
 
-    skip : int or str
+    start : int or str
         How many results to show.
 
     start : int or str
@@ -100,7 +100,7 @@ def search(name="", *filters, rows=10, skip=1):
     A DataFrame with the results.
     """
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    params = f"q={name}&rows={rows}&start={skip}&sort=score desc"
+    params = f"q={name}&rows={rows}&start={start}&sort=score desc"
     filter_params = f"&fq={'+'.join([value for value in filters])}" if filters else ""
     url = f"{baseurl}{params}{filter_params}"
     results = return_search_results_bcb(url)

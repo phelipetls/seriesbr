@@ -25,7 +25,7 @@ class TestBCBSearch(unittest.TestCase):
 
     def test_search_with_more_args_and_rows_bcb(self):
         correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
-        self.assertEqual(bcb.search("spread", "mensal", "livre", rows=30, skip=5), correct)
+        self.assertEqual(bcb.search("spread", "mensal", "livre", rows=30, start=5), correct)
 
 
 if __name__ == "__main__":
