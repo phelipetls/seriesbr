@@ -26,13 +26,20 @@ def ipea_make_filter_query(name, fields):
     metadata_filters = []
     if fields:
         for metadata, value in fields.items():
-            if re.search("(CODIGO|NUMERICA)$", metadata):
-                metadata_filters.append(f"{metadata} eq {value}")
+            if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
+                if isinstance(value, list):
+                    metadata_filters.append("(" + " or ".join([f"{metadata} eq {quote_if_str(item)}" for item in value]) + ")")
+                else:
+                    metadata_filters.append(f"{metadata} eq {quote_if_str(value)}")
             else:
                 metadata_filters.append(f"contains({metadata},'{value}')")
             filter_by_metadata = " and " if filter_by_name else ""
             filter_by_metadata += " and ".join(metadata_filters)
     return f"{prefix}{filter_by_name}{filter_by_metadata}"
+
+
+def quote_if_str(something):
+    return f"'{something}'" if isinstance(something, str) else f"{something}"
 
 
 ## IBGE
