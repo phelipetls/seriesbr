@@ -297,12 +297,10 @@ plt.savefig('imgs/recent_ipca.png', bbox_inches='tight')
 
 ** Bonus: Was 50% fo brazilian GDP produced by 69 cities alone?
 
-Let's try to assert the statement, made [[https://g1.globo.com/economia/noticia/2019/12/13/em-2017-quase-metade-do-pib-do-pais-foi-gerado-por-apenas-69-municipios-aponta-ibge.ghtml][here]], that in 2017 the brazilian GDP was produced by 69 cities.
+Let's try to assert the statement, made [[https://g1.globo.com/economia/noticia/2019/12/13/em-2017-quase-metade-do-pib-do-pais-foi-gerado-por-apenas-69-municipios-aponta-ibge.ghtml][here]], that half of the brazilian GDP was produced by 69 only cities in 2017.
 
 To do that, I needed to look for a GDP aggregate that had cities as one of its classifications.
 This aggregate's code turned out to be 5938 and the relevant variable's code (nominal GDP by current price) to be 37.
-
-So that's how I've done it.
 
 #+BEGIN_SRC python :session :exports both
 
@@ -335,9 +333,9 @@ A look at the row numbers confirms the statement.
 69 out of 5570 cities from Brazil was responsible for 50% of the GDP,
 with 10% being São Paulo alone. Pretty impressive.
 
-** Bonus: Unemployment in Brazil
+** Bonus: Private sector's employment in Brazil
 
-Let's try to check out the recent evolution of unemployment in Brazil.
+Let's try to check out the recent evolution of the employment in the private sector in Brazil.
 
 For this, we will first search for an aggregate with "emprego"
 in its name from the research "Pesquisa Nacional por Amostra de
@@ -403,7 +401,7 @@ emprego.columns = ["Formal", "Informal"]
 emprego.plot(subplots=True, figsize=(7, 5))
 
 plt.suptitle("Emprego no setor privado")
-plt.tight_layout(bbox_inches='tight')
+plt.tight_layout()
 plt.savefig('imgs/employment.png')
 'imgs/employment.png'
 #+END_SRC

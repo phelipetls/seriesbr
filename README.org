@@ -89,8 +89,7 @@ values from both IPEA and BCB at the same call.
 #+RESULTS:
 [[file:imgs/example.png]]
 
-Though desirable, it would be hard to do the same thing for IBGE.
-For more thorough demonstrations, check out the links above.
+Though desirable, it would be hard to do the same thing with IBGE's API.
 
 ** Conclusion
 
