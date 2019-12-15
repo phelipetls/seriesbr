@@ -15,16 +15,14 @@ ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 2   BM12_CRDSDPJ12      Operações de crédito - recursos direcionados - spread - pessoa jurídica  Mensal  (p.p.)  Macroeconômico
 3   BM12_CRLSD12        Operações de crédito - recursos livres - spread                          Mensal  (p.p.)  Macroeconômico
 4   BM12_CRLSDPF12      Operações de crédito - recursos livres - spread - pessoa física          Mensal  (p.p.)  Macroeconômico
-5   BM12_CRLSDPJ12      Operações de crédito - recursos livres - spread - pessoa jurídica        Mensal  (p.p.)  Macroeconômico
-6   BM12_CSD12          Operações de crédito - spread                                            Mensal  (p.p.)  Macroeconômico
-7   BM12_CSDPF12        Operações de crédito - spread - pessoa física                            Mensal  (p.p.)  Macroeconômico
-8   BM12_CSDPJ12        Operações de crédito - spread - pessoa jurídica                          Mensal  (p.p.)  Macroeconômico
-9   VALOR12_GLOBAL1212  Bônus global República (12) - spread                                     Mensal  (p.p.)  Macroeconômico
+..             ...                                                                  ...             ...     ...             ...
 10  VALOR12_GLOBAL2412  Bônus global República (24) - spread                                     Mensal  (p.p.)  Macroeconômico
 11  VALOR12_GLOBAL2712  Bônus global República (27) - spread                                     Mensal  (p.p.)  Macroeconômico
 12  VALOR12_GLOBAL4012  Bônus global República (40) - spread                                     Mensal  (p.p.)  Macroeconômico
 13  VALOR12_GLOBAL912   Bônus global República (9) - spread                                      Mensal  (p.p.)  Macroeconômico
 14  VALOR12_TJCBOND12   C-Bond - spread                                                          Mensal  (p.p.)  Macroeconômico
+
+[15 rows x 5 columns]
 #+end_example
 
 Another example:
@@ -41,18 +39,14 @@ Another example:
 2   BM12_TJCDI12       Taxa de juros - CDI / Over                                        Mensal  (% a.m.)
 3   BM12_TJLCMN12      Taxa de juros - letras de câmbio ao mutuário                      Mensal  (% a.m.)
 4   BM12_TJLCTN12      Taxa de juros - letras de câmbio ao tomador                       Mensal  (% a.m.)
-5   BM12_TJLP12        Taxa de juros - TJLP                                              Mensal  (% a.m.)
-6   BM12_TJOVER12      Taxa de juros - Over / Selic                                      Mensal  (% a.m.)
-7   BM12_TJTBAN12      Taxa de juros - TBAN                                              Mensal  (% a.m.)
-8   BM12_TJTBC12       Taxa de juros - TBC                                               Mensal  (% a.m.)
-9   BM12_TJTBF12       Taxa de juros - TBF                                               Mensal  (% a.m.)
-10  BM12_TJTR12        Taxa de juros - TR                                                Mensal  (% a.m.)
-11  DIESP12_GIRO12     Taxa de juros - crédito - capital de giro - fim período           Mensal  (% a.m.)
+..            ...                                              ...                          ...       ...
 12  GM12_TJLFT12       Taxa de juros - Letras do Tesouro Nacional - financeiras (LFT)    Mensal  (% a.m.)
 13  IBMEC12_OTNRTJ12   Taxa de juros - obrigações reajustáveis do Tesouro Nacional       Mensal  (% a.m.)
 14  IBMEC12_TJEMP12    Taxa de juros paga pelo tomador do empréstimo por aceite cambial  Mensal  (% a.m.)
 15  IBMEC12_TJLM12     Taxa de juros - letras imobiliárias                               Mensal  (% a.m.)
 16  IBMEC12_TJTIT12    Taxa de juros - letras de câmbio                                  Mensal  (% a.m.)
+
+[17 rows x 4 columns]
 #+end_example
 
 Or even:

@@ -25,6 +25,8 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 
 ** Installation
 
+To install the latest version, run the following command:
+
 #+NAME: Installation
 
 =pip3 install --upgrade seriesbr=
@@ -44,7 +46,7 @@ It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb
 
 ** Usage
 
-In the following links there are demonstrations files on how to use each module:
+In the following links you will find demonstrations files on how to use each module:
 
 - [[https://github.com/phelipetls/seriesbr/blob/master/BCB.org][BCB]]
 - [[https://github.com/phelipetls/seriesbr/blob/master/IPEA.org][IPEA]]
@@ -100,10 +102,6 @@ feel free to open an issue / contribute by opening a pull request!
 ** License
 
 [[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][MIT]]
-
-** Development
-
-- Improve code coverage (in order to not depend on the external servers, the tests use [[https://docs.python.org/3/library/unittest.mock.html][mock]] very heavily. This, for me, made it difficult to increase code coverage).
 
 ** Support
 
