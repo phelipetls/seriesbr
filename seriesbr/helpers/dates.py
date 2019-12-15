@@ -75,3 +75,15 @@ def very_old_date():
 
 def today_date():
     return datetime.datetime.today()
+
+
+def month_to_quarter(date):
+    quarter = divmod(date.month, 3)[0] + bool(divmod(date.month, 3)[1])
+    return date.replace(month=quarter)
+
+
+def check_if_quarters(dates):
+    months = [
+        datetime.datetime.strptime(dt, "%Y%m").month for dt in dates if dt is not None
+    ]
+    return all([month <= 4 for month in months])

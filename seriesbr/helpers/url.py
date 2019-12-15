@@ -1,7 +1,7 @@
 import re
 from .utils import cat, isiterable
-from .dates import today_date
 from .ipea_metadata_list import ipea_metadata_list
+from .dates import today_date, month_to_quarter, check_if_quarters, parse_dates
 
 ## IPEA
 
@@ -60,25 +60,22 @@ def ibge_build_classification_query(classifications=None):
         return ""
 
 
-def ibge_build_dates_query(start=None, end=None, last_n=None, month=True):
+def ibge_build_dates_query(start=None, end=None, last_n=None, freq=None):
     """
     Auxiliary function to build the date part
     of the URL.
     """
-    if month:
-        today = today_date().strftime("%Y%m")
-    else:
-        today = today_date().strftime("%Y")
-        start = start[:-2]
-        end = end[:-2]
+    start, end = parse_dates(start, end, "ibge")
     if last_n:
         dates = f"/periodos/-{last_n}"
-    elif start and end:
+    else:
+        if freq == "trimestral":
+            if end == today_date().strftime("%Y%m"):
+                end = month_to_quarter(today_date()).strftime("%Y%m")
+            assert check_if_quarters((start, end)), "Invalid quarter. Choose a number between 1 and 4"
+        elif freq == "anual":
+            start, end = start[:-2], end[:-2]
         dates = f"/periodos/{start}-{end}"
-    elif start:
-        dates = f"/periodos/{start}-{today}"
-    elif end:
-        dates = f"/periodos/{'190001' if month else '1900'}-{end}"
     return dates
 
 

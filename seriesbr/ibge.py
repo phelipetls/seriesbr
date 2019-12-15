@@ -1,8 +1,6 @@
-import requests
 import pandas as pd
 from .helpers.request import get_json
 from .helpers.response import parse_ibge_response
-from .helpers.dates import parse_dates
 from .helpers.utils import do_search
 from .helpers.lists import list_regions
 from .helpers.url import (
@@ -75,20 +73,21 @@ def get_series(
     A DataFrame with series values and metadata.
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
-    start, end = parse_dates(start, end, "ibge")
-    dates = ibge_build_dates_query(start, end, last_n)
+    # handle dates part of url
+    frequency = get_frequency(code)
+    dates = ibge_build_dates_query(start, end, last_n, frequency)
+    # handle variables, locations and classifications part of url
     variables = ibge_build_variables_query(variables)
     locations = ibge_build_location_query(city, state, macroregion, microregion, mesoregion, brazil)
     classifications = ibge_build_classification_query(classifications)
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
-    try:
-        return parse_ibge_response(url)
-    except requests.exceptions.HTTPError:
-        dates = ibge_build_dates_query(start, end, last_n, month=False)
-        url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
-        return parse_ibge_response(url)
+    return parse_ibge_response(url)
 
 ## Get metadata
+
+
+def get_frequency(aggregate_code):
+    return list_periods(aggregate_code).loc["frequency", :].values
 
 
 def get_metadata(aggregate_code):
