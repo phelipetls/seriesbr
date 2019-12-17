@@ -9,13 +9,17 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from seriesbr import ibge
 from seriesbr.helpers.url import (
-    ibge_build_classification_query,
-    ibge_build_variables_query,
+    ibge_make_classification_query,
+    ibge_make_variables_query,
 )
 
 
-def mocked_parse_response(url):
+def mocked_get_json(url):
     return url
+
+
+def mocked_ibge_json_to_df(json, frequency):
+    return json
 
 
 def mocked_today_date():
@@ -27,7 +31,8 @@ def mocked_list_regions(kind_of_region, search=None, where="nome"):
     return url
 
 
-@patch('seriesbr.ibge.parse_ibge_response', mocked_parse_response)
+@patch('seriesbr.ibge.get_json', mocked_get_json)
+@patch('seriesbr.ibge.ibge_json_to_df', mocked_ibge_json_to_df)
 @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
 class IBGEtest(unittest.TestCase):
 
@@ -112,18 +117,18 @@ class IBGEtest(unittest.TestCase):
         self.assertEqual(ibge.get_series(1419, start="05072017", end="12092018"), correct)
 
     @patch('seriesbr.ibge.get_frequency')
-    def test_ibge_build_classification_query(self, mocked_get_frequency):
+    def test_ibge_make_classification_query(self, mocked_get_frequency):
         mocked_get_frequency.return_value = "mensal"
-        self.assertEqual(ibge_build_classification_query({315: [7169, 7170, 7445], 22: [1, 3]}), "classificacao=315[7169,7170,7445]|22[1,3]")
-        self.assertEqual(ibge_build_classification_query(315), "classificacao=315[all]")
-        self.assertEqual(ibge_build_classification_query([315, 22]), "classificacao=315[all]|22[all]")
+        self.assertEqual(ibge_make_classification_query({315: [7169, 7170, 7445], 22: [1, 3]}), "classificacao=315[7169,7170,7445]|22[1,3]")
+        self.assertEqual(ibge_make_classification_query(315), "classificacao=315[all]")
+        self.assertEqual(ibge_make_classification_query([315, 22]), "classificacao=315[all]|22[all]")
 
     @patch('seriesbr.ibge.get_frequency')
-    def test_ibge_build_variables_query(self, mocked_get_frequency):
+    def test_ibge_make_variables_query(self, mocked_get_frequency):
         mocked_get_frequency.return_value = "mensal"
-        self.assertEqual(ibge_build_variables_query(15), "/variaveis/15")
-        self.assertEqual(ibge_build_variables_query([15, 16, 12]), "/variaveis/15|16|12")
-        self.assertEqual(ibge_build_variables_query(None), "/variaveis")
+        self.assertEqual(ibge_make_variables_query(15), "/variaveis/15")
+        self.assertEqual(ibge_make_variables_query([15, 16, 12]), "/variaveis/15|16|12")
+        self.assertEqual(ibge_make_variables_query(None), "/variaveis")
 
     @patch('seriesbr.ibge.get_frequency')
     def test_url_start_and_classifications(self, mocked_get_frequency):

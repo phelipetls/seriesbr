@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from seriesbr.helpers.response import json_to_dataframe, ibge_json_to_dataframe
+from seriesbr.helpers.response import bcb_json_to_df, ipea_json_to_df, ibge_json_to_df
 
 
 class TestBCBJsonParser(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestBCBJsonParser(unittest.TestCase):
         json_path = Path(__file__).resolve().parent / "sample_jsons" / "bcb_json"
         with json_path.open() as json_file:
             sample_json = json.load(json_file)
-        self.df = json_to_dataframe(sample_json, 11, "Selic", "data", "valor", "%d/%m/%Y")
+        self.df = bcb_json_to_df(sample_json, 11, "Selic")
 
     def test_if_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)
@@ -32,7 +32,7 @@ class TestIPEAJsonParser(unittest.TestCase):
         json_path = Path(__file__).resolve().parent / "sample_jsons" / "ipea_json"
         with json_path.open() as json_file:
             sample_json = json.load(json_file)
-        self.df = json_to_dataframe(sample_json["value"], "Código", "Nome", "VALDATA", "VALVALOR", "%Y-%m-%dT%H:%M:%S")
+        self.df = ipea_json_to_df(sample_json, "Código", "Nome")
 
     def test_if_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)
@@ -47,7 +47,7 @@ class TestIBGEJsonParser(unittest.TestCase):
         json_path = Path(__file__).resolve().parent / "sample_jsons" / "ibge_json"
         with json_path.open() as json_file:
             sample_json = json.load(json_file)
-        self.df = ibge_json_to_dataframe(sample_json)
+        self.df = ibge_json_to_df(sample_json)
 
     def test_if_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)

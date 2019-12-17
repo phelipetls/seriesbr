@@ -10,15 +10,20 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from seriesbr import bcb
 
 
-def mocked_parse_response(url, code, name):
+def mocked_get_json(url):
     return url
+
+
+def mocked_json_to_df(json, code, name):
+    return json
 
 
 def mocked_today_date():
     return datetime.datetime(2019, 12, 2)
 
 
-@patch('seriesbr.bcb.parse_bcb_response', mocked_parse_response)
+@patch('seriesbr.bcb.get_json', mocked_get_json)
+@patch('seriesbr.bcb.bcb_json_to_df', mocked_json_to_df)
 @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
 class BCBtest(unittest.TestCase):
 

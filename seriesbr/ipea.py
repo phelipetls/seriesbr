@@ -1,61 +1,32 @@
 from pandas import concat, DataFrame
-from .helpers.utils import return_codes_and_names
-from .helpers.lists import list_metadata
-from .helpers.response import parse_ipea_response
-from .helpers.searching import return_search_results_ipea
-from .helpers.request import get_json
 from .helpers.dates import parse_dates
-from .helpers.url import ipea_make_select_query, ipea_make_filter_query
+from .helpers.utils import return_codes_and_names
+from .helpers.lists import list_metadata_helper
+from .helpers.request import get_json
+from .helpers.response import ipea_json_to_df
+from .helpers.searching import get_search_results_ipea
 from .helpers.ipea_metadata_list import ipea_metadata_list
+from .helpers.url import (
+    ipea_make_select_query,
+    ipea_make_filter_query,
+    ipea_make_dates_query,
+)
 
 
 def get_serie(code, name=None, start=None, end=None):
     """
-    Returns a time series from IPEADATA database.
-
-    Parameters
-    ----------
-    code : int or str
-        The code of the time series.
-
-    name : str
-        The name of the series.
-
-    start : str
-        Initial date, year last.
-
-    end : str
-        End date, year last.
-
-    Returns
-    -------
-    pandas.DataFrame
+    Auxiliary function to return a single time series
+    from IPEA database.
     """
     assert isinstance(code, str), "Not a valid code format."
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"ValoresSerie(SERCODIGO='{code}')"
     select = "?$select=VALDATA,VALVALOR"
     start, end = parse_dates(start, end, api="ipeadata")
-    dates = date_filter(start, end)
+    dates = ipea_make_dates_query(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
-    serie = parse_ipea_response(url, code, name)
-    return serie
-
-
-def date_filter(start, end):
-    """
-    Auxiliary function to return the right query
-    to filter dates.
-    """
-    if start and end:
-        data = f"&$filter=VALDATA ge {start} and VALDATA le {end}"
-    elif start:
-        data = f"&$filter=VALDATA ge {start}"
-    elif end:
-        data = f"&$filter=VALDATA le {end}"
-    else:
-        data = ""
-    return data
+    json = get_json(url)
+    return ipea_json_to_df(json, code, name)
 
 
 def get_series(*codes, start=None, end=None, **kwargs):
@@ -66,22 +37,22 @@ def get_series(*codes, start=None, end=None, **kwargs):
     ----------
     codes : dict, str, int
         Dictionary like {"name1": cod1, "name2": cod2}
-        or a bunch of code numbers like cod1, cod2.
+        or a bunch of code numbers, e.g. cod1, cod2.
 
     start : str
-        Initial date.
+        Initial date, month or day first.
 
     end : str
-        End date.
+        End date, month or day first.
 
     **kwargs
-        Arguments to pandas.concat.
+        Passed to pandas.concat.
 
     Returns
     -------
-    pandas.DataFrame with the requested series.
+    pandas.DataFrame
+        A DataFrame with series' values.
     """
-    assert codes, "You must pass at least one code to be searched."
     codes, names = return_codes_and_names(*codes)
     return concat(
         (get_serie(code, name, start, end) for code, name in zip(codes, names)),
@@ -91,19 +62,39 @@ def get_series(*codes, start=None, end=None, **kwargs):
     )
 
 
-def search(SERNOME="", **fields):
+def search(*SERNOME, **metadatas):
+    """
+    Function to search in IPEA's database.
+
+    Parameters
+    ----------
+    *SERNOME
+        String(s) to look up for in a series' name.
+
+    **metadatas
+        Keyword arguments where parameter is a valid metadata
+        and value a str or list of str.
+    """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"
-    select_query = ipea_make_select_query(fields)
-    filter_query = ipea_make_filter_query(SERNOME, fields)
+    select_query = ipea_make_select_query(metadatas)
+    filter_query = ipea_make_filter_query(SERNOME, metadatas)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    results = return_search_results_ipea(url)
-    return results
+    return get_search_results_ipea(url)
 
 
 def get_metadata(code):
     """
-    Returns metadata of a series specified by the a code.
+    Get metadata of a series specified by the a code.
+
+    Parameters
+    ----------
+    code : int or str
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with the series' metadata.
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"Metadados('{code}')"
@@ -114,20 +105,20 @@ def get_metadata(code):
 
 def list_themes():
     """
-    List all themes available in the database.
+    Function to list all themes available in the database.
     """
-    return list_metadata("Temas")
+    return list_metadata_helper("Temas")
 
 
 def list_countries():
     """
-    List all countries available in the database.
+    Function to list all countries available in the database.
     """
-    return list_metadata("Paises")
+    return list_metadata_helper("Paises")
 
 
-def list_fields():
+def list_metadata():
     """
-    Pretty print dictionary of metadata with their description as values
+    Function to list all valid metadatas.
     """
-    return DataFrame.from_dict(ipea_metadata_list, orient='index', columns=["Descrição"])
+    return DataFrame.from_dict(ipea_metadata_list, orient='index', columns=["Description"])

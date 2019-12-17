@@ -5,7 +5,24 @@ s = requests.Session()
 
 
 def get_json(url, **kwargs):
-    response = s.get(url, timeout=120, **kwargs)
+    """
+    Auxiliary function to make get requests
+    within a HTTP Session.
+
+    Parameters
+    ----------
+    url : str
+        Url to be requested.
+
+    **kwargs
+        Passed to Session().get()
+
+    Returns
+    -------
+    dict
+        Decoded JSON.
+    """
+    response = s.get(url, timeout=10, **kwargs)
     response.raise_for_status()
     try:
         return response.json()

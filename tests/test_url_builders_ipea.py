@@ -21,17 +21,17 @@ class TestUrlBuildersIPEA(unittest.TestCase):
 
     def test_numeric_filter_query_no_name(self):
         correct = "&$filter=SERNUMERICA eq 1"
-        test = url.ipea_make_filter_query(names=None, fields={'SERNUMERICA': 1})
+        test = url.ipea_make_filter_query(names=None, metadatas={'SERNUMERICA': 1})
         self.assertEqual(test, correct)
 
     def test_string_filter_query_no_name(self):
         correct = "&$filter=contains(FNTNOME,'BCB')"
-        test = url.ipea_make_filter_query(names=None, fields={'FNTNOME': 'BCB'})
+        test = url.ipea_make_filter_query(names=None, metadatas={'FNTNOME': 'BCB'})
         self.assertEqual(test, correct)
 
     def test_string_and_numeric_filters_query_with_name(self):
         correct = "&$filter=contains(SERNOME,'Spread') and contains(FNTNOME,'BCB') and TEMCODIGO eq 1"
-        test = url.ipea_make_filter_query(names="Spread", fields={'FNTNOME': 'BCB', 'TEMCODIGO': 1})
+        test = url.ipea_make_filter_query(names="Spread", metadatas={'FNTNOME': 'BCB', 'TEMCODIGO': 1})
         self.assertEqual(test, correct)
 
     def test_raises_if_invalid_field(self):

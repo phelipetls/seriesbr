@@ -12,7 +12,7 @@ def mocked_search_results(url):
     return url
 
 
-@patch('seriesbr.bcb.return_search_results_bcb', mocked_search_results)
+@patch('seriesbr.bcb.get_search_results_bcb', mocked_search_results)
 class TestBCBSearch(unittest.TestCase):
 
     def test_search_bcb(self):
