@@ -59,7 +59,7 @@ def do_search(df, search, searches):
         if field not in df_cols:
             raise ValueError("{} is a non-existing column.".format(field))
     regex = build_regex(search)
-    name_search = f"{df_cols[1]}.str.contains('{regex}')"
+    name_search = f"nome.str.contains('{regex}')"
     if searches:
         other_searches = []
         for field, search in searches.items():
