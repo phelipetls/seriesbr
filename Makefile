@@ -1,5 +1,5 @@
 test:
-	cd tests && python3 -m unittest -v
+	cd tests && python3 -m unittest -v -f
 
 publish:
 	python3 setup.py sdist bdist_wheel
@@ -10,9 +10,6 @@ coverage:
 
 lint:
 	flake8 seriesbr
-
-clean:
-	rm -rf build dist .egg *.egg-info
 
 cov:
 	pytest --cov=seriesbr --cov-report term-missing
