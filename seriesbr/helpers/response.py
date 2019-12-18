@@ -41,7 +41,7 @@ def ibge_json_to_df(json, freq="mensal"):
     assert len(json) > 1, "This request produced no value."
     df = pd.DataFrame(json[1:])
     df.columns = json[0].values()
-    date_fmt = "%Y%m" if freq == "mensal" else "%Y"
+    date_fmt = "%Y" if freq == "anual" else "%Y%m"
     date_key = json[0]["D2C"]
     df[date_key] = pd.to_datetime(df[date_key], format=date_fmt)
     df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
