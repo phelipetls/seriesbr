@@ -97,7 +97,11 @@ def ipea_make_filter_query(names, metadatas):
         "&$filter=contains(SERNOME,'SELIC') and SERSTATUS eq 'A' and SERNUMERICA eq 1"
     """
     if any([field not in ipea_metadata_list for field in metadatas]):
-        raise ValueError(f"Can't search for {' or '.join(metadatas)}. Call ipea.list_metadata() if you need a hint.")
+        raise ValueError(
+            "Can't search for {joined_metadatas}, not a valid metadata. Call ipea.list_metadata() if you need help.".format(
+                joined_metadatas=" or ".join(metadatas)
+            )
+        )
     prefix = "&$filter="
     filter_by_name = contains_operator("SERNOME", names) if names else ""
     filter_by_metadata = ""
