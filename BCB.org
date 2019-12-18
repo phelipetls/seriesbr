@@ -1,26 +1,12 @@
-* Banco Central do Brasil					      :TOC_3:
-  - [[#searching][Searching]]
-    - [[#searching-for-brazilian-interest-rate][Searching for brazilian interest rate]]
-    - [[#searching-multiple-terms][Searching multiple terms]]
-    - [[#controlling-the-number-of-search-results][Controlling the number of search results]]
-  - [[#retrieving-data][Retrieving data]]
-    - [[#getting-a-single-series-values][Getting a single series values]]
-    - [[#getting-multiple-series-values-and-filtering-by-period][Getting multiple series values and filtering by period]]
-    - [[#getting-rid-of-nan][Getting rid of NaN]]
-  - [[#getting-metadata][Getting metadata]]
-
+* Banco Central do Brasil
 ** Searching
-*** Searching for brazilian interest rate
+
+A simple search:
 
 #+BEGIN_SRC python :session :exports both
   import pandas as pd
   pd.set_option('display.max_rows', 10)
-#+END_SRC
 
-#+RESULTS:
-
-
-#+BEGIN_SRC python :session :results value :exports both
   from seriesbr import bcb
 
   bcb.search("Selic")
@@ -41,7 +27,7 @@
 9      10618  Dívida mobiliária federal - Títulos do Tesouro...        mensal                                     Meses
 #+end_example
 
-*** Searching multiple terms
+Also possible to search multiple strings:
 
 #+BEGIN_SRC python :session :exports both
   bcb.search("Atividade", "Econômica", "Índice")
@@ -62,59 +48,32 @@
 9      16122  Índice nacional de preços ao consumidor - Ampl...        mensal  Variação percentual mensal
 #+end_example
 
-*** Controlling the number of search results
-
-You can control how many results will be shown with the argument =rows= (defaults to 10), and also from which row it will start showing with =start= (defaults to 1).
+You can control how many results will be shown with the argument =rows= (defaults to 10),
+and also from which row it should start showing with =start= (defaults to 1).
 
 #+BEGIN_SRC python :session :exports both
-  bcb.search("Monetária", rows=20, start=1)
+  bcb.search("Monetária", "mensal", "Milhares", rows=20, start=1)
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-   codigo_sgs                                              title periodicidade                                   unidade_medida
-0       17633  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-1        1849  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-2        1848  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-3        1850  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-4        1797  Recolhimentos obrigatórios de instituições fin...        mensal        Milhares de unidades monetárias correntes
-..        ...                                                ...           ...                                              ...
-15      10813  Taxa de câmbio - Livre - Dólar americano (compra)        diária  Taxa unidade monetária corrente/dólar americano
-16          1  Taxa de câmbio - Livre - Dólar americano (vend...        diária  Taxa unidade monetária corrente/dólar americano
-17      12150  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
-18      12106  Saldos das operações de crédito das instituiçõ...        mensal         Milhões de unidades monetárias correntes
-19      17620  Insuficiência de direcionamento de crédito - D...        mensal        Milhares de unidades monetárias correntes
+   codigo_sgs                                              title periodicidade                             unidade_medida
+0        1849  Recolhimentos obrigatórios de instituições fin...        mensal  Milhares de unidades monetárias correntes
+1        1848  Recolhimentos obrigatórios de instituições fin...        mensal  Milhares de unidades monetárias correntes
+2        1850  Recolhimentos obrigatórios de instituições fin...        mensal  Milhares de unidades monetárias correntes
+3        1797  Recolhimentos obrigatórios de instituições fin...        mensal  Milhares de unidades monetárias correntes
+4       17620  Insuficiência de direcionamento de crédito - D...        mensal  Milhares de unidades monetárias correntes
+..        ...                                                ...           ...                                        ...
+6       17623  Insuficiência de direcionamento de crédito - D...        mensal  Milhares de unidades monetárias correntes
+7       17622  Insuficiência de direcionamento de crédito - D...        mensal  Milhares de unidades monetárias correntes
+8       17624  Insuficiência de direcionamento de crédito - T...        mensal  Milhares de unidades monetárias correntes
+9       17625                       Outros recolhimentos - Total        mensal  Milhares de unidades monetárias correntes
+10       1847  Outros recolhimentos de instituições financeir...        mensal  Milhares de unidades monetárias correntes
 
-[20 rows x 4 columns]
+[11 rows x 4 columns]
 #+end_example
 
-** Retrieving data
-*** Getting a single series values
-
-#+BEGIN_SRC python :session :exports both
-  bcb.get_series({"Spread": 20786}) # or just 20786
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-            Spread
-Date              
-2011-03-01   26.22
-2011-04-01   27.01
-2011-05-01   26.84
-2011-06-01   26.72
-2011-07-01   26.91
-...            ...
-2019-06-01   31.43
-2019-07-01   31.63
-2019-08-01   31.57
-2019-09-01   30.84
-2019-10-01   30.35
-
-[104 rows x 1 columns]
-#+end_example
-
-*** Getting multiple series values and filtering by period
+** Getting time series
 
 #+BEGIN_SRC python :session :exports both
   bcb.get_series({"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012")
@@ -159,12 +118,14 @@ Date
 2019-09-01  30.84   5.71  566361.6
 2019-10-01  30.35   5.38  613627.6
 2019-11-01    NaN   4.90       NaN
-2019-12-01    NaN   4.80       NaN
+2019-12-01    NaN   4.76       NaN
 
 [403 rows x 3 columns]
 #+end_example
 
-*** Getting rid of NaN
+Keyword arguments will be passed to =pandas.concat=.
+If you pass "inner" to the =join= argument the returned
+=DataFrame= won't have NAs.
 
 #+BEGIN_SRC python :session :exports both
   bcb.get_series(20786, 4189, 4380, join="inner")
@@ -188,8 +149,6 @@ Date
 
 [104 rows x 3 columns]
 #+end_example
-
-Another possibily is just calling =dropna()= afterwards.
 
 ** Getting metadata
 

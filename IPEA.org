@@ -1,32 +1,7 @@
-* Instituto de Pesquisa Econômica Aplicada				:TOC:
-  - [[#filtering][Filtering]]
-  - [[#examples-of-searching-in-the-database][Examples of searching in the database]]
-  - [[#listing-available-themes-and-countries][Listing available themes and countries]]
-  - [[#getting-multiple-values][Getting multiple values]]
-  - [[#getting-metadata][Getting metadata]]
+* Instituto de Pesquisa Econômica Aplicada
+** Searching
 
-** Filtering
-   
-To help you search the desired time series, you can use these filters below in the =ipea.search= function, as we soon will see.
-   
-| Code           | Description                   |
-|----------------+-------------------------------|
-| SERNOME        | Name                          |
-| SERCODIGO      | Code                          |
-| PERNOME        | Frequency                     |
-| TEMCODIGO      | Theme code                    |
-| UNINOME        | Unit measure                  |
-| PAICODIGO      | Country code                  |
-| SERATUALIZACAO | Last updated                  |
-| MULNOME        | Multiplicative factor         |
-| SERCOMENTARIO  | Notes/comments, in portuguese |
-| FNTNOME        | Source's name, in portuguese  |
-| FNTSIGLA       | Source's initials             |
-| FNTURL         | Source's url                  |
-| SERSTATUS      | Active ('A'), Inactive ('I')  |
-| SERNUMERICA    | Numeric (1), Alphanumeric (0) |
-
-** Examples of searching in the database
+The search function takes an arbitrary number of arguments.
 
 #+BEGIN_SRC python :session :exports both
 import pandas as pd
@@ -34,6 +9,33 @@ import pandas as pd
 pd.set_option('max_rows', 10)
 
 from seriesbr import ipea
+
+ipea.search("Taxa", "Selic", "recursos", "livres")
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+           SERCODIGO                                            SERNOME PERNOME UNINOME
+0       BM12_CRDCA12  Operações de crédito - recursos direcionados -...  Mensal      R$
+1     BM12_CRDCAPF12  Operações de crédito - recursos direcionados -...  Mensal      R$
+2     BM12_CRDCAPJ12  Operações de crédito - recursos direcionados -...  Mensal      R$
+3       BM12_CRDIN12  Operações de crédito - recursos direcionados -...  Mensal     (%)
+4     BM12_CRDINPF12  Operações de crédito - recursos direcionados -...  Mensal     (%)
+..               ...                                                ...     ...     ...
+469       TxParticip                               Taxa de participação   Anual     (%)
+470  TxParticip_Metr        Taxa de participação - áreas metropolitanas   Anual     (%)
+471  TxParticip_NaoM    Taxa de participação - áreas não-metropolitanas   Anual     (%)
+472  TxParticip_Rura                Taxa de participação - áreas rurais   Anual     (%)
+473  TxParticip_Urba  Taxa de participação - áreas urbanas não-metro...   Anual     (%)
+
+[474 rows x 4 columns]
+#+end_example
+
+It also accepts keyword arguments to filter for metadata values.
+
+For example, if you're looking for a macroeconomic, monthly time series measured in percent points, you could try:
+
+#+BEGIN_SRC python :session :exports both
 
 ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 #+END_SRC
@@ -56,55 +58,49 @@ ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 [15 rows x 5 columns]
 #+end_example
 
-Another example:
+Or, if you want american or german GDP that is still updated:
 
 #+BEGIN_SRC python :session :exports both
-  ipea.search("Juros", PAICODIGO=["BRA", "USA"], SERSTATUS="A")
+  ipea.search("PIB", PAICODIGO=["DEU", "USA"], SERSTATUS="A")
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-             SERCODIGO                                            SERNOME PERNOME   UNINOME PAICODIGO SERSTATUS
-0         BM12_CRDTJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)       BRA         A
-1       BM12_CRDTJPF12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)       BRA         A
-2       BM12_CRDTJPJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)       BRA         A
-3         BM12_CRLTJ12  Operações de crédito - recursos livres - taxa ...  Mensal  (% a.a.)       BRA         A
-4       BM12_CRLTJPF12  Operações de crédito - recursos livres - taxa ...  Mensal  (% a.a.)       BRA         A
-..                 ...                                                ...     ...       ...       ...       ...
-55  BMF366_FUT3DI1V366  Taxa de juros - DI de 1 dia - futuro: vencimen...  Diária         -       BRA         A
-56   BMF366_FUT6DI1366  Taxa de juros - DI de 1 dia - futuro: vencimen...  Diária  (% a.a.)       BRA         A
-57     GM366_TJOVER366                       Taxa de juros - Over / Selic  Diária  (% a.a.)       BRA         A
-58    GM366_TJOVERV366        Taxa de juros - Over / Selic - volatilidade  Diária         -       BRA         A
-59       GM366_TJTR366                                 Taxa de juros - TR  Diária  (% a.m.)       BRA         A
+           SERCODIGO                                            SERNOME     PERNOME      UNINOME PAICODIGO SERSTATUS
+0   ECONMI4_ALPIBG34                PIB - var. real trimestral anualiz.  Trimestral     (% a.a.)       DEU         A
+1    ECONMI4_ALPIBG4  PIB - var. real contra igual trimestre do ano ...  Trimestral     (% a.a.)       DEU         A
+2   ECONMI4_USPIBG34                PIB - var. real trimestral anualiz.  Trimestral     (% a.a.)       USA         A
+3    ECONMI4_USPIBG4  PIB - var. real contra igual trimestre do ano ...  Trimestral     (% a.a.)       USA         A
+4   WDI_PIBPPCCAPDEU  PIB - paridade do poder de compra (PPC) - per ...       Anual          US$       DEU         A
+..               ...                                                ...         ...          ...       ...       ...
+7   WDI_PIBPPCCAPUSA  PIB - paridade do poder de compra (PPC) - per ...       Anual          US$       USA         A
+8      WDI_PIBPPCDEU            PIB - paridade do poder de compra (PPC)       Anual          US$       DEU         A
+9     WDI_PIBPPCRDEU            PIB - paridade do poder de compra (PPC)       Anual  US$ de 2011       DEU         A
+10    WDI_PIBPPCRUSA            PIB - paridade do poder de compra (PPC)       Anual  US$ de 2011       USA         A
+11     WDI_PIBPPCUSA            PIB - paridade do poder de compra (PPC)       Anual          US$       USA         A
 
-[60 rows x 6 columns]
+[12 rows x 6 columns]
 #+end_example
 
-Or even:
-
-#+BEGIN_SRC python :session :exports both
-  ipea.search("Emprego", TEMCODIGO=[12, 14], PAICODIGO=["BRA", "USA"])
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-           SERCODIGO                                            SERNOME PERNOME UNINOME  TEMCODIGO PAICODIGO
-0         DISOC_DESE                                 Taxa de desemprego   Anual     (%)         12       BRA
-1     DISOC_DESEMETR          Taxa de desemprego - áreas metropolitanas   Anual     (%)         12       BRA
-2     DISOC_DESENAOM      Taxa de desemprego - áreas não-metropolitanas   Anual     (%)         12       BRA
-3     DISOC_DESERURA                  Taxa de desemprego - áreas rurais   Anual     (%)         12       BRA
-4     DISOC_DESEURBA  Taxa de desemprego - áreas urbanas não-metropo...   Anual     (%)         12       BRA
-..               ...                                                ...     ...     ...        ...       ...
-10  SEADE12_TDAGSP12                 Taxa de desemprego - aberto - RMSP  Mensal     (%)         12       BRA
-11  SEADE12_TDODSP12     Taxa de desemprego - oculto - desalento - RMSP  Mensal     (%)         12       BRA
-12  SEADE12_TDOPSP12      Taxa de desemprego - oculto - precário - RMSP  Mensal     (%)         12       BRA
-13  SEADE12_TDOTSP12                 Taxa de desemprego - oculto - RMSP  Mensal     (%)         12       BRA
-14  SEADE12_TDTGSP12                          Taxa de desemprego - RMSP  Mensal     (%)         12       BRA
-
-[15 rows x 6 columns]
-#+end_example
-
-** Listing available themes and countries
+Here's a list of the valid metadatas accepted by the =ipea.search= function:
+   
+| Code           | Description                   |
+|----------------+-------------------------------|
+| SERNOME        | Name                          |
+| SERCODIGO      | Code                          |
+| PERNOME        | Frequency                     |
+| TEMCODIGO      | Theme's code                  |
+| UNINOME        | Unit of measurement           |
+| PAICODIGO      | Country's code                |
+| SERATUALIZACAO | Last updated                  |
+| MULNOME        | Multiplicative factor         |
+| SERCOMENTARIO  | Notes/comments, in portuguese |
+| FNTNOME        | Source's name, in portuguese  |
+| FNTSIGLA       | Source's initials             |
+| FNTURL         | Source's url                  |
+| BASNOME        | Basis' name                   |
+| SERSTATUS      | Active ('A'), Inactive ('I')  |
+| SERNUMERICA    | Numeric (1), Alphanumeric (0) |
 
 You can take a look at the available themes and countries with the functions =list_themes= and =list_countries=.
 
@@ -204,7 +200,9 @@ ipea.search(PAICODIGO=["VEN", "DEU", "LATI"])
 [49 rows x 5 columns]
 #+end_example
 
-** Getting multiple values
+** Getting time series
+
+This works in a very similary way as =bcb.get_series= and returns a similar output too, except that there isn't =last_n= argument.
 
 #+BEGIN_SRC python :session :exports both
   ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
@@ -231,7 +229,7 @@ Date
 
 ** Getting metadata
 
-To get metadata you would do the same as in =bcb= module.
+To get metadata you would do the same as in =bcb= module, just call =ipea.get_metadata=.
 
 #+BEGIN_SRC python :session :results output :exports both
   metadados = ipea.get_metadata("BM12_TJOVER12")
