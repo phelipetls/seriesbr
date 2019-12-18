@@ -7,19 +7,15 @@
 [[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
 [[https://codecov.io/gh/phelipetls/seriesbr][file:https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg]]
 
- #+TOC: headlines 2
-
 ** Introduction
 
-This package eases the task of getting data from Banco Central do Brasil
-(BCB), Instituto de Pesquisa Econômica Aplicada (Ipea) and Instituto 
-Brasileiro de Geografia e Estatística (IBGE).
+*SeriesBR* is a Python interface to interact with brazilian time series databases such as:
 
-Here you will find several functions to interact with these databases,
-such as searching, getting the series' values or metadata.
+- Banco Central do Brasil (BCB)
+- Instituto de Pesquisa Econômica Aplicada (IPEA)
+- Instituto Brasileiro de Geografia e Estatística (IBGE)
 
-It aims to enrich the pandas ecosystem, as almost all functions return a
-=pandas.DataFrame=.
+It integrates well with =pandas= as almost all functions return a =DataFrame=.
 
 It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb][rbcb]], [[https://github.com/ipea/ipeaData][ipeaData]] and [[https://github.com/cran/sidrar][sidrar]].
 
