@@ -35,9 +35,9 @@ def get_series(*codes, start=None, end=None, **kwargs):
 
     Parameters
     ----------
-    codes : dict, str, int
-        Dictionary like {"name1": cod1, "name2": cod2}
-        or a bunch of code numbers, e.g. cod1, cod2.
+    codes : dict, str
+        Dictionary like {"name1": code1, "name2": code2}
+        or a bunch of code strings, e.g. code1, code2.
 
     start : str
         Initial date, month or day first.
@@ -52,6 +52,15 @@ def get_series(*codes, start=None, end=None, **kwargs):
     -------
     pandas.DataFrame
         A DataFrame with series' values.
+
+    Examples
+    --------
+    >>> ipea.get_series("BM12_TJOVER12", "CAGED12_SALDO12", start="2018", end="03-2018")
+                BM12_TJOVER12  CAGED12_SALDO12
+    Date
+    2018-01-01           0.58          77822.0
+    2018-02-01           0.47          61188.0
+    2018-03-01           0.53          56151.0
     """
     codes, names = return_codes_and_names(*codes)
     return concat(
@@ -74,6 +83,33 @@ def search(*SERNOME, **metadatas):
     **metadatas
         Keyword arguments where parameter is a valid metadata
         and value a str or list of str.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with the search results.
+
+    Examples
+    --------
+    >>> ipea.search("Empreg", FNTNOME="CAGED")
+             SERCODIGO                 SERNOME PERNOME UNINOME                                            FNTNOME
+    0    CAGED12_ADMIS  Empregados - admissões  Mensal  Pessoa  Ministério do Trabalho e Emprego, Cadastro Ger...
+    1   CAGED12_DESLIG  Empregados - demissões  Mensal  Pessoa  Ministério do Trabalho e Emprego, Cadastro Ger...
+    2  CAGED12_SALDO12      Empregados - saldo  Mensal  Pessoa  Ministério do Trabalho e Emprego, Cadastro Ger...
+
+    >>> ipea.search("Taxa", "Juros", "Selic", "recursos livres", PERNOME="mensal", UNINOME="%")
+                SERCODIGO                                            SERNOME PERNOME   UNINOME
+    0        BM12_CRDTJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
+    1      BM12_CRDTJPF12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
+    2      BM12_CRDTJPJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
+    3        BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
+    4      BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
+    ..                ...                                                ...     ...       ...
+    118  IBMEC12_OTNRTJ12  Taxa de juros - obrigações reajustáveis do Tes...  Mensal  (% a.m.)
+    119   IBMEC12_OTNTJ12  Obrigações do Tesouro Nacional - taxa implícit...  Mensal  (% a.a.)
+    120   IBMEC12_TJEMP12  Taxa de juros paga pelo tomador do empréstimo ...  Mensal  (% a.m.)
+    121    IBMEC12_TJLM12                Taxa de juros - letras imobiliárias  Mensal  (% a.m.)
+    122   IBMEC12_TJTIT12                   Taxa de juros - letras de câmbio  Mensal  (% a.m.)
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"
@@ -94,7 +130,17 @@ def get_metadata(code):
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with the series' metadata.
+        A DataFrame with series' metadata.
+
+    Examples
+    --------
+    >>> ipea.get_metadata("BM12_TJOVER12").head()
+                                                               values
+    SERCODIGO                                           BM12_TJOVER12
+    SERNOME                              Taxa de juros - Over / Selic
+    SERCOMENTARIO   Quadro: Taxas de juros efetivas.  Para 1974-19...
+    SERATUALIZACAO                      2019-12-17T05:06:00.793-02:00
+    BASNOME                                            Macroeconômico
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"Metadados('{code}')"
@@ -106,6 +152,16 @@ def get_metadata(code):
 def list_themes():
     """
     Function to list all themes available in the database.
+
+    Examples
+    --------
+    >>> ipea.list_themes().head()
+        TEMCODIGO  TEMCODIGO_PAI                  TEMNOME
+    0          28            NaN             Agropecuária
+    1          23            NaN       Assistência social
+    2          10            NaN    Balanço de pagamentos
+    3           7            NaN                   Câmbio
+    4           5            NaN        Comércio exterior
     """
     return list_metadata_helper("Temas")
 
@@ -113,12 +169,36 @@ def list_themes():
 def list_countries():
     """
     Function to list all countries available in the database.
+
+    Examples
+    --------
+    >>> ipea.list_countries().head()
+      PAICODIGO         PAINOME
+    0       ZAF   África do Sul
+    1       DEU        Alemanha
+    2      LATI  América Latina
+    3       AGO          Angola
+    4       SAU  Arábia Saudita
     """
     return list_metadata_helper("Paises")
 
 
 def list_metadata():
     """
-    Function to list all valid metadatas.
+    Function to list all valid metadatas.and their description.
+
+    Returns
+    -------
+    pandas.DataFrame
+
+    Examples
+    --------
+    >>> ipea.list_metadata().head()
+                       Description
+    SERNOME                   Name
+    SERCODIGO                 Code
+    PERNOME              Frequency
+    UNINOME    Unit of measurement
+    BASNOME           Basis's name
     """
     return DataFrame.from_dict(ipea_metadata_list, orient='index', columns=["Description"])

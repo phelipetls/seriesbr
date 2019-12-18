@@ -5,6 +5,7 @@ from .dates import today_date, month_to_quarter, check_if_quarter, parse_dates
 
 ## IPEA
 
+
 def ipea_make_dates_query(start, end):
     """
     Auxiliary function to return the right
@@ -18,7 +19,6 @@ def ipea_make_dates_query(start, end):
     elif end:
         dates = f"&$filter=VALDATA le {end}"
     return dates
-
 
 
 def ipea_make_select_query(metadatas):

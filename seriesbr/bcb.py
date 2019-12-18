@@ -60,15 +60,15 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
 
     Examples
     --------
-        >>> bcb.get_series({"Spread": 20786}, start="02-2018", end="072018")
-                    Spread
-        Date
-        2018-02-01   33.97
-        2018-03-01   33.66
-        2018-04-01   33.03
-        2018-05-01   30.92
-        2018-06-01   29.43
-        2018-07-01   29.39
+    >>> bcb.get_series({"Spread": 20786}, start="02-2018", end="072018")
+                Spread
+    Date
+    2018-02-01   33.97
+    2018-03-01   33.66
+    2018-04-01   33.03
+    2018-05-01   30.92
+    2018-06-01   29.43
+    2018-07-01   29.39
     """
     assert codes, "You must pass at least one code."
     codes, names = return_codes_and_names(*codes)
@@ -87,10 +87,10 @@ def search(*names, rows=10, start=1):
 
     Parameters
     ----------
-    rows : int
+    rows : int, optional
         How many results to show.
 
-    start : int
+    start : int, optional
         From which row to start showing the results.
 
     *names
@@ -122,17 +122,27 @@ def search(*names, rows=10, start=1):
 
 def get_metadata(code):
     """
-    Get metadata of a time series.
+    Get metadata of a BCB's time series.
 
     Parameters
     ----------
     code : str
-        Code of the time series.
+        Time series' code.
 
     Returns
     -------
     pandas.DataFrame
         A DataFrame with metadata values.
+
+    Examples
+    --------
+    >>> bcb.get_metadata(20786).head()
+                                                                        values
+    referencias              <P><A href="http://www.bcb.gov.br/estatisticas...
+    license_title            Licença Aberta para Bases de Dados (ODbL) do O...
+    maintainer                  Banco Central do Brasil/Departamento Econômico
+    relationships_as_object                                                 []
+    vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"fq=codigo_sgs:{code}"
