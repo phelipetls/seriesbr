@@ -3,6 +3,7 @@ import sys
 import json
 import pandas
 import unittest
+from unittest.mock import patch
 
 from pathlib import Path
 
@@ -11,8 +12,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from seriesbr.helpers.response import bcb_json_to_df, ipea_json_to_df, ibge_json_to_df
 
 
+def mocked_get_json(url):
+    return url
+
+
 class TestBCBJsonParser(unittest.TestCase):
 
+    @patch('seriesbr.helpers.response.get_json', mocked_get_json)
     def setUp(self):
         json_path = Path(__file__).resolve().parent / "sample_jsons" / "bcb_json"
         with json_path.open() as json_file:
@@ -28,6 +34,7 @@ class TestBCBJsonParser(unittest.TestCase):
 
 class TestIPEAJsonParser(unittest.TestCase):
 
+    @patch('seriesbr.helpers.response.get_json', mocked_get_json)
     def setUp(self):
         json_path = Path(__file__).resolve().parent / "sample_jsons" / "ipea_json"
         with json_path.open() as json_file:
@@ -43,6 +50,7 @@ class TestIPEAJsonParser(unittest.TestCase):
 
 class TestIBGEJsonParser(unittest.TestCase):
 
+    @patch('seriesbr.helpers.response.get_json', mocked_get_json)
     def setUp(self):
         json_path = Path(__file__).resolve().parent / "sample_jsons" / "ibge_json"
         with json_path.open() as json_file:

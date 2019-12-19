@@ -10,12 +10,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from seriesbr import ipea
 
 
-def mocked_get_json(url):
+def mocked_json_to_df(url, code, name):
     return url
-
-
-def mocked_json_to_df(json, code, name):
-    return json
 
 
 def mocked_today_date():
@@ -35,7 +31,6 @@ def mocked_list_metadata(resource_path):
     return url
 
 
-@patch('seriesbr.ipea.get_json', mocked_get_json)
 @patch('seriesbr.ipea.ipea_json_to_df', mocked_json_to_df)
 @patch('seriesbr.ipea.get_metadata', mocked_get_metadata)
 @patch('seriesbr.ipea.list_metadata_helper', mocked_list_metadata)

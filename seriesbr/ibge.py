@@ -87,7 +87,7 @@ def get_series(
     locations = ibge_make_location_query(city, state, macroregion, microregion, mesoregion, brazil)
     classifications = ibge_make_classification_query(classifications)
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
-    return ibge_json_to_df(get_json(url), frequency)
+    return ibge_json_to_df(url, frequency)
 
 ## Get metadata
 

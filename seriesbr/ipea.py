@@ -25,8 +25,7 @@ def get_serie(code, name=None, start=None, end=None):
     start, end = parse_dates(start, end, api="ipeadata")
     dates = ipea_make_dates_query(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
-    json = get_json(url)
-    return ipea_json_to_df(json, code, name)
+    return ipea_json_to_df(url, code, name)
 
 
 def get_series(*codes, start=None, end=None, **kwargs):

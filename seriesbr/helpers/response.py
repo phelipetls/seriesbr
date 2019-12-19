@@ -1,12 +1,13 @@
 import pandas as pd
+from .request import get_json
 
 
-def bcb_json_to_df(json, code, name):
+def bcb_json_to_df(url, code, name):
     """
     Auxiliary function to convert json produced by
     BCB's and IPEA's API into a DataFrame.
     """
-    assert json, print(f"Request for {code} returned nothing.")
+    json = get_json(url)
     df = pd.DataFrame(json)
     df["data"] = pd.to_datetime(df["data"], format="%d/%m/%Y")
     df["valor"] = df["valor"].astype('float64')
@@ -16,13 +17,12 @@ def bcb_json_to_df(json, code, name):
     return df
 
 
-def ipea_json_to_df(json, code, name):
+def ipea_json_to_df(url, code, name):
     """
     Auxiliary function to convert json produced by
     BCB's and IPEA's API into a DataFrame.
     """
-    json = json["value"]
-    assert json, print(f"Request for {code} returned nothing.")
+    json = get_json(url)["value"]
     df = pd.DataFrame(json)
     df["VALDATA"] = df["VALDATA"].str[:-6]
     df["VALDATA"] = pd.to_datetime(df["VALDATA"], format="%Y-%m-%dT%H:%M:%S")
@@ -33,12 +33,12 @@ def ipea_json_to_df(json, code, name):
     return df
 
 
-def ibge_json_to_df(json, freq="mensal"):
+def ibge_json_to_df(url, freq="mensal"):
     """
     Auxiliary function to convert json produced by
     IBGE's API into a DataFrame.
     """
-    assert len(json) > 1, "This request produced no value."
+    json = get_json(url)
     df = pd.DataFrame(json[1:])
     df.columns = json[0].values()
     date_fmt = "%Y" if freq == "anual" else "%Y%m"
