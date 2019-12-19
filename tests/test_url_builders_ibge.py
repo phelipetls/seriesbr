@@ -9,10 +9,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import seriesbr.helpers.url as url
 
 
-def mocked_today_date():
-    return datetime.datetime(2019, 12, 1)
-
-
 class TestUrlBuildersIBGE(unittest.TestCase):
 
     def test_make_classification_query_str(self):
@@ -34,6 +30,10 @@ class TestUrlBuildersIBGE(unittest.TestCase):
         correct = "classificacao=315[all]|45[7,2]"
         test = url.ibge_make_classification_query({315: [], 45: [7, 2]})
         self.assertEqual(test, correct)
+
+
+def mocked_today_date():
+    return datetime.datetime(2019, 12, 1)
 
 
 class TestUrlBuildersDatesIBGE(unittest.TestCase):

@@ -30,7 +30,7 @@ def get_serie(code, name=None, start=None, end=None):
 
 def get_series(*codes, start=None, end=None, **kwargs):
     """
-    Get multiple series all at once in a single data frame.
+    Get multiple series into a DataFrame.
 
     Parameters
     ----------
@@ -201,3 +201,5 @@ def list_metadata():
     BASNOME           Basis's name
     """
     return DataFrame.from_dict(ipea_metadata_list, orient='index', columns=["Description"])
+
+# vi: nowrap

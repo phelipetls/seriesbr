@@ -6,7 +6,7 @@ from .dates import today_date, month_to_quarter, check_if_quarter, parse_dates
 ## IPEA
 
 
-def ipea_make_dates_query(start, end):
+def ipea_make_dates_query(start=None, end=None):
     """
     Auxiliary function to return the right
     string for filtering dates.
@@ -63,7 +63,7 @@ def ipea_make_select_query(metadatas):
 def ipea_make_filter_query(names, metadatas):
     """
     Auxiliary function to make filter
-    query for IBGE's web API.
+    query for IBGE's database API.
 
     Parameters
     ----------
@@ -96,12 +96,12 @@ def ipea_make_filter_query(names, metadatas):
         >>> url.ipea_make_filter_query("SELIC", {"SERSTATUS": "A", "SERNUMERICA": 1})
         "&$filter=contains(SERNOME,'SELIC') and SERSTATUS eq 'A' and SERNUMERICA eq 1"
     """
+    # error handling
+    joined_metadatas = " or ".join(metadatas)
+    error_msg = f"{joined_metadatas}: not a valid metadata. Call ipea.list_metadata() if you need help."
     if any([field not in ipea_metadata_list for field in metadatas]):
-        raise ValueError(
-            "Can't search for {joined_metadatas}, not a valid metadata. Call ipea.list_metadata() if you need help.".format(
-                joined_metadatas=" or ".join(metadatas)
-            )
-        )
+        raise ValueError(error_msg)
+    # building filter query
     prefix = "&$filter="
     filter_by_name = contains_operator("SERNOME", names) if names else ""
     filter_by_metadata = ""
@@ -143,7 +143,8 @@ def quote_if_str(something):
     """
     Auxiliary function to put quotes around value
     if it is a string. Needed to make filter queries
-    for OData's equal logical operator.
+    for OData's equal logical operator in case of a 
+    string.
     """
     return f"'{something}'" if isinstance(something, str) else f"{something}"
 
@@ -224,9 +225,8 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     if freq == "trimestral":
         if end == today_date().strftime("%Y%m"):
             end = month_to_quarter(today_date()).strftime("%Y%m")
-        assert check_if_quarter(
-            (start, end)
-        ), "Invalid quarter. Choose a number between 1 and 4"
+        error_msg = "Invalid quarter. Choose a number between 1 and 4"
+        assert check_if_quarter((start, end)), error_msg
     elif freq == "anual":
         start, end = start[:-2], end[:-2]
     return f"/periodos/{start}-{end}"

@@ -2,7 +2,7 @@ import pandas as pd
 from .helpers.request import get_json
 from .helpers.response import ibge_json_to_df
 from .helpers.utils import do_search
-from .helpers.lists import list_regions
+from .helpers.lists import list_regions_helper
 from .helpers.url import (
     ibge_make_dates_query,
     ibge_make_variables_query,
@@ -47,19 +47,19 @@ def get_series(
     last_n : int or str, optional
         Return only last n observations.
 
-    city : str or int a list of them, optional
+    city : str, int a list, optional
         Cities' codes.
 
-    state : str or int or a list of them, optional
+    state : str, int or a list, optional
         States' codes.
 
-    macroregion : str or int or a list of them, optional
+    macroregion : str, int or a list, optional
         Macroregions' codes.
 
-    microregion : str or int or a list of them, optional
+    microregion : str, int or a list, optional
         Microregions' codes.
 
-    mesoregion : str or int or a list of them, optional
+    mesoregion : str, int or a list, optional
         Mesoregions' codes.
 
     classifications : dict, int, str or list, optional
@@ -73,12 +73,12 @@ def get_series(
     Examples
     --------
     >>> ibge.get_series(1419, last_n=1)
-               Nível Territorial  ...   Valor
-    Date                          ...
-    2019-11-01            Brasil  ...    0.51
-    2019-11-01            Brasil  ...    3.12
-    2019-11-01            Brasil  ...    3.27
-    2019-11-01            Brasil  ...  100.00
+               Nível Territorial                               Variável Geral, grupo, subgrupo, item e subitem   Valor
+    Date
+    2019-11-01            Brasil                 IPCA - Variação mensal                           Índice geral    0.51
+    2019-11-01            Brasil       IPCA - Variação acumulada no ano                           Índice geral    3.12
+    2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses                           Índice geral    3.27
+    2019-11-01            Brasil                     IPCA - Peso mensal                           Índice geral  100.00
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
     frequency = get_frequency(code)
@@ -94,15 +94,15 @@ def get_series(
 
 def get_frequency(aggregate_code):
     """
-    Auxiliary function to get time frequency of
-    a IBGE's time series.
+    Auxiliary function to get frequency of
+    a time series from IBGE.
     """
     return list_periods(aggregate_code).loc["frequency", :].values
 
 
 def get_metadata(aggregate_code):
     """
-    Get metadata of a IBGE's time series.
+    Get metadata of a time series from IBGE.
 
     Parameters
     ----------
@@ -137,20 +137,21 @@ def get_metadata(aggregate_code):
 
 def search(*search, **searches):
     """
-    Function to list all aggregated variables of IBGE.
+    Function to list all aggregated variables in IBGE's database.
 
     Parameters
     ----------
-    search : str
-        Strings to search.
+    *search
+        Strings to search in aggregates' names.
 
-    where : str, default "nome"
-        Where to search.
+    **searches
+        Keyword arguments where param is a column and
+        value a string or list of strings.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with metadata about the aggregates.
+        A DataFrame with an aggregate's metadata.
 
     Examples
     --------
@@ -179,15 +180,18 @@ def search(*search, **searches):
 
 def list_variables(aggregate_code, *search, **searches):
     """
-    Function to list all variables associated with an aggregate of IBGE.
+    Function to list all variables associated with an aggregate.
 
     Parameters
     ----------
-    search : str
-        Strings to search.
+    aggregate_code : int or str
+        Aggregate's code.
 
-    where : str, default "nome"
-        Where to search.
+    *search
+        Names to search for.
+
+    **searches
+        Strings to search in other columns.
 
     Returns
     -------
@@ -282,7 +286,7 @@ def list_classifications(aggregate_code, *search, **searches):
     Parameters
     ----------
     aggregate_code : int or str
-        Aggregated variable's code.
+        Aggregate's code.
 
     *search
         Strings to search in categories' names.
@@ -337,7 +341,7 @@ def list_states(*search, **searches):
         Aggregated variable's code.
 
     *search
-        Strings to search in categories' names.
+        Strings to search in states' names.
 
     **searches
         Keyword arguments where param is a column and
@@ -351,7 +355,7 @@ def list_states(*search, **searches):
     Examples
     --------
     """
-    return list_regions("estados", search, searches)
+    return list_regions_helper("estados", search, searches)
 
 
 def list_macroregions(*search, **searches):
@@ -361,7 +365,7 @@ def list_macroregions(*search, **searches):
     Parameters
     ----------
     *search
-        Strings to search in categories' names.
+        Strings to search in macroregions' names.
 
     **searches
         Keyword arguments where param is a column and
@@ -380,7 +384,7 @@ def list_macroregions(*search, **searches):
     18  33    RJ       Rio de Janeiro          3           SE     Sudeste
     22  43    RS    Rio Grande do Sul          4            S         Sul
     """
-    return list_regions("regioes", search, searches)
+    return list_regions_helper("regioes", search, searches)
 
 
 def list_cities(*search, **searches):
@@ -390,7 +394,7 @@ def list_cities(*search, **searches):
     Parameters
     ----------
     *search
-        Strings to search in categories' names.
+        Strings to search in cities' names.
 
     **searches
         Keyword arguments where param is a column and
@@ -417,7 +421,7 @@ def list_cities(*search, **searches):
     5519  5218789                 Rio Quente            52015         Meia Ponte            5205         Sul Goiano     52       GO     Goiás          5           CO  Centro-Oeste
     5520  5218805                  Rio Verde            52013  Sudoeste de Goiás            5205         Sul Goiano     52       GO     Goiás          5           CO  Centro-Oeste
     """
-    return list_regions("municipios", search, searches)
+    return list_regions_helper("municipios", search, searches)
 
 
 def list_microregions(*search, **searches):
@@ -427,7 +431,7 @@ def list_microregions(*search, **searches):
     Parameters
     ----------
     *search
-        Strings to search in categories' names.
+        Strings to search in microregions' names.
 
     **searches
         Keyword arguments where param is a column and
@@ -454,7 +458,7 @@ def list_microregions(*search, **searches):
     556  52018      Quirinópolis            5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
     557  53001          Brasília            5301   Distrito Federal     53       DF  Distrito Federal          5           CO  Centro-Oeste
     """
-    return list_regions("microrregioes", search, searches)
+    return list_regions_helper("microrregioes", search, searches)
 
 
 def list_mesoregions(*search, **searches):
@@ -464,7 +468,7 @@ def list_mesoregions(*search, **searches):
     Parameters
     ----------
     *search
-        Strings to search in categories' names.
+        Strings to search in mesoregions' names.
 
     **searches
         Keyword arguments where param is a column and
@@ -491,6 +495,6 @@ def list_mesoregions(*search, **searches):
     135  5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
     136  5301   Distrito Federal     53       DF  Distrito Federal          5           CO  Centro-Oeste
     """
-    return list_regions("mesorregioes", search, searches)
+    return list_regions_helper("mesorregioes", search, searches)
 
 # vi: nowrap

@@ -20,12 +20,12 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
         dates = f"&dataInicial={start}" if start else start
         dates += f"&dataFinal={end}" if end else end
         url = f"{baseurl}?format=json{dates}"
-    return bcb_json_to_df(get_json(url), code, name)
+    return bcb_json_to_df(url, code, name)
 
 
 def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     """
-    Get multiple series all at once in a DataFrame.
+    Get multiple series into a DataFrame.
 
     Parameters
     ----------
@@ -50,14 +50,6 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     pandas.DataFrame
         A DataFrame with series' values.
 
-    Raises
-    ------
-    AssertionError
-        If code is not an int or str.
-
-    ValueError
-        If not a valid date format.
-
     Examples
     --------
     >>> bcb.get_series({"Spread": 20786}, start="02-2018", end="072018")
@@ -81,7 +73,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     )
 
 
-def search(*names, rows=10, start=1):
+def search(*search, rows=10, start=1):
     """
     Search for a name in the SGS database.
 
@@ -93,7 +85,7 @@ def search(*names, rows=10, start=1):
     start : int, optional
         From which row to start showing the results.
 
-    *names
+    *search
         Arbitrary number of strings to search.
 
     Returns
@@ -104,18 +96,18 @@ def search(*names, rows=10, start=1):
     Examples
     --------
     >>> bcb.search("Atividade", "econômica", rows=5, start=2)
-      codigo_sgs  ...    unidade_medida
-    0      27738  ...  Milhões de reais
-    1      27742  ...  Milhões de reais
-    2      22039  ...  Milhões de reais
-    3      22041  ...  Milhões de reais
-    4      22027  ...  Milhões de reais
+      codigo_sgs                                              title periodicidade    unidade_medida
+    0      27738  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
+    1      27742  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
+    2      22039  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
+    3      22041  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
+    4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     """
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    params = f"q={names[0]}&rows={rows}&start={start}&sort=score desc"
+    params = f"q={search[0]}&rows={rows}&start={start}&sort=score desc"
     filter_params = ""
-    if len(names) > 1:
-        filter_params = f"&fq={'+'.join([name for name in names[1:]])}"
+    if len(search) > 1:
+        filter_params = f"&fq={'+'.join([name for name in search[1:]])}"
     url = f"{baseurl}{params}{filter_params}"
     return get_search_results_bcb(url)
 
@@ -149,3 +141,5 @@ def get_metadata(code):
     url = f"{baseurl}{params}"
     results = get_json(url)["result"]["results"]
     return DataFrame.from_dict(results[0], orient="index", columns=["values"])
+
+# vi: nowrap
