@@ -11,21 +11,7 @@ from seriesbr import ibge
 
 
 def get_sample_json(resource):
-    json_path = Path(__file__).resolve().parent / "sample_jsons"
-    if resource == "ibge_variables":
-        json_path /= "ibge_variables"
-    if resource == "ibge_metadata":
-        json_path /= "ibge_metadata"
-    if resource == "regioes":
-        json_path /= "ibge_regioes"
-    if resource == "mesorregioes":
-        json_path /= "ibge_mesorregioes"
-    if resource == "microrregioes":
-        json_path /= "ibge_microrregioes"
-    if resource == "estados":
-        json_path /= "ibge_estados"
-    if resource == "municipios":
-        json_path /= "ibge_municipios"
+    json_path = Path(__file__).resolve().parent / "sample_jsons" / resource
     with json_path.open() as json_file:
         return json.load(json_file)
 
@@ -57,27 +43,27 @@ class TestListRegionsFunctions(unittest.TestCase):
 
     @patch('seriesbr.helpers.lists.get_json')
     def test_list_macroregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("regioes")
+        mocked_get_json.return_value = get_sample_json("ibge_regioes")
         self.assertFalse(ibge.list_macroregions().empty)
 
     @patch('seriesbr.helpers.lists.get_json')
     def test_list_microregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("microrregioes")
+        mocked_get_json.return_value = get_sample_json("ibge_microrregioes")
         self.assertFalse(ibge.list_microregions().empty)
 
     @patch('seriesbr.helpers.lists.get_json')
     def test_list_mesoregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("mesorregioes")
+        mocked_get_json.return_value = get_sample_json("ibge_mesorregioes")
         self.assertFalse(ibge.list_mesoregions().empty)
 
     @patch('seriesbr.helpers.lists.get_json')
     def test_list_cities(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("municipios")
+        mocked_get_json.return_value = get_sample_json("ibge_municipios")
         self.assertFalse(ibge.list_cities().empty)
 
     @patch('seriesbr.helpers.lists.get_json')
     def test_list_states(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("estados")
+        mocked_get_json.return_value = get_sample_json("ibge_estados")
         self.assertFalse(ibge.list_states().empty)
 
 
