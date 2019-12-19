@@ -59,6 +59,7 @@ html_theme_options = {
     "github_user": "phelipetls",
     "github_repo": "seriesbr",
     "github_button": "true",
+    "github_type": "star",
     "fixed_sidebar": "true",
 }
 
