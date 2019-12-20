@@ -27,8 +27,8 @@ def get_series(
     classifications=None,
 ):
     """
-    Function to get variables associated with a aggregated variable of IBGE's
-    SIDRA database.
+    Function to get variables associated with an
+    aggregate from IBGE's database.
 
     Parameters
     ----------
@@ -95,14 +95,14 @@ def get_series(
 def get_frequency(aggregate_code):
     """
     Auxiliary function to get frequency of
-    a time series from IBGE.
+    a time series from IBGE's database.
     """
     return list_periods(aggregate_code).loc["frequency", :].values
 
 
 def get_metadata(aggregate_code):
     """
-    Get metadata of a time series from IBGE.
+    Get metadata of a time series from IBGE's database.
 
     Parameters
     ----------

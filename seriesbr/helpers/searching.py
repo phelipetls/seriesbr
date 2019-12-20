@@ -8,6 +8,21 @@ def get_search_results_bcb(url):
     """
     Auxiliary function to request BCB's search
     results and turn json into a DataFrame.
+
+    Parameters
+    ----------
+    url : str
+        Url to be requested.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with the search results.
+
+    Raises
+    ------
+    AssertionError
+        If nothing was found.
     """
     json = get_json(url)
     search_results = json["result"]["results"]
@@ -19,6 +34,21 @@ def get_search_results_ipea(url):
     """
     Auxiliary function to request IPEA's search
     results and turn json into a DataFrame.
+
+    Parameters
+    ----------
+    url : str
+        Url to be requested.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with the search results.
+
+    Raises
+    ------
+    AssertionError
+        If nothing was found.
     """
     json = get_json(url)
     search_results = json["value"]

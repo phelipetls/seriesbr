@@ -9,7 +9,25 @@ from .dates import today_date, month_to_quarter, check_if_quarter, parse_dates
 def ipea_make_dates_query(start=None, end=None):
     """
     Auxiliary function to return the right
-    string for filtering dates.
+    string for filtering dates via IPEA api.
+
+    Parameters
+    ----------
+    start : str
+        Start date string.
+
+    End : str
+        End date string.
+
+    Returns
+    -------
+    str
+        A string to filter by dates.
+
+    Examples
+    --------
+    >>> url.ipea_make_dates_query("2019-01-01T00:00:00-00:00", "2019-02-01T00:00:00-00:00")
+    '&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00'
     """
     dates = ""
     if start and end:
@@ -78,7 +96,7 @@ def ipea_make_filter_query(names, metadatas):
     Returns
     -------
     str
-        A string to filter metadatas by values.
+        A string to filter metadatas.
 
     Raises
     ------
@@ -121,6 +139,24 @@ def contains_operator(metadata, values):
     """
     Auxiliary function to make string with
     OData's contains logical operator.
+
+    Parameters
+    ----------
+    metadata : str or list of str
+        Metadatas to be filtered.
+
+    metadata : str or list of str
+        Values to filter by.
+
+    Returns
+    -------
+        A valid string to perform the query
+        via OData's URL convention.
+
+    Examples
+    --------
+    >>> url.contains_operator(["FNTNOME", "UNINOME"], ["A", "B"])
+    "(contains(['FNTNOME', 'UNINOME'],'A') or contains(['FNTNOME', 'UNINOME'],'B'))"
     """
     if isinstance(values, (list, tuple)):
         return "(" + " or ".join([f"contains({metadata},'{item}')" for item in values]) + ")"
@@ -132,6 +168,24 @@ def equal_operator(metadata, values):
     """
     Auxiliary function to make string with
     OData's equal logical operator.
+
+    Parameters
+    ----------
+    metadata : str or list of str
+        Metadatas to be filtered.
+
+    metadata : str or list of str
+        Values to filter by.
+
+    Returns
+    -------
+        A valid string to perform the query
+        via OData's URL convention.
+
+    Examples
+    --------
+    >>> url.equal_operator(["SERNUMERICA", "PAICODIGO"], [1, "A"])
+    "(['SERNUMERICA', 'PAICODIGO'] eq 1 or ['SERNUMERICA', 'PAICODIGO'] eq 'A')"
     """
     if isinstance(values, (list, tuple)):
         return "(" + " or ".join([f"{metadata} eq {quote_if_str(item)}" for item in values]) + ")"
@@ -143,8 +197,18 @@ def quote_if_str(something):
     """
     Auxiliary function to put quotes around value
     if it is a string. Needed to make filter queries
-    for OData's equal logical operator in case of a 
+    for OData's equal logical operator in case of a
     string.
+
+    Parameters
+    ----------
+    something
+        Any object.
+
+    Returns
+    -------
+        A string around quote if something is a string,
+        else just the object coerced to a string.
     """
     return f"'{something}'" if isinstance(something, str) else f"{something}"
 
@@ -159,24 +223,26 @@ def ibge_make_classification_query(classifications=None):
     Parameters
     ----------
     classifications : int, str, list or dict
-        Dict like { classification : category1, category2 }
-        Int, str or list of classifications only.
+        Dictionary of classifications (keys) and categories
+        (values) or a set of classifcations as int, str, or
+        list.
 
     Returns
     -------
     str
-        A string to filter by classifications / categories.
+        A valid string to filter by classifications
+        and categories.
 
     Examples
     --------
-        >>> url.ibge_make_classification_query({1: [2, 3]})
-        'classificacao=1[2,3]'
+    >>> url.ibge_make_classification_query({1: [2, 3]})
+    'classificacao=1[2,3]'
 
-        >>> url.ibge_make_classification_query([1, 2])
-        'classificacao=1[all]|2[all]'
+    >>> url.ibge_make_classification_query([1, 2])
+    'classificacao=1[all]|2[all]'
 
-        >>> url.ibge_make_classification_query(3)
-        'classificacao=3[all]'
+    >>> url.ibge_make_classification_query(3)
+    'classificacao=3[all]'
     """
     if isinstance(classifications, dict):
         s = []
@@ -217,7 +283,18 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     Returns
     -------
     str
-        A string to filter dates in IBGE's API.
+        A valid string to filter dates in IBGE's API.
+
+    Examples
+    --------
+    >>> url.ibge_make_dates_query(last_n=5)
+    '/periodos/-5'
+    >>> url.ibge_make_dates_query(start="012017")
+    '/periodos/201701-201912'
+    >>> url.ibge_make_dates_query(end="072017")
+    '/periodos/190001-201707'
+    >>> url.ibge_make_dates_query(start="052015", end="072017")
+    '/periodos/201505-201707'
     """
     start, end = parse_dates(start, end, "ibge")
     if last_n:
@@ -232,7 +309,7 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     return f"/periodos/{start}-{end}"
 
 
-def ibge_make_variables_query(variables):
+def ibge_make_variables_query(variables=None):
     """
     Auxiliary function to filter an IBGE's
     aggregate by variables.
@@ -246,6 +323,15 @@ def ibge_make_variables_query(variables):
     -------
     str
         A string to filter variables in IBGE's API.
+
+    Examples
+    --------
+    >>> url.ibge_make_variables_query(100)
+    '/variaveis/100'
+    >>> url.ibge_make_variables_query([1, 2, 3])
+    '/variaveis/1|2|3'
+    >>> url.ibge_make_variables_query()
+    '/variaveis/'
     """
     if isiterable(variables):
         return f"/variaveis/{cat(variables, '|')}"
@@ -286,6 +372,17 @@ def ibge_make_location_query(city=None, state=None, macroregion=None, microregio
     -------
     str
         A string to filter locations in IBGE's API.
+
+    Examples
+    --------
+    >>> url.ibge_make_location_query()
+    '&localidades=BR'
+    >>> url.ibge_make_location_query(city=True)
+    '&localidades=N6[all]'
+    >>> url.ibge_make_location_query(city=1)
+    '&localidades=N6[1]'
+    >>> url.ibge_make_location_query(city=[2, 3, 4])
+    '&localidades=N6[2,3,4]'
     """
     # note-to-self: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
     locations = vars()

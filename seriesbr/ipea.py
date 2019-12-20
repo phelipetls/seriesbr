@@ -150,7 +150,14 @@ def get_metadata(code):
 
 def list_themes():
     """
-    Function to list all themes available in the database.
+    Function to list all themes available
+    in the database.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with all available themes
+        in IPEA's database.
 
     Examples
     --------
@@ -167,7 +174,14 @@ def list_themes():
 
 def list_countries():
     """
-    Function to list all countries available in the database.
+    Function to list all countries available
+    in the database.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with all available countries
+        in IPEA's database.
 
     Examples
     --------
@@ -184,7 +198,7 @@ def list_countries():
 
 def list_metadata():
     """
-    Function to list all valid metadatas.and their description.
+    Function to list all valid metadatas and their description.
 
     Returns
     -------

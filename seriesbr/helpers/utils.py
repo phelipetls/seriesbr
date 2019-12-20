@@ -12,6 +12,12 @@ def return_codes_and_names(*args):
 
     Otherwise, the codes themselves will serve
     as columns' labels.
+
+    Returns
+    -------
+    tuple
+        First element with codes and second element
+        with names.
     """
     for arg in args:
         if isinstance(arg, dict):
@@ -24,6 +30,20 @@ def cat(something, sep):
     Auxiliary function to join an iterable
     delimited by sep, forcing the join by
     coercing the items to be strings.
+
+    Parameters
+    ----------
+    something : list
+        List to be joined.
+
+    sep : str
+        Delimiter.
+
+    Returns
+    -------
+    str
+        String with values in something joined
+        by sep.
     """
     return sep.join(map(str, something)) if isiterable(something) else something
 
@@ -32,6 +52,11 @@ def isiterable(something):
     """
     Auxiliary function to test if something is
     an iterable or not.
+
+    Returns
+    -------
+    bool
+        True if an iterable, False otherwise.
     """
     try:
         iter(something)
@@ -47,6 +72,15 @@ def do_search(df, search, searches):
 
     It builds a string to be passed to
     the query method of a DataFrame.
+
+    Parameters
+    ----------
+
+    df : pandas.DataFrame
+
+    search : list of strings
+
+    searches : dict
 
     Raises
     ------
@@ -73,8 +107,7 @@ def do_search(df, search, searches):
 def build_regex(strings):
     """
     Build regex by joining strings by sep
-    if it is an iterable but don't do it
-    if just a string.
+    if it is an iterable only.
     """
     # (?iu) sets unicode and ignore case flags
     flags = r'(?iu)'

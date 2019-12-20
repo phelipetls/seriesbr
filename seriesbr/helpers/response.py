@@ -6,6 +6,16 @@ def bcb_json_to_df(url, code, name):
     """
     Auxiliary function to convert json produced by
     BCB's and IPEA's API into a DataFrame.
+
+    Parameters
+    ----------
+    url : str
+        Url to be requested.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with time series' values and a DateTimeIndex.
     """
     json = get_json(url)
     df = pd.DataFrame(json)
@@ -21,6 +31,16 @@ def ipea_json_to_df(url, code, name):
     """
     Auxiliary function to convert json produced by
     BCB's and IPEA's API into a DataFrame.
+
+    Parameters
+    ----------
+    url : str
+        Url to be requested.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with time series' values and a DateTimeIndex.
     """
     json = get_json(url)["value"]
     df = pd.DataFrame(json)
@@ -37,6 +57,17 @@ def ibge_json_to_df(url, freq="mensal"):
     """
     Auxiliary function to convert json produced by
     IBGE's API into a DataFrame.
+
+    Parameters
+    ----------
+    url : str
+        Url to be requested.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with time series' values, metadatas
+        and a DateTimeIndex.
     """
     json = get_json(url)
     df = pd.DataFrame(json[1:])

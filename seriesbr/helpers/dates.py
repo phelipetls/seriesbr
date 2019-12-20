@@ -11,16 +11,50 @@ blank_formats = [fmt.replace("/", "") for fmt in slash_formats]
 allowed_fmts = slash_formats + dash_formats + blank_formats
 
 
-def parse_date(date, api, start=True):
+def parse_date(date_str, api, start=True):
     """
-    Auxiliary function to convert different dates formats
-    to the required API format.
+    Auxiliary function to convert different dates strings
+    to the format required by an API.
 
     Also, when it is an end date, if day is unspecificed,
     the day will be the last day of the month.
     Similarly, if month is not specified, the month must be 12.
+
+    Note that the date string is assumed to start with day
+    or month. Otherwise, unexpected results can arise.
+
+    Parameters
+    ----------
+    date_str : str
+        String to be parsed.
+
+    api : str
+        Name of the api. Possible values are "ibge", "ipea" and "bcb".
+
+    start : bool
+        If it is a start date.
+
+    Returns
+    -------
+    str
+        Appropriate date string for a given API.
+
+    Raises
+    ------
+    ValueError
+        If the string could not be converted to a
+        datetime.datetime object by strptime.
+
+    Examples
+    --------
+    >>> dates.parse_date("012017", api="bcb")
+    '01/01/2017'
+    >>> dates.parse_date("01-2017", api="ipea")
+    '2017-01-01T00:00:00-00:00'
+    >>> dates.parse_date("01/2017", api="ibge")
+    '201701'
     """
-    assert isinstance(date, str), "You didn't give a string as a date."
+    assert isinstance(date_str, str), "You didn't give a string as a date."
     for fmt in allowed_fmts:
         try:
             if start:
@@ -43,7 +77,7 @@ def parse_date(date, api, start=True):
 
 def parse_dates(start, end, api):
     """
-    Auxiliary function to handle dates.
+    Auxiliary function to call dates functions.
 
     Returns
     -------
@@ -103,6 +137,7 @@ def today_date():
     Returns
     -------
     datetime.datetime
+        Today's date.
     """
     return datetime.datetime.today()
 
