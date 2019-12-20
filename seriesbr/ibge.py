@@ -1,6 +1,7 @@
 import pandas as pd
 from .helpers.request import get_json
 from .helpers.response import ibge_json_to_df
+from .helpers.metadata import ibge_metadata_to_df
 from .helpers.utils import do_search
 from .helpers.lists import list_regions_helper
 from .helpers.url import (
@@ -129,8 +130,7 @@ def get_metadata(aggregate_code):
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate_code}/metadados"
-    json = get_json(url)
-    return pd.DataFrame.from_dict(json, orient="index", columns=["values"])
+    return ibge_metadata_to_df(url)
 
 ## List Metadata Functions
 

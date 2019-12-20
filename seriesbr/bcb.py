@@ -1,9 +1,9 @@
-from pandas import concat, DataFrame
+from pandas import concat
 from .helpers.dates import parse_dates
 from .helpers.utils import return_codes_and_names
 from .helpers.response import bcb_json_to_df
-from .helpers.request import get_json
 from .helpers.searching import get_search_results_bcb
+from .helpers.metadata import bcb_metadata_to_df
 
 
 def get_serie(code, name=None, start=None, end=None, last_n=None):
@@ -65,11 +65,10 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     assert codes, "You must pass at least one code."
     codes, names = return_codes_and_names(*codes)
     return concat(
-        (get_serie(code, name, start, end, last_n)
-         for code, name in zip(codes, names)),
+        (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
         axis="columns",
         sort=True,
-        **kwargs
+        **kwargs,
     )
 
 
@@ -139,7 +138,7 @@ def get_metadata(code):
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"fq=codigo_sgs:{code}"
     url = f"{baseurl}{params}"
-    results = get_json(url)["result"]["results"]
-    return DataFrame.from_dict(results[0], orient="index", columns=["values"])
+    return bcb_metadata_to_df(url)
+
 
 # vi: nowrap
