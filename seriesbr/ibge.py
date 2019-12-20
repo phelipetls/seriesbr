@@ -7,8 +7,8 @@ from .helpers.lists import list_regions_helper
 from .helpers.url import (
     ibge_make_dates_query,
     ibge_make_variables_query,
-    ibge_make_location_query,
-    ibge_make_classification_query,
+    ibge_make_locations_query,
+    ibge_make_classifications_query,
     locations_dict
 )
 
@@ -85,8 +85,8 @@ def get_series(
     frequency = get_frequency(code)
     dates = ibge_make_dates_query(start, end, last_n, frequency)
     variables = ibge_make_variables_query(variables)
-    locations = ibge_make_location_query(city, state, macroregion, microregion, mesoregion, brazil)
-    classifications = ibge_make_classification_query(classifications)
+    locations = ibge_make_locations_query(city, state, macroregion, microregion, mesoregion, brazil)
+    classifications = ibge_make_classifications_query(classifications)
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
     return ibge_json_to_df(url, frequency)
 

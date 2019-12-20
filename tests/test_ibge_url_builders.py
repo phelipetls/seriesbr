@@ -11,24 +11,24 @@ import seriesbr.helpers.url as url
 
 class TestUrlBuildersIBGE(unittest.TestCase):
 
-    def test_make_classification_query_str(self):
+    def test_make_classifications_query_str(self):
         correct = "classificacao=315[all]"
-        test = url.ibge_make_classification_query("315")
+        test = url.ibge_make_classifications_query("315")
         self.assertEqual(test, correct)
 
-    def test_make_classification_query_int(self):
+    def test_make_classifications_query_int(self):
         correct = "classificacao=315[all]"
-        test = url.ibge_make_classification_query(315)
+        test = url.ibge_make_classifications_query(315)
         self.assertEqual(test, correct)
 
-    def test_make_classification_query_dict(self):
+    def test_make_classifications_query_dict(self):
         correct = "classificacao=315[11,12,13]|45[7,2]"
-        test = url.ibge_make_classification_query({315: [11, 12, 13], 45: [7, 2]})
+        test = url.ibge_make_classifications_query({315: [11, 12, 13], 45: [7, 2]})
         self.assertEqual(test, correct)
 
-    def test_make_classification_query_dict_empty_list(self):
+    def test_make_classifications_query_dict_empty_list(self):
         correct = "classificacao=315[all]|45[7,2]"
-        test = url.ibge_make_classification_query({315: [], 45: [7, 2]})
+        test = url.ibge_make_classifications_query({315: [], 45: [7, 2]})
         self.assertEqual(test, correct)
 
 
@@ -99,17 +99,17 @@ class TestUrlBuildersLocationsIBGE(unittest.TestCase):
             "&localidades=BR"
         ]
         test = [
-            url.ibge_make_location_query(city=1),
-            url.ibge_make_location_query(city=[1, 2, 3]),
-            url.ibge_make_location_query(city="all"),
-            url.ibge_make_location_query(city="all", state=[4, 5], brazil="yes"),
-            url.ibge_make_location_query(city=True, state=[4, 5]),
-            url.ibge_make_location_query(city=True, state=[4, 5], mesoregion="yes"),
-            url.ibge_make_location_query(city=True, state=True, mesoregion=True),
-            url.ibge_make_location_query(city=["1", "2", "3"]),
-            url.ibge_make_location_query(city=["all"]),
-            url.ibge_make_location_query(brazil="yes"),
-            url.ibge_make_location_query()
+            url.ibge_make_locations_query(city=1),
+            url.ibge_make_locations_query(city=[1, 2, 3]),
+            url.ibge_make_locations_query(city="all"),
+            url.ibge_make_locations_query(city="all", state=[4, 5], brazil="yes"),
+            url.ibge_make_locations_query(city=True, state=[4, 5]),
+            url.ibge_make_locations_query(city=True, state=[4, 5], mesoregion="yes"),
+            url.ibge_make_locations_query(city=True, state=True, mesoregion=True),
+            url.ibge_make_locations_query(city=["1", "2", "3"]),
+            url.ibge_make_locations_query(city=["all"]),
+            url.ibge_make_locations_query(brazil="yes"),
+            url.ibge_make_locations_query()
         ]
         self.assertListEqual(test, correct)
 

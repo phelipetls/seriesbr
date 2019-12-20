@@ -215,7 +215,7 @@ def quote_if_str(something):
 ## IBGE
 
 
-def ibge_make_classification_query(classifications=None):
+def ibge_make_classifications_query(classifications=None):
     """
     Auxiliary function to make classifications
     part of the URL.
@@ -354,7 +354,7 @@ locations_dict = {
 location_ids = {location: code for code, location in locations_dict.items()}
 
 
-def ibge_make_location_query(city=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
+def ibge_make_locations_query(city=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
     """
     Auxiliary function to filter an IBGE's
     aggregate by variables.
