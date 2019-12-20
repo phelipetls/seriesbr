@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import seriesbr.helpers.utils as utils
 
 
-def return_argument(arg, **kwargs):
+def return_first_argument(arg, **kwargs):
     return arg
 
 
@@ -27,7 +27,7 @@ class TestUtils(unittest.TestCase):
 
     @patch.object(pandas.DataFrame, "query")
     def test_do_search(self, mocked_query):
-        mocked_query.side_effect = return_argument
+        mocked_query.side_effect = return_first_argument
         df = pandas.DataFrame({"id": [1, 2], "nome": [2, 3], "pesquisa_nome": [4, 5], "pesquisa_id": [3, 4]})
         test = [
             utils.do_search(df, "oi", {"pesquisa_nome": "DD"}),
@@ -49,3 +49,5 @@ class TestUtils(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+# vi: nowrap
