@@ -57,19 +57,17 @@ def parse_date(date_str, api, start=True):
     assert isinstance(date_str, str), "You didn't give a string as a date."
     for fmt in allowed_fmts:
         try:
-            if start:
-                date_object = datetime.datetime.strptime(date, fmt)
-            else:
+            date = datetime.datetime.strptime(date_str, fmt)
+            if not start:
                 # if an end date,
                 # "2011"    -> "31-12-2011"
                 # "01-2011" -> "31-01-2011"
                 # "02-01-2011" -> "02-01-2011"
-                date = datetime.datetime.strptime(date, fmt)
-                date_object = date.replace(
+                date = date.replace(
                     month=12 if fmt in year_format else date.month,
                     day=last_day_of_month(date) if fmt.find("%d") == -1 else date.day,
                 )
-            return api_date_format_of(date_object, api)
+            return api_date_format_of(date, api)
         except ValueError:
             continue
     raise ValueError("Not a valid date format.")
@@ -100,12 +98,12 @@ def api_date_format_of(date, api):
     Auxiliary function to convert datetime.datetime
     object to string compatible with a given API.
     """
-    if api == "ipeadata":
-        return date.strftime("%Y-%m-%dT00:00:00") + "-00:00"  # 01-12-2010T00:00:00-00:00
+    if api == "ipea":
+        return date.strftime("%Y-%m-%dT00:00:00") + "-00:00"
     if api == "bcb":
-        return date.strftime("%d/%m/%Y")  # 01/12/2010
+        return date.strftime("%d/%m/%Y")
     if api == "ibge":
-        return date.strftime("%Y%m")  # 201901
+        return date.strftime("%Y%m")
 
 
 def last_day_of_month(date):

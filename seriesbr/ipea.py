@@ -22,7 +22,7 @@ def get_serie(code, name=None, start=None, end=None):
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = f"ValoresSerie(SERCODIGO='{code}')"
     select = "?$select=VALDATA,VALVALOR"
-    start, end = parse_dates(start, end, api="ipeadata")
+    start, end = parse_dates(start, end, api="ipea")
     dates = ipea_make_dates_query(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
     return ipea_json_to_df(url, code, name)
