@@ -90,25 +90,13 @@ def search(*SERNOME, **metadatas):
 
     Examples
     --------
-    >>> ipea.search("Empreg", FNTNOME="CAGED")
-             SERCODIGO                 SERNOME PERNOME UNINOME                                            FNTNOME
-    0    CAGED12_ADMIS  Empregados - admissões  Mensal  Pessoa  Ministério do Trabalho e Emprego, Cadastro Ger...
-    1   CAGED12_DESLIG  Empregados - demissões  Mensal  Pessoa  Ministério do Trabalho e Emprego, Cadastro Ger...
-    2  CAGED12_SALDO12      Empregados - saldo  Mensal  Pessoa  Ministério do Trabalho e Emprego, Cadastro Ger...
-
-    >>> ipea.search("Taxa", "Juros", "Selic", "recursos livres", PERNOME="mensal", UNINOME="%")
-                SERCODIGO                                            SERNOME PERNOME   UNINOME
-    0        BM12_CRDTJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
-    1      BM12_CRDTJPF12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
-    2      BM12_CRDTJPJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
-    3        BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
-    4      BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
-    ..                ...                                                ...     ...       ...
-    118  IBMEC12_OTNRTJ12  Taxa de juros - obrigações reajustáveis do Tes...  Mensal  (% a.m.)
-    119   IBMEC12_OTNTJ12  Obrigações do Tesouro Nacional - taxa implícit...  Mensal  (% a.a.)
-    120   IBMEC12_TJEMP12  Taxa de juros paga pelo tomador do empréstimo ...  Mensal  (% a.m.)
-    121    IBMEC12_TJLM12                Taxa de juros - letras imobiliárias  Mensal  (% a.m.)
-    122   IBMEC12_TJTIT12                   Taxa de juros - letras de câmbio  Mensal  (% a.m.)
+    >>> ipea.search("Taxa", "Juros", "Selic", "recursos livres", PERNOME="mensal", UNINOME="%").head()
+            SERCODIGO                                            SERNOME PERNOME   UNINOME
+    0    BM12_CRDTJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
+    1  BM12_CRDTJPF12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
+    2  BM12_CRDTJPJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
+    3    BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
+    4  BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"

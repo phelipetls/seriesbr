@@ -89,9 +89,9 @@ def do_search(df, search, searches):
         non-existent column.
     """
     df_cols = df.columns.tolist()
-    for field in searches:
-        if field not in df_cols:
-            raise ValueError("{} is a non-existing column.".format(field))
+    for col in searches:
+        if col not in df_cols:
+            raise ValueError(f"{col} is a non-existing column.")
     regex = build_regex(search)
     name_search = f"nome.str.contains('{regex}')"
     if searches:
@@ -106,8 +106,8 @@ def do_search(df, search, searches):
 
 def build_regex(strings):
     """
-    Build regex by joining strings by sep
-    if it is an iterable only.
+    Build regex by joining strings by '|'
+    only if it is an iterable other than a str.
     """
     # (?iu) sets unicode and ignore case flags
     flags = r'(?iu)'

@@ -20,7 +20,7 @@ def list_regions_helper(region, search, searches):
         Strings to search in names column.
 
     searches : dict
-        Other searches.
+        Strings to search in other columns.
 
     Returns
     -------

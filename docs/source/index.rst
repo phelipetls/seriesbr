@@ -26,7 +26,10 @@ Installation
 
 Get the latest version with:
 
+.. code::
+
    $ pip3 install --upgrade seriesbr
+
 
 Main Features
 -------------

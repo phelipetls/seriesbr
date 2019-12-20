@@ -155,19 +155,13 @@ def search(*search, **searches):
 
     Examples
     --------
-    >>> ibge.search("Índice", "Preços", pesquisa_nome="Pesquisa")
-            id                                               nome pesquisa_id                                      pesquisa_nome
-    2472  1399  Número de empresas comerciais, Unidades locais...          PB                         Pesquisa Anual de Comércio
-    2957   379  Índice de Gini - recebimento médio mensal das ...          OF                  Pesquisa de Orçamentos Familiares
-    3101    50  Folha de pagamento nominal por classes de indú...          DG          Pesquisa Industrial Mensal - Dados Gerais
-    3102    49  Folha de pagamento nominal por tipo de índice ...          DG          Pesquisa Industrial Mensal - Dados Gerais
-    3103    52  Folha de pagamento nominal por trabalhador por...          DG          Pesquisa Industrial Mensal - Dados Gerais
-    ...    ...                                                ...         ...                                                ...
-    5490   431  Valor do rendimento e Número-índice do rendime...          PD        Pesquisa Nacional por Amostra de Domicílios
-    5491   430  Valor do rendimento e Número-índice do rendime...          PD        Pesquisa Nacional por Amostra de Domicílios
-    5673    32  Custo médio m² em variação percentual, por tip...          SI  Sistema Nacional de Pesquisa de Custos e Índic...
-    5674    34  Preços medianos, por materiais e serviços (sér...          SI  Sistema Nacional de Pesquisa de Custos e Índic...
-    5675  2062  Preços medianos, por materiais e serviços (sér...          SI  Sistema Nacional de Pesquisa de Custos e Índic...
+    >>> ibge.search("Índice", "Preços", pesquisa_nome="Pesquisa").head()
+            id                                               nome pesquisa_id                              pesquisa_nome
+    2472  1399  Número de empresas comerciais, Unidades locais...          PB                 Pesquisa Anual de Comércio
+    2957   379  Índice de Gini - recebimento médio mensal das ...          OF          Pesquisa de Orçamentos Familiares
+    3101    50  Folha de pagamento nominal por classes de indú...          DG  Pesquisa Industrial Mensal - Dados Gerais
+    3102    49  Folha de pagamento nominal por tipo de índice ...          DG  Pesquisa Industrial Mensal - Dados Gerais
+    3103    52  Folha de pagamento nominal por trabalhador por...          DG  Pesquisa Industrial Mensal - Dados Gerais
     """
     json = get_json("https://servicodados.ibge.gov.br/api/v3/agregados")
     df = pd.io.json.json_normalize(
@@ -302,19 +296,13 @@ def list_classifications(aggregate_code, *search, **searches):
 
     Examples
     --------
-    >>> ibge.list_classifications(1419)
-             id                                     nome unidade  nivel classificacao_id                      classificacao_nome
-    0      7169                             Índice geral    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    1      7170                  1.Alimentação e bebidas    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    2      7171              11.Alimentação no domicílio    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    3      7172  1101.Cereais, leguminosas e oleaginosas    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    4      7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    ..      ...                                      ...     ...    ...              ...                                     ...
-    459    7792                 9101008.Telefone celular    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    460  107688                9101018.Acesso à internet    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    461    7794              9101019.Aparelho telefônico    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    462   12429   9101021.Telefone com internet - pacote    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    463   12430   9101022.TV por assinatura com internet    None     -1              315  Geral, grupo, subgrupo, item e subitem
+    >>> ibge.list_classifications(1419).head()
+         id                                     nome unidade  nivel classificacao_id                      classificacao_nome
+    0  7169                             Índice geral    None     -1              315  Geral, grupo, subgrupo, item e subitem
+    1  7170                  1.Alimentação e bebidas    None     -1              315  Geral, grupo, subgrupo, item e subitem
+    2  7171              11.Alimentação no domicílio    None     -1              315  Geral, grupo, subgrupo, item e subitem
+    3  7172  1101.Cereais, leguminosas e oleaginosas    None     -1              315  Geral, grupo, subgrupo, item e subitem
+    4  7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
     """
     baseurl = "https://servicodados.ibge.gov.br/api/v3/agregados"
     url = f"{baseurl}/{aggregate_code}/metadados"
@@ -354,6 +342,13 @@ def list_states(*search, **searches):
 
     Examples
     --------
+    >>> ibge.list_states().head()
+       id sigla      nome  regiao_id regiao_sigla regiao_nome
+    0  11    RO  Rondônia          1            N       Norte
+    1  12    AC      Acre          1            N       Norte
+    2  13    AM  Amazonas          1            N       Norte
+    3  14    RR   Roraima          1            N       Norte
+    4  15    PA      Pará          1            N       Norte
     """
     return list_regions_helper("estados", search, searches)
 
@@ -378,11 +373,13 @@ def list_macroregions(*search, **searches):
 
     Examples
     --------
-    >>> ibge.list_states("Rio")
-        id sigla                 nome  regiao_id regiao_sigla regiao_nome
-    10  24    RN  Rio Grande do Norte          2           NE    Nordeste
-    18  33    RJ       Rio de Janeiro          3           SE     Sudeste
-    22  43    RS    Rio Grande do Sul          4            S         Sul
+    >>> ibge.list_macroregions()
+       id sigla          nome
+    0   1     N         Norte
+    1   2    NE      Nordeste
+    2   3    SE       Sudeste
+    3   4     S           Sul
+    4   5    CO  Centro-Oeste
     """
     return list_regions_helper("regioes", search, searches)
 
@@ -407,19 +404,13 @@ def list_cities(*search, **searches):
 
     Examples
     --------
-    >>> ibge.list_cities("Rio")
-               id                       nome  microrregiao_id  microrregiao_nome  mesorregiao_id   mesorregiao_nome  UF_id UF_sigla   UF_nome  regiao_id regiao_sigla   regiao_nome
-    18    1100262                 Rio Crespo            11003          Ariquemes            1102  Leste Rondoniense     11       RO  Rondônia          1            N         Norte
-    66    1200401                 Rio Branco            12004         Rio Branco            1202       Vale do Acre     12       AC      Acre          1            N         Norte
-    122   1303569           Rio Preto da Eva            13008   Rio Preto da Eva            1303  Centro Amazonense     13       AM  Amazonas          1            N         Norte
-    123   1303601  Santa Isabel do Rio Negro            13001          Rio Negro            1301   Norte Amazonense     13       AM  Amazonas          1            N         Norte
-    192   1502772               Curionópolis            15019        Parauapebas            1506   Sudeste Paraense     15       PA      Pará          1            N         Norte
-    ...       ...                        ...              ...                ...             ...                ...    ...      ...       ...        ...          ...           ...
-    5379  5205000         Carmo do Rio Verde            52006              Ceres            5203      Centro Goiano     52       GO     Goiás          5           CO  Centro-Oeste
-    5478  5214408                    Nazário            52009            Anicuns            5203      Centro Goiano     52       GO     Goiás          5           CO  Centro-Oeste
-    5508  5217401               Pires do Rio            52016       Pires do Rio            5205         Sul Goiano     52       GO     Goiás          5           CO  Centro-Oeste
-    5519  5218789                 Rio Quente            52015         Meia Ponte            5205         Sul Goiano     52       GO     Goiás          5           CO  Centro-Oeste
-    5520  5218805                  Rio Verde            52013  Sudoeste de Goiás            5205         Sul Goiano     52       GO     Goiás          5           CO  Centro-Oeste
+    >>> ibge.list_cities(UF_nome="Rio de Janeiro").head()
+               id                nome  microrregiao_id       microrregiao_nome  mesorregiao_id     mesorregiao_nome  UF_id UF_sigla         UF_nome  regiao_id regiao_sigla regiao_nome
+    3175  3300100      Angra dos Reis            33013     Baía da Ilha Grande            3305       Sul Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
+    3176  3300159             Aperibé            33002  Santo Antônio de Pádua            3301  Noroeste Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
+    3177  3300209            Araruama            33010                   Lagos            3304             Baixadas     33       RJ  Rio de Janeiro          3           SE     Sudeste
+    3178  3300225               Areal            33005               Três Rios            3303    Centro Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
+    3179  3300233  Armação dos Búzios            33010                   Lagos            3304             Baixadas     33       RJ  Rio de Janeiro          3           SE     Sudeste
     """
     return list_regions_helper("municipios", search, searches)
 
@@ -444,19 +435,10 @@ def list_microregions(*search, **searches):
 
     Examples
     --------
-    >>> ibge.list_microregions()
-            id              nome  mesorregiao_id   mesorregiao_nome  UF_id UF_sigla           UF_nome  regiao_id regiao_sigla   regiao_nome
-    0    11001       Porto Velho            1101    Madeira-Guaporé     11       RO          Rondônia          1            N         Norte
-    1    11002     Guajará-Mirim            1101    Madeira-Guaporé     11       RO          Rondônia          1            N         Norte
-    2    11003         Ariquemes            1102  Leste Rondoniense     11       RO          Rondônia          1            N         Norte
-    3    11004         Ji-Paraná            1102  Leste Rondoniense     11       RO          Rondônia          1            N         Norte
-    4    11005  Alvorada D'Oeste            1102  Leste Rondoniense     11       RO          Rondônia          1            N         Norte
-    ..     ...               ...             ...                ...    ...      ...               ...        ...          ...           ...
-    553  52015        Meia Ponte            5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    554  52016      Pires do Rio            5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    555  52017           Catalão            5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    556  52018      Quirinópolis            5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    557  53001          Brasília            5301   Distrito Federal     53       DF  Distrito Federal          5           CO  Centro-Oeste
+    >>> ibge.list_microregions("Rio", mesorregiao_nome="Rio")
+            id                   nome  mesorregiao_id                 mesorregiao_nome  UF_id UF_sigla         UF_nome  regiao_id regiao_sigla regiao_nome
+    348  33018         Rio de Janeiro            3306  Metropolitana do Rio de Janeiro     33       RJ  Rio de Janeiro          3           SE     Sudeste
+    352  35004  São José do Rio Preto            3501            São José do Rio Preto     35       SP       São Paulo          3           SE     Sudeste
     """
     return list_regions_helper("microrregioes", search, searches)
 
@@ -481,19 +463,13 @@ def list_mesoregions(*search, **searches):
 
     Examples
     --------
-    >>> ibge.list_mesoregions()
-           id               nome  UF_id UF_sigla           UF_nome  regiao_id regiao_sigla   regiao_nome
-    0    1101    Madeira-Guaporé     11       RO          Rondônia          1            N         Norte
-    1    1102  Leste Rondoniense     11       RO          Rondônia          1            N         Norte
-    2    1201      Vale do Juruá     12       AC              Acre          1            N         Norte
-    3    1202       Vale do Acre     12       AC              Acre          1            N         Norte
-    4    1301   Norte Amazonense     13       AM          Amazonas          1            N         Norte
-    ..    ...                ...    ...      ...               ...        ...          ...           ...
-    132  5202       Norte Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    133  5203      Centro Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    134  5204       Leste Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    135  5205         Sul Goiano     52       GO             Goiás          5           CO  Centro-Oeste
-    136  5301   Distrito Federal     53       DF  Distrito Federal          5           CO  Centro-Oeste
+    >>> ibge.list_mesoregions().head()
+         id               nome  UF_id UF_sigla   UF_nome  regiao_id regiao_sigla regiao_nome
+    0  1101    Madeira-Guaporé     11       RO  Rondônia          1            N       Norte
+    1  1102  Leste Rondoniense     11       RO  Rondônia          1            N       Norte
+    2  1201      Vale do Juruá     12       AC      Acre          1            N       Norte
+    3  1202       Vale do Acre     12       AC      Acre          1            N       Norte
+    4  1301   Norte Amazonense     13       AM  Amazonas          1            N       Norte
     """
     return list_regions_helper("mesorregioes", search, searches)
 

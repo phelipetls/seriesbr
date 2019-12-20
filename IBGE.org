@@ -1,8 +1,6 @@
 * Instituto Brasileiro de Geografia e Estatística
 
-IBGE has a complex database.
-
-It is composed of several researches responsible for measuring a set
+IBGE has a complex database. It is composed of several researches responsible for measuring a set
 of aggregates, which in turn has several variables.
 
 Some aggregates can be filtered by locations, such as cites, states,
@@ -36,7 +34,7 @@ ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 : 2260  1705  IPCA15 - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de fevereiro/2012)  IQ          Índice Nacional de Preços ao Consumidor Amplo 15
 
 It is also possible to search for all aggregates of a research by 
-assigning to the =where= parameter the value "pesquisa_nome".
+assigning to the =where= parameter the value =pesquisa_nome=.
 
 Please note that the string is a regex.
 
@@ -165,7 +163,9 @@ Now let's visualize the inflation rate by product / service.
 #+NAME: 
 #+BEGIN_SRC python :session :exports both
 
-ipca.pivot_table(index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor")
+ipca.pivot_table(
+    index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
+)
 
 #+END_SRC
 

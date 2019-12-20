@@ -33,6 +33,14 @@ seriesbr.helpers.lists module
    :undoc-members:
    :show-inheritance:
 
+seriesbr.helpers.metadata module
+--------------------------------
+
+.. automodule:: seriesbr.helpers.metadata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 seriesbr.helpers.request module
 -------------------------------
 
