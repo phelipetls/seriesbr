@@ -1,10 +1,10 @@
 import datetime
 
 year_format = ["%Y"]
-month_year_format = ["%m/%y", "%m/%Y", "%M/%Y"]
+month_year_format = ["%m/%y", "%m/%Y", "%M/%Y", "%b/%Y", "%b/%y", "%B/%Y", "%B/%y"]
 day_month_year_format = ["%d/%m/%Y"]
 
-slash_formats = day_month_year_format + year_format + month_year_format
+slash_formats = year_format + month_year_format + day_month_year_format
 dash_formats = [fmt.replace("/", "-") for fmt in slash_formats]
 blank_formats = [fmt.replace("/", "") for fmt in slash_formats]
 
