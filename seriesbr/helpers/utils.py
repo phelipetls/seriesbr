@@ -89,7 +89,7 @@ def do_search(df, search, searches):
         non-existent column.
     """
     df_cols = df.columns.tolist()
-    for field in searches.keys():
+    for field in searches:
         if field not in df_cols:
             raise ValueError("{} is a non-existing column.".format(field))
     regex = build_regex(search)
@@ -124,6 +124,5 @@ def clean_json(json):
     and clean its columns names.
     """
     df = pd.io.json.json_normalize(json, sep='_')
-    df = df.rename(lambda x: x.replace('.', '_'), axis='columns')
     df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
     return df

@@ -214,6 +214,9 @@ def list_metadata():
     UNINOME    Unit of measurement
     BASNOME           Basis's name
     """
-    return DataFrame.from_dict(ipea_metadata_list, orient='index', columns=["Description"])
+    return DataFrame.from_dict(
+        ipea_metadata_list, orient="index", columns=["Description"]
+    )
+
 
 # vi: nowrap
