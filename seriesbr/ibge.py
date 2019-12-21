@@ -145,8 +145,7 @@ def search(*search, **searches):
         Strings to search in aggregates' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
@@ -286,8 +285,7 @@ def list_classifications(aggregate_code, *search, **searches):
         Strings to search in categories' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
@@ -332,8 +330,7 @@ def list_states(*search, **searches):
         Strings to search in states' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
@@ -363,8 +360,7 @@ def list_macroregions(*search, **searches):
         Strings to search in macroregions' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
@@ -394,8 +390,7 @@ def list_cities(*search, **searches):
         Strings to search in cities' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
@@ -425,8 +420,7 @@ def list_microregions(*search, **searches):
         Strings to search in microregions' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
@@ -453,8 +447,7 @@ def list_mesoregions(*search, **searches):
         Strings to search in mesoregions' names.
 
     **searches
-        Keyword arguments where param is a column and
-        value a string or list of strings.
+        Strings to search in other columns.
 
     Returns
     -------
