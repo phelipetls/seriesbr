@@ -61,6 +61,8 @@ html_theme_options = {
     "github_button": "true",
     "github_type": "star",
     "fixed_sidebar": "true",
+    'font_family': "'Roboto', Georgia, sans",
+    'head_font_family': "'Garamond', Georgia, serif",
 }
 
 
@@ -71,4 +73,4 @@ html_static_path = ['_static']
 
 master_doc = "index"
 
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
