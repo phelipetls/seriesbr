@@ -22,7 +22,7 @@ def get_json(url, **kwargs):
     dict
         Decoded JSON.
     """
-    response = s.get(url, timeout=10, **kwargs)
+    response = s.get(url, timeout=60, **kwargs)
     response.raise_for_status()
     try:
         return response.json()
