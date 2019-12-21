@@ -6,12 +6,10 @@
 SeriesBR
 =================================================================================
 
-|image0|
-|image4|
-|image5|
-|image3|
-|image1|
-
+|pypi|
+|downloads|
+|travis|
+|codecov|
 
 **SeriesBR** is a Python interface to interact with brazilian time series databases such as:
 
@@ -90,21 +88,19 @@ Here's how to get series from both BCB and IPEA:
    plt.suptitle("Séries do IPEADATA e do BCB")
    plt.subplots_adjust(top=.9)
 
-|image2|
+|plot|
 
 .. automodule:: seriesbr.bcb
 
-.. |image0| image:: https://img.shields.io/pypi/v/seriesbr.svg
+.. |plot| image:: ../../imgs/example.png
+.. |pypi| image:: https://img.shields.io/pypi/v/seriesbr.svg
    :target: https://pypi.org/project/seriesbr/
-.. |image1| image:: https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/phelipetls/seriesbr
-.. |image2| image:: ../../imgs/example.png
-.. |image3| image:: https://travis-ci.org/phelipetls/seriesbr.svg?branch=master
+.. |downloads| image:: https://img.shields.io/pypi/dm/seriesbr
+    :target: https://pypi.org/project/seriesbr/
+.. |travis| image:: https://travis-ci.org/phelipetls/seriesbr.svg?branch=master
    :target: https://travis-ci.org/phelipetls/seriesbr
-.. |image4| image:: https://img.shields.io/pypi/dm/seriesbr
-    :target: https://pypi.org/project/seriesbr/
-.. |image5| image:: https://img.shields.io/pypi/l/seriesbr
-    :target: https://pypi.org/project/seriesbr/
+.. |codecov| image:: https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/phelipetls/seriesbr
 
 Indices and tables
 ==================
