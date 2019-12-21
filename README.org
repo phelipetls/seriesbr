@@ -42,7 +42,7 @@ To install the latest version, run the following command:
 
 ** Documentation
 
-See our documentation at [[seriesbr.readthedocs.io/en/latest][readthedocs]].
+See our documentation at [[https://seriesbr.readthedocs.io/en/latest][readthedocs]].
 
 ** Usage
 
