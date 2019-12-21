@@ -36,8 +36,8 @@ Main Features
 -  Search in a given database with ``search``.
 -  Get metadata with ``get_metadata``.
 
-User Guide
-----------
+User
+----
 
 In the following links you will learn more on how to use each module:
 
@@ -49,10 +49,13 @@ In the following links you will learn more on how to use each module:
    IBGE <demos/IBGE>
 
 
+Developer
+---------
+
+And here you can explore the source code and its documentation:
 
 .. toctree::
-   :maxdepth: 2
-   :hidden:
+   :maxdepth: 1
 
    Documentation <api/modules>
 

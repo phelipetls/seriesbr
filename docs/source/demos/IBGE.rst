@@ -87,20 +87,17 @@ want a specific one.
 Now we need the codes of the same classifications used by in IBGE in its
 visualizations. Let's use ``list_classifications``.
 
+Because all ``list_*`` functions takes an arbitrary number of regexes as
+arguments to search in column ``nome``, we will search for those which
+have a single number followed by a dot, letters and spaces. This means
+they're products' groups.
+
 .. code:: python
 
    categories = ibge.list_classifications(
        1419,
        "Índice geral",
-       "^..Alimentação e bebidas",
-       "^..Habitação",
-       "^..Artigos de residência",
-       "^..Vestuário",
-       "^..Transportes",
-       "^..Saúde e cuidados pessoais",
-       "^..Despesas Pessoais",
-       "^..Educação",
-       "^..Comunicação",
+       "^\d\.[A-z ]+",
    )
 
    categories
@@ -118,11 +115,6 @@ visualizations. Let's use ``list_classifications``.
    395  7712  7.Despesas pessoais          None   -1      315              Geral, grupo, subgrupo, item e subitem
    428  7766  8.Educação                   None   -1      315              Geral, grupo, subgrupo, item e subitem
    453  7786  9.Comunicação                None   -1      315              Geral, grupo, subgrupo, item e subitem
-
-All ``list_*`` functions takes an arbitrary number of strings (a regex)
-as optional arguments to match the column "nome" by default, i.e., the
-name of the categories in this case, but you can change this with the
-argument ``where``.
 
 Getting time series
 -------------------

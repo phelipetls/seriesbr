@@ -4,7 +4,8 @@ Instituto de Pesquisa Econômica Aplicada
 Searching
 ---------
 
-The search function takes an arbitrary number of arguments.
+You can search a time series by name with an arbitrary number of
+arguments:
 
 .. code:: python
 
@@ -33,7 +34,7 @@ The search function takes an arbitrary number of arguments.
 
    [474 rows x 4 columns]
 
-It also accepts keyword arguments to filter for metadata values.
+And it also accepts keyword arguments to filter by metadata.
 
 For example, if you're looking for a macroeconomic, monthly time series
 measured in percent points, you could try:
@@ -179,7 +180,7 @@ If you're interested in particular countries, try ``list_countries``.
 
    [67 rows x 2 columns]
 
-You will then be able to search for how many you like.
+You will then be able to search for multiple countries in one call.
 
 .. code:: python
 
@@ -205,8 +206,8 @@ You will then be able to search for how many you like.
 Getting time series
 -------------------
 
-This works in a very similary way as ``bcb.get_series`` and returns a
-similar output too, except that there isn't ``last_n`` argument.
+This works in a very similar way as ``bcb.get_series`` and returns a
+similar output too, except that there isn't a ``last_n`` argument.
 
 .. code:: python
 

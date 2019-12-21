@@ -1,7 +1,7 @@
 * Instituto de Pesquisa Econômica Aplicada
 ** Searching
 
-The search function takes an arbitrary number of arguments.
+You can search a time series by name with an arbitrary number of arguments:
 
 #+BEGIN_SRC python :session :exports both
 import pandas as pd
@@ -31,7 +31,7 @@ ipea.search("Taxa", "Selic", "recursos", "livres")
 [474 rows x 4 columns]
 #+end_example
 
-It also accepts keyword arguments to filter for metadata values.
+And it also accepts keyword arguments to filter by metadata.
 
 For example, if you're looking for a macroeconomic, monthly time series measured in percent points, you could try:
 
@@ -176,7 +176,7 @@ ipea.list_countries()
 [67 rows x 2 columns]
 #+end_example
 
-You will then be able to search for how many you like.
+You will then be able to search for multiple countries in one call.
 
 #+BEGIN_SRC python :session :exports both
 ipea.search(PAICODIGO=["VEN", "DEU", "LATI"])
@@ -202,7 +202,9 @@ ipea.search(PAICODIGO=["VEN", "DEU", "LATI"])
 
 ** Getting time series
 
-This works in a very similary way as =bcb.get_series= and returns a similar output too, except that there isn't =last_n= argument.
+This works in a very similar way as =bcb.get_series= and
+returns a similar output too, except that there isn't a
+=last_n= argument.
 
 #+BEGIN_SRC python :session :exports both
   ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")

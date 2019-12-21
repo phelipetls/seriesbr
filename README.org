@@ -40,6 +40,10 @@ To install the latest version, run the following command:
 - Search in a given database with =search=.
 - Get metadata with =get_metadata=.
 
+** Documentation
+
+See our documentation at [[seriesbr.readthedocs.io/en/latest][readthedocs]].
+
 ** Usage
 
 In the following links you will find demonstrations files on how to use each module:
@@ -48,8 +52,8 @@ In the following links you will find demonstrations files on how to use each mod
 - [[https://github.com/phelipetls/seriesbr/blob/master/IPEA.org][IPEA]]
 - [[https://github.com/phelipetls/seriesbr/blob/master/IBGE.org][IBGE]]
 
-For a quick example, check out the function below, which allows you to get
-values from both IPEA and BCB at the same call.
+For a quick demo, check out the function below, which allows you to get
+values from both IPEA and BCB in one call.
 
 #+BEGIN_SRC python :session
   from seriesbr import seriesbr
@@ -84,8 +88,6 @@ values from both IPEA and BCB at the same call.
 
 #+RESULTS:
 [[file:imgs/example.png]]
-
-Though desirable, it would be hard to do the same thing with IBGE's API.
 
 ** Conclusion
 
