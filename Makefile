@@ -3,7 +3,11 @@ test:
 
 publish:
 	python3 setup.py sdist bdist_wheel
-	twine upload dist/*
+	twine upload --skip-existing dist/*
+	rm -rf build dist .egg seriesbr.egg-info
+
+docs:
+	cd docs && make html
 
 coverage:
 	pytest --cov=seriesbr
