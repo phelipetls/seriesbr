@@ -1,15 +1,16 @@
 * Instituto Brasileiro de Geografia e Estatística
 
 IBGE has a complex database. It is composed of several researches responsible for measuring a set
-of aggregates, which in turn has several variables.
+of aggregates which has several variables, locations and classifications associated with it.
 
-Some aggregates can be filtered by locations, such as cites, states,
-mesoregions, microregions and macroregions, and by specific classifications
-and categories.
+An aggregate is also commonly referred to as a IBGE table.
+
+Some aggregates may be filtered by locations such as cities, states, mesoregions, microregions
+and macroregions, as well by classifications and categories.
 
 For example, IPCA, the inflation rate, is an aggregate of the research "Índice Nacional de Preços ao
-Consumidor Amplo", with variables such as monthly and cumulative variation, among others. It has 
-values for every location of Brazil and for various kinds of products (a lot, really).
+Consumidor Amplo", with variables such as monthly and cumulative variation. It has 
+values for every Brazil's location and for various kinds of products.
 
 To show how to use the package, we will try to replicate the visualizations as
 it was done [[https://sidra.ibge.gov.br/home/ipca/brasil][here]], concerning the most recent IPCA.
@@ -33,10 +34,7 @@ ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 : 2244  1419  IPCA - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de janeiro/2012)      IA          Índice Nacional de Preços ao Consumidor Amplo   
 : 2260  1705  IPCA15 - Variação mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de fevereiro/2012)  IQ          Índice Nacional de Preços ao Consumidor Amplo 15
 
-It is also possible to search for all aggregates of a research by 
-assigning to the =where= parameter the value =pesquisa_nome=.
-
-Please note that the string is a regex.
+You could also search for a specific research in this way:
 
 #+BEGIN_SRC python :session :exports both
 ibge.search(pesquisa_nome="Índice Nacional de Preços ao Consumidor Amplo$")
@@ -59,6 +57,8 @@ ibge.search(pesquisa_nome="Índice Nacional de Preços ao Consumidor Amplo$")
 
 [22 rows x 4 columns]
 #+end_example
+
+In fact, you can search in a similar way within any column. Also notice that the string is a regex.
 
 We want the aggregate that goes by the code of 1419.
 So now let's take a look at the available variables:
@@ -84,7 +84,7 @@ used by in IBGE in its visualizations. Let's use =list_classifications=.
 Because all =list_*= functions takes an arbitrary number of regexes as
 arguments to search in column =nome=, we will search for those which
 have a single number followed by a dot, letters and spaces. This means
-they're products' groups.
+they're products' groups, not subgroups etc.
 
 #+BEGIN_SRC python :session :exports both
 categories = ibge.list_classifications(
@@ -120,9 +120,9 @@ The aggregate is 1419, we will use every variable so no need to filter that.
 Since we have the codes for classifications and categories, we
 can just pass a dictionary like this: ={ classification: [ categories ] }=.
 
-But if you wanted data for all values of a classification, you don't to give
+But if you wanted data for all values of a classification, you don't need to give
 a list of all categories' codes, just pass the classification code alone as an
-int / str, or a list of them, if you want all categories.
+int / str, or a list of them, and you'll get all of its categories.
 
 #+BEGIN_SRC python :session :exports both
 ipca = ibge.get_series(1419, last_n=1, classifications={315: categories.id.to_list()})
