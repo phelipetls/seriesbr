@@ -10,8 +10,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from seriesbr import ibge
 
 
-def get_sample_json(resource):
-    json_path = Path(__file__).resolve().parent / "sample_jsons" / resource
+def get_sample_json(filename):
+    json_path = Path(__file__).resolve().parent / "sample_jsons" / filename
     with json_path.open() as json_file:
         return json.load(json_file)
 
