@@ -4,7 +4,7 @@ from .request import get_json
 metadata_list = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
 
 
-def get_search_results_bcb(url):
+def bcb_get_search_results(url):
     """
     Auxiliary function to request BCB's search
     results and turn json into a DataFrame.
@@ -30,7 +30,7 @@ def get_search_results_bcb(url):
     return DataFrame(search_results).loc[:, metadata_list]
 
 
-def get_search_results_ipea(url):
+def ipea_get_search_results(url):
     """
     Auxiliary function to request IPEA's search
     results and turn json into a DataFrame.

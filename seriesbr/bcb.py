@@ -2,7 +2,7 @@ from pandas import concat
 from .helpers.dates import parse_dates
 from .helpers.utils import return_codes_and_names
 from .helpers.response import bcb_json_to_df
-from .helpers.searching import get_search_results_bcb
+from .helpers.searching import bcb_get_search_results
 from .helpers.metadata import bcb_metadata_to_df
 
 
@@ -108,7 +108,7 @@ def search(*search, rows=10, start=1):
     if len(search) > 1:
         filter_params = f"&fq={'+'.join([name for name in search[1:]])}"
     url = f"{baseurl}{params}{filter_params}"
-    return get_search_results_bcb(url)
+    return bcb_get_search_results(url)
 
 
 def get_metadata(code):

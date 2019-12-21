@@ -4,7 +4,7 @@ from .helpers.utils import return_codes_and_names
 from .helpers.lists import list_metadata_helper
 from .helpers.response import ipea_json_to_df
 from .helpers.metadata import ipea_metadata_to_df
-from .helpers.searching import get_search_results_ipea
+from .helpers.searching import ipea_get_search_results
 from .helpers.ipea_metadata_list import ipea_metadata_list
 from .helpers.url import (
     ipea_make_select_query,
@@ -103,7 +103,7 @@ def search(*SERNOME, **metadatas):
     select_query = ipea_make_select_query(metadatas)
     filter_query = ipea_make_filter_query(SERNOME, metadatas)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    return get_search_results_ipea(url)
+    return ipea_get_search_results(url)
 
 
 def get_metadata(code):

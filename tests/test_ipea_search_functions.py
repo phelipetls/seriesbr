@@ -13,7 +13,7 @@ def mocked_get_search_results_ipea(url):
     return url
 
 
-@patch('seriesbr.ipea.get_search_results_ipea', mocked_get_search_results_ipea)
+@patch('seriesbr.ipea.ipea_get_search_results', mocked_get_search_results_ipea)
 class TestIPEASearch(unittest.TestCase):
 
     base = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados"
