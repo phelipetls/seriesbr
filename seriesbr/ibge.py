@@ -73,7 +73,7 @@ def get_series(
 
     Examples
     --------
-    >>> ibge.get_series(1419, last_n=1)
+    >>> ibge.get_series(1419, start="11-2019", end="11-2019")
                Nível Territorial                               Variável Geral, grupo, subgrupo, item e subitem   Valor
     Date
     2019-11-01            Brasil                 IPCA - Variação mensal                           Índice geral    0.51
