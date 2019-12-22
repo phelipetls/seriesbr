@@ -15,14 +15,19 @@ def return_first_argument(arg, **kwargs):
 
 class TestUtils(unittest.TestCase):
     def test_concatenate_by_separator_if_iterable(self):
-        test = [utils.cat([1, 2, 3, 4], ","), utils.cat(2, ","), utils.cat((4, 5), ",")]
-        correct = ["1,2,3,4", 2, "4,5"]
+        test = [
+            utils.cat([1, 2, 3, 4], ","),
+            utils.cat(2, ","),
+            utils.cat((4, 5), ","),
+            utils.cat("123", ","),
+        ]
+        correct = ["1,2,3,4", 2, "4,5", "123"]
         self.assertListEqual(test, correct)
 
     def test_is_isterable(self):
         to_test = [[1], (1,), 1, {1: 1}, "1"]
         test = list(map(utils.isiterable, to_test))
-        correct = [True, True, False, True, True]
+        correct = [True, True, False, True, False]
         self.assertListEqual(test, correct)
 
     @patch.object(pandas.DataFrame, "query")
@@ -33,11 +38,15 @@ class TestUtils(unittest.TestCase):
             utils.do_search(df, "oi", {"pesquisa_nome": "DD"}),
             utils.do_search(df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"]}),
             utils.do_search(df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"], "pesquisa_id": "AA"}),
+            utils.do_search(df, [1], {"pesquisa_nome": [2]}),
+            utils.do_search(df, [1, 2, 3], {"pesquisa_nome": ["A", "B", "C"]}),
         ]
         correct = [
             "nome.str.contains('(?iu)oi') and pesquisa_nome.str.contains('(?iu)DD')",
             "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI')",
             "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI') and pesquisa_id.str.contains('(?iu)AA')",
+            "nome.str.contains('(?iu)1') and pesquisa_nome.str.contains('(?iu)2')",
+            "nome.str.contains('(?iu)1|2|3') and pesquisa_nome.str.contains('(?iu)A|B|C')",
         ]
         self.assertListEqual(test, correct)
 
@@ -48,6 +57,6 @@ class TestUtils(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(failfast=True)
 
 # vi: nowrap

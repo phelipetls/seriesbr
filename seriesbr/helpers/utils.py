@@ -51,18 +51,19 @@ def cat(something, sep):
 def isiterable(something):
     """
     Auxiliary function to test if something is
-    an iterable or not.
+    an iterable (unless it's a str).
 
     Returns
     -------
     bool
-        True if an iterable, False otherwise.
+        True if an iterable other than str,
+        False otherwise.
     """
     try:
         iter(something)
     except TypeError:
         return False
-    return True
+    return True and not isinstance(something, str)
 
 
 def do_search(df, search, searches):
@@ -111,11 +112,9 @@ def build_regex(strings):
     """
     # (?iu) sets unicode and ignore case flags
     flags = r'(?iu)'
-    if isinstance(strings, str):
-        regex = f"{flags}{strings}"
-    elif isiterable(strings):
-        regex = f"{flags}{'|'.join(strings)}"
-    return regex
+    if isiterable(strings):
+        return f"{flags}{'|'.join(map(str, strings))}"
+    return f"{flags}{strings}"
 
 
 def clean_json(json):
