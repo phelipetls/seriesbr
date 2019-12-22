@@ -1,7 +1,8 @@
-import requests
+import urllib3
 import json
 
-s = requests.Session()
+
+http = urllib3.PoolManager()
 
 
 def get_json(url, **kwargs):
@@ -22,9 +23,8 @@ def get_json(url, **kwargs):
     dict
         Decoded JSON.
     """
-    response = s.get(url, timeout=60, **kwargs)
-    response.raise_for_status()
+    response = http.request("GET", url, timeout=60.0, retries=3)
     try:
-        return response.json()
+        return json.loads(response.date.decode("utf-8"))
     except json.JSONDecodeError:
         raise ValueError(f"A request to {url} didn't produce any JSON.")
