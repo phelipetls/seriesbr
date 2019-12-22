@@ -7,7 +7,7 @@ Searching
 You can search a time series by name with an arbitrary number of
 arguments:
 
-.. code:: python
+.. ipython:: python
 
    import pandas as pd
 
@@ -17,72 +17,24 @@ arguments:
 
    ipea.search("Taxa", "Selic", "recursos", "livres")
 
-::
-
-              SERCODIGO                                            SERNOME PERNOME UNINOME
-   0       BM12_CRDCA12  Operações de crédito - recursos direcionados -...  Mensal      R$
-   1     BM12_CRDCAPF12  Operações de crédito - recursos direcionados -...  Mensal      R$
-   2     BM12_CRDCAPJ12  Operações de crédito - recursos direcionados -...  Mensal      R$
-   3       BM12_CRDIN12  Operações de crédito - recursos direcionados -...  Mensal     (%)
-   4     BM12_CRDINPF12  Operações de crédito - recursos direcionados -...  Mensal     (%)
-   ..               ...                                                ...     ...     ...
-   469       TxParticip                               Taxa de participação   Anual     (%)
-   470  TxParticip_Metr        Taxa de participação - áreas metropolitanas   Anual     (%)
-   471  TxParticip_NaoM    Taxa de participação - áreas não-metropolitanas   Anual     (%)
-   472  TxParticip_Rura                Taxa de participação - áreas rurais   Anual     (%)
-   473  TxParticip_Urba  Taxa de participação - áreas urbanas não-metro...   Anual     (%)
-
-   [474 rows x 4 columns]
 
 And it also accepts keyword arguments to filter by metadata.
 
 For example, if you're looking for a macroeconomic, monthly time series
 measured in percent points, you could try:
 
-.. code:: python
+.. ipython:: python
 
 
    ipea.search(BASNOME="Macroeconômico", PERNOME="Mensal", UNINOME="(p.p.)")
 
-::
-
-                SERCODIGO                                            SERNOME PERNOME UNINOME         BASNOME
-   0         BM12_CRDSD12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
-   1       BM12_CRDSDPF12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
-   2       BM12_CRDSDPJ12  Operações de crédito - recursos direcionados -...  Mensal  (p.p.)  Macroeconômico
-   3         BM12_CRLSD12    Operações de crédito - recursos livres - spread  Mensal  (p.p.)  Macroeconômico
-   4       BM12_CRLSDPF12  Operações de crédito - recursos livres - sprea...  Mensal  (p.p.)  Macroeconômico
-   ..                 ...                                                ...     ...     ...             ...
-   10  VALOR12_GLOBAL2412               Bônus global República (24) - spread  Mensal  (p.p.)  Macroeconômico
-   11  VALOR12_GLOBAL2712               Bônus global República (27) - spread  Mensal  (p.p.)  Macroeconômico
-   12  VALOR12_GLOBAL4012               Bônus global República (40) - spread  Mensal  (p.p.)  Macroeconômico
-   13   VALOR12_GLOBAL912                Bônus global República (9) - spread  Mensal  (p.p.)  Macroeconômico
-   14   VALOR12_TJCBOND12                                    C-Bond - spread  Mensal  (p.p.)  Macroeconômico
-
-   [15 rows x 5 columns]
 
 Or, if you want american or german GDP that is still updated:
 
-.. code:: python
+.. ipython:: python
 
    ipea.search("PIB", PAICODIGO=["DEU", "USA"], SERSTATUS="A")
 
-::
-
-              SERCODIGO                                            SERNOME     PERNOME      UNINOME PAICODIGO SERSTATUS
-   0   ECONMI4_ALPIBG34                PIB - var. real trimestral anualiz.  Trimestral     (% a.a.)       DEU         A
-   1    ECONMI4_ALPIBG4  PIB - var. real contra igual trimestre do ano ...  Trimestral     (% a.a.)       DEU         A
-   2   ECONMI4_USPIBG34                PIB - var. real trimestral anualiz.  Trimestral     (% a.a.)       USA         A
-   3    ECONMI4_USPIBG4  PIB - var. real contra igual trimestre do ano ...  Trimestral     (% a.a.)       USA         A
-   4   WDI_PIBPPCCAPDEU  PIB - paridade do poder de compra (PPC) - per ...       Anual          US$       DEU         A
-   ..               ...                                                ...         ...          ...       ...       ...
-   7   WDI_PIBPPCCAPUSA  PIB - paridade do poder de compra (PPC) - per ...       Anual          US$       USA         A
-   8      WDI_PIBPPCDEU            PIB - paridade do poder de compra (PPC)       Anual          US$       DEU         A
-   9     WDI_PIBPPCRDEU            PIB - paridade do poder de compra (PPC)       Anual  US$ de 2011       DEU         A
-   10    WDI_PIBPPCRUSA            PIB - paridade do poder de compra (PPC)       Anual  US$ de 2011       USA         A
-   11     WDI_PIBPPCUSA            PIB - paridade do poder de compra (PPC)       Anual          US$       USA         A
-
-   [12 rows x 6 columns]
 
 Here's a list of the valid metadatas accepted by the ``ipea.search``
 function:
@@ -110,98 +62,34 @@ SERNUMERICA    Numeric (1), Alphanumeric (0)
 You can take a look at the available themes and countries with the
 functions ``list_themes`` and ``list_countries``.
 
-.. code:: python
+.. ipython:: python
 
    ipea.list_themes()
 
-::
-
-       TEMCODIGO  TEMCODIGO_PAI                 TEMNOME
-   0          28            NaN            Agropecuária
-   1          23            NaN      Assistência social
-   2          10            NaN   Balanço de pagamentos
-   3           7            NaN                  Câmbio
-   4           5            NaN       Comércio exterior
-   ..        ...            ...                     ...
-   38         59           18.0                 Senador
-   39         17            NaN  Sinopse macroeconômica
-   40         33            NaN              Transporte
-   41         26            NaN                  Vendas
-   42         60           18.0                Vereador
-
-   [43 rows x 3 columns]
 
 Supposing now we are interested in the theme of employment and
 macroeconomics, we could search for these type of series like this:
 
-.. code:: python
+.. ipython:: python
 
    ipea.search(TEMCODIGO=[12, 17])
 
-::
-
-              SERCODIGO                                            SERNOME     PERNOME                   UNINOME  TEMCODIGO
-   0              ADMIS                     Total da evolução de admissões      Mensal                    Pessoa         12
-   1      CAGED12_ADMIS                             Empregados - admissões      Mensal                    Pessoa         12
-   2     CAGED12_DESLIG                             Empregados - demissões      Mensal                    Pessoa         12
-   3    CAGED12_SALDO12                                 Empregados - saldo      Mensal                    Pessoa         12
-   4               CN_C  Despesas com salários nas atividades da indúst...  Quinquenal  R$, a preços do ano 2000         12
-   ..               ...                                                ...         ...                       ...        ...
-   281         PAN4_TD4                                 Taxa de desemprego  Trimestral                       (%)         17
-   282     PAN4_TDESOC4                                Taxa de desocupação  Trimestral                       (%)         17
-   283     PAN4_TJOVER4               Taxa de juros nominal - Over / Selic  Trimestral                  (% a.a.)         17
-   284        PAN4_TPR4          Tendência prospectiva para 4 meses - IPCA  Trimestral                  (% a.a.)         17
-   285        PAN4_XTV4             Balança comercial - Exportações (BPM6)  Trimestral                       US$         17
-
-   [286 rows x 5 columns]
 
 Of course, you can search for just one of them as well.
 
 If you're interested in particular countries, try ``list_countries``.
 
-.. code:: python
+.. ipython:: python
 
    ipea.list_countries()
 
-::
-
-      PAICODIGO                      PAINOME
-   0        ZAF                África do Sul
-   1        DEU                     Alemanha
-   2       LATI               América Latina
-   3        AGO                       Angola
-   4        SAU               Arábia Saudita
-   ..       ...                          ...
-   62       THA                    Tailândia
-   63       TLS  Timor Leste (Ex-East Timor)
-   64       URY                      Uruguai
-   65       VEN                    Venezuela
-   66      ZEUR                 Zona do Euro
-
-   [67 rows x 2 columns]
 
 You will then be able to search for multiple countries in one call.
 
-.. code:: python
+.. ipython:: python
 
    ipea.search(PAICODIGO=["VEN", "DEU", "LATI"])
 
-::
-
-              SERCODIGO                                            SERNOME PERNOME      UNINOME PAICODIGO
-   0   ECONMI12_ALBCY12         balança comercial - saldo (acum. 12 meses)  Mensal          US$       DEU
-   1   ECONMI12_ALCCY12  balanço - conta corrente - saldo (acum. 12 meses)  Mensal          US$       DEU
-   2   ECONMI12_ALPCG12            preços ao consumidor - var. em 12 meses  Mensal     (% a.a.)       DEU
-   3   ECONMI12_ALPIG12             produção industrial - var. em 12 meses  Mensal     (% a.a.)       DEU
-   4   ECONMI12_ALPPG12              preços ao produtor - var. em 12 meses  Mensal     (% a.a.)       DEU
-   ..               ...                                                ...     ...          ...       ...
-   44     WDI_PIBPPCLCN            PIB - paridade do poder de compra (PPC)   Anual          US$      LATI
-   45    WDI_PIBPPCRDEU            PIB - paridade do poder de compra (PPC)   Anual  US$ de 2011       DEU
-   46    WDI_PIBPPCRLCN            PIB - paridade do poder de compra (PPC)   Anual  US$ de 2011      LATI
-   47    WDI_PIBPPCRVEN            PIB - paridade do poder de compra (PPC)   Anual  US$ de 2011       VEN
-   48     WDI_PIBPPCVEN            PIB - paridade do poder de compra (PPC)   Anual          US$       VEN
-
-   [49 rows x 5 columns]
 
 Getting time series
 -------------------
@@ -209,27 +97,10 @@ Getting time series
 This works in a very similar way as ``bcb.get_series`` and returns a
 similar output too, except that there isn't a ``last_n`` argument.
 
-.. code:: python
+.. ipython:: python
 
    ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
 
-::
-
-               Taxa de juros - Over / Selic  Taxa de juros - CDB
-   Date                                                         
-   1974-01-01                          1.46             1.800000
-   1974-02-01                          1.15             1.800000
-   1974-03-01                          1.16             1.800000
-   1974-04-01                          1.21             1.800000
-   1974-05-01                          1.24             1.800000
-   ...                                  ...                  ...
-   2009-06-01                          0.76             0.711593
-   2009-07-01                          0.79             0.776809
-   2009-08-01                          0.69             0.692135
-   2009-09-01                          0.69             0.718573
-   2009-10-01                          0.69             0.693355
-
-   [430 rows x 2 columns]
 
 Getting metadata
 ----------------
@@ -237,42 +108,14 @@ Getting metadata
 To get metadata you would do the same as in ``bcb`` module, just call
 ``ipea.get_metadata``.
 
-.. code:: python
+.. ipython:: python
 
    metadados = ipea.get_metadata("BM12_TJOVER12")
 
    metadados
 
-::
 
+.. ipython:: python
+   :suppress:
 
-   values
-   SERCODIGO                                               BM12_TJOVER12
-   SERNOME                                  Taxa de juros - Over / Selic
-   SERCOMENTARIO       Quadro: Taxas de juros efetivas.  Para 1974-19...
-   SERATUALIZACAO                          2019-12-14T05:06:00.543-02:00
-   BASNOME                                                Macroeconômico
-   FNTID                                                      1333430857
-   FNTSIGLA                                      Bacen/Boletim/M. Finan.
-   FNTNOME             Banco Central do Brasil, Boletim, Seção mercad...
-   FNTURL                                          http://www.bcb.gov.br
-   PERNOME                                                        Mensal
-   UNINOME                                                      (% a.m.)
-   MULNOME                                                          None
-   SERSTATUS                                                           A
-   TEMCODIGO                                                          39
-   TEMNOME                                                   Financeiras
-   TEMCODIGOPAI                                                     None
-   PAICODIGO                                                         BRA
-   SERNUMERICA                                                      True
-   SERTEMBR                                                         None
-   SERTEMEST                                                        None
-   SERTEMMUN                                                        None
-   SERTEMAMC                                                        None
-   SERTEMMET                                                        None
-   SERMINDATA                                  1974-01-01T00:00:00-02:00
-   SERMAXDATA                                  2019-12-01T00:00:00-02:00
-   FNTEXTURL                                                        None
-   SERPROGRAMAGERADOR                                               None
-   SERDECIMAIS                                                         4
-   SERQNT                                                            552
+   plt.close('all')
