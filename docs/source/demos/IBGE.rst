@@ -16,10 +16,9 @@ For example, IPCA, the inflation rate, is an aggregate of the research
 monthly and cumulative variation. It has values for every Brazil's
 location and for various kinds of products.
 
-To show how to use the package, we will try to replicate the
-visualizations as it was done
-`here <https://sidra.ibge.gov.br/home/ipca/brasil>`__, concerning the
-most recent IPCA.
+To show how to use the package, we will try to replicate `these
+visualizations <https://sidra.ibge.gov.br/home/ipca/brasil>`__
+on the most recent IPCA.
 
 Searching
 ---------
@@ -27,14 +26,12 @@ Searching
 Let's first search for IPCA's code.
 
 .. ipython:: python
-   import pandas as pd
-   from seriesbr import ibge
 
-   pd.set_option(
-       "display.expand_frame_repr", False,
-       "display.max_colwidth", -1,
-       "display.max_rows", 10,
-   )
+   import pandas as pd
+
+   pd.set_option('display.expand_frame_repr', False, 'display.max_colwidth', -1, 'display.max_rows', 10)
+
+   from seriesbr import ibge
 
    ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 
@@ -78,6 +75,7 @@ they're products' groups, not subgroups etc.
 
    categories
 
+
 Getting time series
 -------------------
 
@@ -105,27 +103,23 @@ Now let's visualize the inflation rate by product / service.
 
 .. ipython:: python
 
-
-   ipca.pivot_table(
-       index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
-   )
-
-
-.. ipython:: python
-
    import matplotlib
    import matplotlib.pyplot as plt
 
-   matplotlib.style.use('seaborn-muted')
-
    ipca.pivot_table(
        index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
-   ).drop("IPCA - Peso mensal", axis="columns").plot(
+   ).drop("IPCA - Peso mensal", axis="columns").sort_values(
+       "IPCA - Variação acumulada em 12 meses"
+   ).plot(
        kind="barh", title="IPCA by Procuct", figsize=(10, 8)
+   ).legend(
+       bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
 
+   plt.ylabel("");
    @savefig ipca_by_product.png
    plt.tight_layout()
+
 
 To see the weight of each product in the inflation rate:
 
@@ -138,6 +132,7 @@ To see the weight of each product in the inflation rate:
        kind="barh", title="Weight of each product in IPCA"
    )
 
+   plt.ylabel("");
    @savefig ipca_weight_by_product.png
    plt.tight_layout()
 
@@ -170,12 +165,18 @@ anything that would be evaluated as ``True`` in Python.
 
    ipca_by_area.pivot_table(
        index="Região Metropolitana e Brasil", columns="Variável", values="Valor"
-   ).drop("IPCA - Peso mensal", axis="columns").plot.barh(
-       title="IPCA by Mesoregion", figsize=(10, 8)
+   ).drop("IPCA - Peso mensal", axis="columns").sort_values(
+       "IPCA - Variação acumulada em 12 meses"
+   ).plot.barh(
+       title="IPCA by Metropolitan Area", figsize=(10, 8)
+   ).legend(
+       bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
 
+   plt.ylabel("");
    @savefig ipca_by_area.png
    plt.tight_layout()
+
 
 You could, of course, also filter by a specific date. For example, it
 would be interested to know the inflation by product soon after the
@@ -192,12 +193,18 @@ Truck Drivers' strike in 2018.
        index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
    ).drop(
        "IPCA - Peso mensal", axis="columns"
+   ).sort_values(
+       "IPCA - Variação acumulada em 12 meses"
    ).plot.barh(
        title="IPCA after Truckers' strike (June 2018)", figsize=(10, 10)
+   ).legend(
+       bbox_to_anchor=(1, .5), loc="center left", frameon=False
    )
 
+   plt.ylabel("");
    @savefig ipca_truckers_strike.png
    plt.tight_layout()
+
 
 Getting metadata
 ----------------
@@ -205,6 +212,7 @@ Getting metadata
 .. ipython:: python
 
    ibge.get_metadata(1419).head()
+
 
 .. ipython:: python
    :suppress:

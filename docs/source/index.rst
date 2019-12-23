@@ -65,7 +65,7 @@ Quick Demo
 
 Here's how to get series from both BCB and IPEA:
 
-.. code:: python
+.. ipython:: python
 
    from seriesbr import seriesbr
 
@@ -79,19 +79,14 @@ Here's how to get series from both BCB and IPEA:
        join="inner",
    )
 
-.. code:: python
-
    import matplotlib.pyplot as plt
    import matplotlib
 
-   matplotlib.style.use('seaborn-deep')
-
-   dados.plot(subplots=True, layout=(2, 2), figsize=(7, 5))
-   plt.gcf().tight_layout()
-   plt.suptitle("Séries do IPEADATA e do BCB")
+   dados.plot(subplots=True, layout=(2, 2), figsize=(7, 5));
+   plt.gcf().tight_layout();
+   plt.suptitle("Séries do IPEADATA e do BCB");
+   @savefig index.png
    plt.subplots_adjust(top=.9)
-
-|plot|
 
 .. automodule:: seriesbr.bcb
 
