@@ -1,4 +1,4 @@
-from pandas import concat
+from pandas import concat, to_datetime
 from .helpers.dates import parse_dates
 from .helpers.utils import return_codes_and_names
 from .helpers.response import bcb_json_to_df
@@ -64,12 +64,14 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     """
     assert codes, "You must pass at least one code."
     codes, names = return_codes_and_names(*codes)
-    return concat(
+    df = concat(
         (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
         axis="columns",
         sort=True,
         **kwargs,
     )
+    df.index = to_datetime(df.index, format="%d/%m/%Y")
+    return df
 
 
 def search(*search, rows=10, start=1):

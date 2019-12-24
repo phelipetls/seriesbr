@@ -28,9 +28,6 @@ class TestBCBJsonParser(unittest.TestCase):
     def test_if_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)
 
-    def test_index_dtype(self):
-        self.assertTrue(pandas.api.types.is_datetime64_dtype(self.df.index))
-
 
 class TestIPEAJsonParser(unittest.TestCase):
 
@@ -44,9 +41,6 @@ class TestIPEAJsonParser(unittest.TestCase):
     def test_if_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)
 
-    def test_index_dtype(self):
-        self.assertTrue(pandas.api.types.is_datetime64_dtype(self.df.index))
-
 
 class TestIBGEJsonParser(unittest.TestCase):
 
@@ -59,9 +53,6 @@ class TestIBGEJsonParser(unittest.TestCase):
 
     def test_if_returns_data_frame(self):
         self.assertIsInstance(self.df, pandas.DataFrame)
-
-    def test_index_dtype(self):
-        self.assertTrue(pandas.api.types.is_datetime64_dtype(self.df.index))
 
 
 if __name__ == "__main__":

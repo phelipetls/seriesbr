@@ -19,7 +19,6 @@ def bcb_json_to_df(url, code, name):
     """
     json = get_json(url)
     df = pd.DataFrame(json)
-    df["data"] = pd.to_datetime(df["data"], format="%d/%m/%Y")
     df["valor"] = df["valor"].astype('float64')
     df = df.set_index("data")
     df = df.rename_axis("Date")
@@ -44,11 +43,12 @@ def ipea_json_to_df(url, code, name):
     """
     json = get_json(url)["value"]
     df = pd.DataFrame(json)
+    # removing utc component from date string
     df["VALDATA"] = df["VALDATA"].str[:-6]
-    df["VALDATA"] = pd.to_datetime(df["VALDATA"], format="%Y-%m-%dT%H:%M:%S")
-    df["VALVALOR"] = df["VALVALOR"].astype('float64')
     df = df.set_index("VALDATA")
     df = df.rename_axis("Date")
+    # casting numerical values
+    df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
     df.columns = [name if name else code]
     return df
 

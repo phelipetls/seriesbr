@@ -1,4 +1,4 @@
-from pandas import concat, DataFrame
+from pandas import concat, DataFrame, to_datetime
 from .helpers.dates import parse_dates
 from .helpers.utils import return_codes_and_names
 from .helpers.lists import list_metadata_helper
@@ -62,12 +62,14 @@ def get_series(*codes, start=None, end=None, **kwargs):
     2018-03-01           0.53          56151.0
     """
     codes, names = return_codes_and_names(*codes)
-    return concat(
+    df = concat(
         (get_serie(code, name, start, end) for code, name in zip(codes, names)),
         axis="columns",
         sort=True,
         **kwargs,
     )
+    df.index = to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
+    return df
 
 
 def search(*SERNOME, **metadatas):
