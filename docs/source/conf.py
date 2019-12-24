@@ -22,7 +22,7 @@ copyright = '2019, Phelipe Teles'
 author = 'Phelipe Teles'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.0.8'
+release = 'v0.0.9'
 
 
 # -- General configuration ---------------------------------------------------
