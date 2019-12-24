@@ -55,6 +55,16 @@ class TestUtils(unittest.TestCase):
         with self.assertRaises(ValueError):
             utils.do_search(df, "oi", {"non_existent_col": "a"})
 
+    def test_return_codes_and_names_dict(self):
+        test = [list(x) for x in utils.return_codes_and_names({"A": 1, "B": 2}, 2, 3)]
+        correct = [[1, 2], ["A", "B"]]
+        self.assertListEqual(test, correct)
+
+    def test_return_codes_and_names_no_dict(self):
+        test = [list(x) for x in utils.return_codes_and_names(2, 3, 4)]
+        correct = [[2, 3, 4], [2, 3, 4]]
+        self.assertListEqual(test, correct)
+
 
 if __name__ == "__main__":
     unittest.main(failfast=True)
