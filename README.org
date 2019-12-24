@@ -7,9 +7,7 @@
 [[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
 [[https://codecov.io/gh/phelipetls/seriesbr][file:https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg]]
 
-** Introduction
-
-*SeriesBR* is a Python interface to interact with brazilian time series databases such as:
+*SeriesBR* is a Python package to interact with brazilian time series databases such as:
 
 - Banco Central do Brasil (BCB)
 - Instituto de Pesquisa Econômica Aplicada (IPEA)
@@ -19,21 +17,6 @@ It integrates well with =pandas= as almost all functions return a =DataFrame=.
 
 It is heavily inspired by the R packages [[https://github.com/wilsonfreitas/rbcb][rbcb]], [[https://github.com/ipea/ipeaData][ipeaData]] and [[https://github.com/cran/sidrar][sidrar]].
 
-** Installation
-
-To install the latest version, run the following command:
-
-#+NAME: Installation
-
-=pip3 install --upgrade seriesbr=
-
-#+END_NAME:
-
-** Dependencies
-   
-- [[https://github.com/psf/requests][requests]]
-- [[https://github.com/pandas-dev/pandas][pandas]]
-
 ** Main Features
 
 - Get multiple time series with =get_series=.
@@ -42,63 +25,63 @@ To install the latest version, run the following command:
 
 ** Documentation
 
-See our documentation at [[https://seriesbr.readthedocs.io/en/latest][readthedocs]].
+See our documentation at [[https://seriesbr.readthedocs.io/][readthedocs]].
 
-** Usage
+** Example Usage
 
-In the following links you will find demonstrations files on how to use each module:
+#+BEGIN_SRC python :session :exports both
+from seriesbr import bcb
 
-- [[https://github.com/phelipetls/seriesbr/blob/master/BCB.org][BCB]]
-- [[https://github.com/phelipetls/seriesbr/blob/master/IPEA.org][IPEA]]
-- [[https://github.com/phelipetls/seriesbr/blob/master/IBGE.org][IBGE]]
-
-For a quick demo, check out the function below, which allows you to get
-values from both IPEA and BCB in one call.
-
-#+BEGIN_SRC python :session
-  from seriesbr import seriesbr
-
-  dados = seriesbr.get_series(
-      {
-          "spread": 20786,
-          "pib_mensal": 4380,
-          "igp": "PAN12_IGPDIG12",
-          "inadimplência": "BM12_CRLIN12"
-      },
-      join="inner",
-  )
+bcb.get_series({"Spread": 20786, "Selic": 11}, start="2015", end="2016", join="inner")
 #+END_SRC
 
 #+RESULTS:
+#+begin_example
+            Spread     Selic
+Date                        
+2015-04-01   28.93  0.047279
+2015-06-01   30.31  0.049037
+2015-07-01   31.24  0.050788
+2015-09-01   31.49  0.052531
+2015-10-01   32.64  0.052531
+2015-12-01   31.64  0.052531
+2016-02-01   35.80  0.052531
+2016-03-01   37.09  0.052531
+2016-04-01   38.74  0.052531
+2016-06-01   39.09  0.052531
+2016-07-01   39.90  0.052531
+2016-08-01   40.38  0.052531
+2016-09-01   40.97  0.052531
+2016-11-01   41.64  0.051660
+2016-12-01   39.84  0.050788
+#+end_example
 
-
-#+BEGIN_SRC python :session :results file :exports both
-  import matplotlib.pyplot as plt
-  import matplotlib
-
-  matplotlib.style.use('seaborn-deep')
-
-  dados.plot(subplots=True, layout=(2, 2), figsize=(7, 5))
-  plt.gcf().tight_layout()
-  plt.suptitle("Séries do IPEADATA e do BCB")
-  plt.subplots_adjust(top=.9)
-  plt.savefig('imgs/example.png')
-  'imgs/example.png'
+#+BEGIN_SRC python :session :exports both
+bcb.search("Selic", "mensal", "Percentual")
 #+END_SRC
 
 #+RESULTS:
-[[file:imgs/example.png]]
-
-** Conclusion
-
-Hope you enjoy the package!!
-
-If you find any bugs or if you think something could be better, 
-feel free to open an issue / contribute by opening a pull request!
+#+begin_example
+  codigo_sgs                                              title periodicidade     unidade_medida
+0       4189  Taxa de juros - Selic acumulada no mês anualiz...        mensal  Percentual ao ano
+1       4177  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+2       4175  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+3       4173  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+4       4174  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+5       4178  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+6       4176  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+7       4180  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+8       4179  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+#+end_example
 
 ** License
 
 [[https://github.com/phelipetls/seriesbr/blob/master/LICENSE][MIT]]
+
+** Contributing
+
+Please, if you find any bugs or room for improvement open an issue or a pull request!
+This would certainly be appreciated. Thanks.
 
 ** Support
 

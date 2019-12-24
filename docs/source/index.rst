@@ -11,7 +11,7 @@ SeriesBR
 |travis|
 |codecov|
 
-**SeriesBR** is a Python interface to interact with brazilian time series databases such as:
+**SeriesBR** is a Python package to interact with brazilian time series databases such as:
 
 - Banco Central do Brasil (BCB)
 - Instituto de Pesquisa Econômica Aplicada (IPEA)
