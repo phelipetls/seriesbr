@@ -1,4 +1,3 @@
 sphinx
 alabaster
 seriesbr
--r ../requirements.txt
