@@ -11,7 +11,7 @@ with an arbitrary number of arguments:
 
    import pandas as pd
 
-   pd.set_option('max_rows', 10)
+   pd.set_option('display.expand_frame_repr', False, 'display.max_rows', 10)
 
    from seriesbr import ipea
 

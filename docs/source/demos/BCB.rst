@@ -9,7 +9,7 @@ A simple :py:func:`search <seriesbr.bcb.search>`:
 .. ipython:: python
 
    import pandas as pd
-   pd.set_option('display.max_rows', 10)
+   pd.set_option('display.expand_frame_repr', False, 'display.max_rows', 10)
 
    from seriesbr import bcb
 
