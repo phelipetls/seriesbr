@@ -170,7 +170,7 @@ def check_if_quarter(dates):
     """
     for date in dates:
         date_obj = datetime.datetime.strptime(date, "%Y%m")
-        if date_obj.month >= 4:
+        if date_obj.month > 4:
             error_msg = f"This is a quarterly time series."
             error_msg += (
                 f" {date_obj.month} is not a quarter, choose a number between 1 and 4."

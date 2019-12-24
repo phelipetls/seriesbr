@@ -77,7 +77,7 @@ class TestUrlBuildersDatesIBGE(unittest.TestCase):
         self.assertEqual(test, correct)
 
     def test_make_dates_raise_if_not_quarter(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             url.ibge_make_dates_query(end="12-2018", freq="trimestral")
 
 
