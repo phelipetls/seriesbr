@@ -71,13 +71,17 @@ def ibge_json_to_df(url, freq="mensal"):
     """
     json = get_json(url)
     df = pd.DataFrame(json[1:])
+    # getting column names
     df.columns = json[0].values()
+    # handling dates
     date_fmt = "%Y" if freq == "anual" else "%Y%m"
     date_key = json[0]["D2C"]
     df[date_key] = pd.to_datetime(df[date_key], format=date_fmt)
-    df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
     df = df.set_index(date_key)
     df = df.rename_axis("Date")
+    # handling numerical values
+    df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
+    # dropping less useful columns
     df = df.drop(
         [c for c in df.columns if c.endswith("(Código)")]
         + ["Mês", "Unidade de Medida", "Brasil"],

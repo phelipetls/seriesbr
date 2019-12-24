@@ -97,6 +97,9 @@ def get_frequency(aggregate):
     """
     Auxiliary function to get frequency of
     a time series from IBGE's database.
+
+    This is needed because in case of a yearly time
+    series, there can't be months in the url.
     """
     return list_periods(aggregate).loc["frequency", :].values
 
