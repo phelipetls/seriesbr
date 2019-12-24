@@ -2,3 +2,4 @@ sphinx
 alabaster
 seriesbr
 IPython
+matplotlib
