@@ -107,20 +107,22 @@ Now let's visualize the inflation rate by product / service.
 
    import matplotlib
    import matplotlib.pyplot as plt
+   import matplotlib.ticker as ticker
 
    ipca.pivot_table(
        index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada em 12 meses"
    ).plot(
-       kind="barh", title="IPCA by Procuct", figsize=(10, 8)
+       kind="barh", title="IPCA por Produto / Serviço", figsize=(10, 8)
    ).legend(
        bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
 
    plt.ylabel("");
-   @savefig ipca_by_product.png
    plt.tight_layout()
+   @savefig ipca_by_product.png
+   plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
 
 To see the weight of each product in the inflation rate:
@@ -135,8 +137,9 @@ To see the weight of each product in the inflation rate:
    )
 
    plt.ylabel("");
-   @savefig ipca_weight_by_product.png
    plt.tight_layout()
+   @savefig ipca_weight_by_product.png
+   plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
 
 It would be great if we could plot the inflation rate by metropolitan
@@ -168,14 +171,15 @@ other regions and also for Brazil as a whole, you can do the following:
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada em 12 meses"
    ).plot.barh(
-       title="IPCA by Metropolitan Area", figsize=(10, 8)
+       title="IPCA por Área Metropolitana", figsize=(10, 8)
    ).legend(
        bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
 
    plt.ylabel("");
-   @savefig ipca_by_area.png
    plt.tight_layout()
+   @savefig ipca_by_area.png
+   plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
 
 You could, of course, also filter by a specific date. For example, it
@@ -196,14 +200,15 @@ Truck Drivers' strike in 2018.
    ).sort_values(
        "IPCA - Variação acumulada em 12 meses"
    ).plot.barh(
-       title="IPCA after Truckers' strike (June 2018)", figsize=(10, 10)
+       title="IPCA após greve dos caminhoneiros (junho/2018)", figsize=(10, 10)
    ).legend(
        bbox_to_anchor=(1, .5), loc="center left", frameon=False
    )
 
    plt.ylabel("");
-   @savefig ipca_truckers_strike.png
    plt.tight_layout()
+   @savefig ipca_truckers_strike.png
+   plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
 
 Getting metadata
