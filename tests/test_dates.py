@@ -4,7 +4,7 @@ import unittest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from seriesbr.helpers.dates import parse_date
+from seriesbr.helpers.dates import parse_date, check_if_quarter
 
 
 class TestDates(unittest.TestCase):
@@ -38,6 +38,13 @@ class TestDates(unittest.TestCase):
         test = parse_date("january2018", api="bcb")
         correct = "01/01/2018"
         self.assertEqual(test, correct)
+
+
+class QuarterlyError(unittest.TestCase):
+
+    def test_if_invalid_quarter_raises_error(self):
+        with self.assertRaises(ValueError):
+            check_if_quarter(["201604"])
 
 
 if __name__ == "__main__":

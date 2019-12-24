@@ -168,7 +168,11 @@ def check_if_quarter(dates):
     object is less than 4, i.e., if
     it is a quarter.
     """
-    months = [
-        datetime.datetime.strptime(dt, "%Y%m").month for dt in dates if dt is not None
-    ]
-    return all([month <= 4 for month in months])
+    for date in dates:
+        date_obj = datetime.datetime.strptime(date, "%Y%m")
+        if date_obj.month >= 4:
+            error_msg = f"This is a quarterly time series."
+            error_msg += (
+                f" {date_obj.month} is not a quarter, choose a number between 1 and 4."
+            )
+            raise ValueError(error_msg)

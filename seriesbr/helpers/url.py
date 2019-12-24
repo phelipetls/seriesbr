@@ -302,8 +302,7 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     if freq == "trimestral":
         if end == today_date().strftime("%Y%m"):
             end = month_to_quarter(today_date()).strftime("%Y%m")
-        error_msg = "Invalid quarter. Choose a number between 1 and 4"
-        assert check_if_quarter((start, end)), error_msg
+        check_if_quarter((start, end))
     elif freq == "anual":
         start, end = start[:-2], end[:-2]
     return f"/periodos/{start}-{end}"
