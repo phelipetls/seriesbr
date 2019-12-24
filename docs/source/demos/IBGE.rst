@@ -76,6 +76,9 @@ This means they're products' major groups, not subgroups etc.
 
    categories
 
+Apart from those, there are also :py:func:`list_periods <seriesbr.ibge.list_periods>`
+and :py:func:`list_locations <seriesbr.ibge.list_locations>`.
+
 
 Getting time series
 -------------------
