@@ -140,30 +140,6 @@ class IBGEtest(unittest.TestCase):
             ibge.get_series(1419, start="asfhajksfsa")
 
 
-@patch('seriesbr.ibge.list_regions_helper', mocked_list_regions)
-class TestListsFunctions(unittest.TestCase):
-
-    def test_list_cities(self):
-        test = ibge.list_cities()
-        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios"
-        self.assertEqual(test, correct)
-
-    def test_list_regions(self):
-        test = ibge.list_macroregions()
-        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
-        self.assertEqual(test, correct)
-
-    def test_list_mesoregions(self):
-        test = ibge.list_mesoregions()
-        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/mesorregioes"
-        self.assertEqual(test, correct)
-
-    def test_list_microregions(self):
-        test = ibge.list_microregions()
-        correct = "https://servicodados.ibge.gov.br/api/v1/localidades/microrregioes"
-        self.assertEqual(test, correct)
-
-
 if __name__ == "__main__":
     unittest.main()
 

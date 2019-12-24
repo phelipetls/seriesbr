@@ -266,13 +266,8 @@ def list_periods(aggregate):
     start      201201
     end        201911
     """
-    baseurl = "https://servicodados.ibge.gov.br/api/v3"
-    query = f"/agregados/{aggregate}/metadados"
-    url = f"{baseurl}{query}"
-    json = get_json(url)["periodicidade"]
-    df = pd.DataFrame.from_dict(json, orient="index", columns=["value"])
-    df.index = ["frequency", "start", "end"]
-    return df
+    periods = get_metadata(aggregate).loc["periodicidade"][0]
+    return pd.DataFrame(periods.values(), index=periods.keys(), columns=["valores"])
 
 
 def list_classifications(aggregate, *search, **searches):
@@ -305,10 +300,7 @@ def list_classifications(aggregate, *search, **searches):
     3  7172  1101.Cereais, leguminosas e oleaginosas    None     -1              315  Geral, grupo, subgrupo, item e subitem
     4  7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
     """
-    baseurl = "https://servicodados.ibge.gov.br/api/v3/agregados"
-    url = f"{baseurl}/{aggregate}/metadados"
-    json = get_json(url)
-    classifications = json["classificacoes"]
+    classifications = get_metadata(aggregate).loc["classificacoes"][0]
     df = pd.io.json.json_normalize(
         classifications,
         "categorias",

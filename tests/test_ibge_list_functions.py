@@ -28,15 +28,19 @@ class TestListMetadataFunctions(unittest.TestCase):
         mocked_get_json.return_value = get_sample_json("ibge_metadata")
         self.assertFalse(ibge.list_locations(1419).empty)
 
-    @patch('seriesbr.ibge.get_json')
-    def test_ibge_list_periods(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_metadata")
-        self.assertFalse(ibge.list_periods(1419).empty)
+    @patch('seriesbr.helpers.metadata.get_json')
+    def test_list_classifications(self, mocked_get_metadata):
+        mocked_get_metadata.return_value = get_sample_json("ibge_metadata")
+        test = ibge.list_classifications(1419).columns.tolist()
+        correct = ['id', 'nome', 'unidade', 'nivel', 'classificacao_id', 'classificacao_nome']
+        self.assertListEqual(test, correct)
 
-    @patch('seriesbr.ibge.get_json')
-    def test_ibge_list_classifications(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_metadata")
-        self.assertFalse(ibge.list_classifications(1419).empty)
+    @patch('seriesbr.helpers.metadata.get_json')
+    def test_list_periods(self, mocked_get_metadata):
+        mocked_get_metadata.return_value = get_sample_json("ibge_metadata")
+        test = ibge.list_periods(1419).index.tolist()
+        correct = ["frequencia", "inicio", "fim"]
+        self.assertListEqual(test, correct)
 
 
 class TestListRegionsFunctions(unittest.TestCase):
