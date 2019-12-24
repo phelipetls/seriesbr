@@ -1,5 +1,5 @@
 import re
-from pandas import concat
+from pandas import concat, to_datetime
 from . import bcb, ipea
 from .helpers.utils import return_codes_and_names
 
@@ -33,26 +33,30 @@ def get_series(*codes, start=None, end=None, **kwargs):
 
     Examples
     --------
-    >>> seriesbr.get_series("BM12_CRLIN12", 20786)
+    >>> seriesbr.get_series("BM12_CRLIN12", 20786, start="2015", end="2015")
                 BM12_CRLIN12  20786
     Date
-    2011-03-01          4.41  26.22
-    2011-04-01          4.55  27.01
-    2011-05-01          4.72  26.84
-    2011-06-01          4.71  26.72
-    2011-07-01          4.89  26.91
-    ...                  ...    ...
-    2019-06-01          3.83  31.43
-    2019-07-01          3.96  31.63
-    2019-08-01          3.88  31.57
-    2019-09-01          3.89  30.84
-    2019-10-01          3.88  30.35
+    2015-01-01          4.41  26.91
+    2015-02-01          4.42  27.95
+    2015-03-01          4.38  27.72
+    2015-04-01          4.57  28.93
+    2015-05-01          4.68  29.61
+    2015-06-01          4.59  30.31
+    2015-07-01          4.77  31.24
+    2015-08-01          4.91  31.65
+    2015-09-01          4.92  31.49
+    2015-10-01          5.02  32.64
+    2015-11-01          5.22  33.31
+    2015-12-01          5.28  31.64
     """
     codes, names = return_codes_and_names(*codes)
     series = []
     for code, name in zip(codes, names):
         if re.search(r"^\d+$", str(code)):
-            series.append(bcb.get_serie(code, name, start, end))
+            df = bcb.get_serie(code, name, start, end)
+            df.index = to_datetime(df.index, format="%d/%m/%Y")
         else:
-            series.append(ipea.get_serie(code, name, start, end))
+            df = ipea.get_serie(code, name, start, end)
+            df.index = to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
+        series.append(df)
     return concat(series, axis="columns", **kwargs)
