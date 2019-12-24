@@ -4,8 +4,8 @@ Instituto de Pesquisa Econômica Aplicada
 Searching
 ---------
 
-You can search a time series by name with an arbitrary number of
-arguments:
+You can :py:func:`search <seriesbr.ipea.search>` for a time series by name
+with an arbitrary number of arguments:
 
 .. ipython:: python
 
@@ -48,7 +48,7 @@ PERNOME        Frequency
 TEMCODIGO      Theme's code
 UNINOME        Unit of measurement
 PAICODIGO      Country's code
-SERATUALIZACAO Last updated
+SERATUALIZACAO Last update
 MULNOME        Multiplicative factor
 SERCOMENTARIO  Notes/comments, in portuguese
 FNTNOME        Source's name, in portuguese
@@ -59,8 +59,8 @@ SERSTATUS      Active ('A'), Inactive ('I')
 SERNUMERICA    Numeric (1), Alphanumeric (0)
 ============== =============================
 
-You can take a look at the available themes and countries with the
-functions ``list_themes`` and ``list_countries``.
+You can take a look at the available themes and countries with
+:py:func:`list_themes <seriesbr.ipea.list_themes>` and :py:func:`list_countries <seriesbr.ipea.list_countries>`.
 
 .. ipython:: python
 
@@ -68,54 +68,39 @@ functions ``list_themes`` and ``list_countries``.
 
 
 Supposing now we are interested in the theme of employment and
-macroeconomics, we could search for these type of series like this:
+macroeconomics, we could search for these themes like this:
 
 .. ipython:: python
 
    ipea.search(TEMCODIGO=[12, 17])
 
 
-Of course, you can search for just one of them as well.
-
-If you're interested in particular countries, try ``list_countries``.
-
 .. ipython:: python
 
    ipea.list_countries()
 
 
-You will then be able to search for multiple countries in one call.
-
 .. ipython:: python
 
-   ipea.search(PAICODIGO=["VEN", "DEU", "LATI"])
+   ipea.search(PAICODIGO="DEU")
 
 
 Getting time series
 -------------------
 
-This works in a very similar way as ``bcb.get_series`` and returns a
-similar output too, except that there isn't a ``last_n`` argument.
+To get time series values, use :py:func:`seriesbr.ipea.get_series`.
 
 .. ipython:: python
 
-   ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12", "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
+   ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12",
+                    "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
 
 
 Getting metadata
 ----------------
 
-To get metadata you would do the same as in ``bcb`` module, just call
-``ipea.get_metadata``.
+To get metadata, just call :py:func:`seriesbr.ipea.get_metadata`.
 
 .. ipython:: python
 
-   metadados = ipea.get_metadata("BM12_TJOVER12")
-
-   metadados
-
-
-.. ipython:: python
-   :suppress:
-
-   plt.close('all')
+   ipea.get_metadata("BM12_TJOVER12")

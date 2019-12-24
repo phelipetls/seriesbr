@@ -78,10 +78,10 @@ def search(*search, rows=10, start=1):
 
     Parameters
     ----------
-    rows : int, optional
+    rows : int, default 10
         How many results to show.
 
-    start : int, optional
+    start : int, default 1
         From which row to start showing the results.
 
     *search

@@ -78,6 +78,9 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# Master document, apparently this is needed because in readthedocs
+# it's different.
 master_doc = "index"
 
+# Syntax highlighting style
 pygments_style = "sphinx"

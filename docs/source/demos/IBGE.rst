@@ -23,7 +23,7 @@ on the most recent IPCA.
 Searching
 ---------
 
-Let's first search for IPCA's code.
+Let's first :py:func:`search <seriesbr.ibge.search>` for IPCA's code:
 
 .. ipython:: python
 
@@ -36,7 +36,7 @@ Let's first search for IPCA's code.
    ibge.search("Variação mensal, acumulada no ano, acumulada em 12 meses")
 
 
-You could also search for a specific research in this way:
+You could also search for a specific research (or any other column) in this way:
 
 .. ipython:: python
 
@@ -46,8 +46,8 @@ You could also search for a specific research in this way:
 In fact, you can search in a similar way within any column. Also notice
 that the string is a regex.
 
-We want the aggregate that goes by the code of 1419. So now let's take a
-look at the available variables:
+We want the aggregate that goes by the code 1419. So now let's take a
+look at the available variables with :py:func:`seriesbr.ibge.list_variables`.
 
 .. ipython:: python
 
@@ -57,13 +57,14 @@ look at the available variables:
 We will use all of them eventually, but it is good to know them if you
 want a specific one.
 
-Now we need the codes of the same classifications used by in IBGE in its
-visualizations. Let's use ``list_classifications``.
+Now we need the codes of the same classifications used by IBGE in its
+visualizations. We need :py:func:`seriesbr.ibge.list_classifications`
+to search for that.
 
-Because all ``list_*`` functions takes an arbitrary number of regexes as
-arguments to search in column ``nome``, we will search for those which
-have a single number followed by a dot, letters and spaces. This means
-they're products' groups, not subgroups etc.
+Because all ``list_*`` functions take an arbitrary number of regexes as
+arguments to search in column ``nome``, by default, we will search for
+those which have a single number followed by a dot, letters or spaces.
+This means they're products' major groups, not subgroups etc.
 
 .. ipython:: python
 
@@ -79,7 +80,8 @@ they're products' groups, not subgroups etc.
 Getting time series
 -------------------
 
-Now let's use all this information we've gathered.
+Now let's use all this information we've gathered and get the actual values
+with :py:func:`seriesbr.ibge.get_series`.
 
 The aggregate is 1419, we will use every variable so no need to filter
 that.
@@ -138,15 +140,16 @@ To see the weight of each product in the inflation rate:
 
 
 It would be great if we could plot the inflation rate by metropolitan
-area, a mesoregion.
+area, a mesoregion, like they did.
 
-Apart from mesoregions, there are also macroregions (Sul, Sudeste),
+But apart from mesoregions, there are also macroregions (Sul, Sudeste),
 microregions (Baixadas, Norte Fluminense etc. in Rio de Janeiro), cities
-and states.
+and states, see the :py:func:`documentation <seriesbr.ibge.get_series>` for details.
 
-If this location is available for an aggregate, you can assign "all" and
-it will do return data for every location, but you can pass a list of
-codes or a single code to select specific locations.
+If a given location is available for an aggregate, you can assign "all" 
+(anything that would be True to Python) and it will return data for every
+instance of that location, but you could also pass a list or a single code
+to select specific locations.
 
 By default, it will get data for the whole country. If you want data for
 other regions and also for Brazil as a whole, you can do the following:
@@ -157,9 +160,6 @@ other regions and also for Brazil as a whole, you can do the following:
 
    ipca_by_area
 
-
-In fact, if you want data for all vales of a given location, just pass
-anything that would be evaluated as ``True`` in Python.
 
 .. ipython:: python
 
@@ -179,7 +179,7 @@ anything that would be evaluated as ``True`` in Python.
 
 
 You could, of course, also filter by a specific date. For example, it
-would be interested to know the inflation by product soon after the
+may be be interesting to know the inflation by product soon after the
 Truck Drivers' strike in 2018.
 
 .. ipython:: python
@@ -208,6 +208,8 @@ Truck Drivers' strike in 2018.
 
 Getting metadata
 ----------------
+
+To :py:func:`get metadata<seriesbr.ibge.get_metadata>` of a time series:
 
 .. ipython:: python
 

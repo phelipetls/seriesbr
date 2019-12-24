@@ -34,7 +34,7 @@ def get_series(
     Parameters
     ----------
     code : int
-        The code of the aggregated variable.
+        Aggregate's code.
 
     variables : int or list of ints, optional
         Which variables to select (if None, return all of them).
@@ -48,19 +48,19 @@ def get_series(
     last_n : int or str, optional
         Return only last n observations.
 
-    city : str, int a list, optional
+    city : str, int, bool a list, optional
         Cities' codes.
 
-    state : str, int or a list, optional
+    state : str, int, bool or a list, optional
         States' codes.
 
-    macroregion : str, int or a list, optional
+    macroregion : str, int, bool or a list, optional
         Macroregions' codes.
 
-    microregion : str, int or a list, optional
+    microregion : str, int, bool or a list, optional
         Microregions' codes.
 
-    mesoregion : str, int or a list, optional
+    mesoregion : str, int, bool or a list, optional
         Mesoregions' codes.
 
     classifications : dict, int, str or list, optional
@@ -93,21 +93,21 @@ def get_series(
 ## Get metadata
 
 
-def get_frequency(aggregate_code):
+def get_frequency(aggregate):
     """
     Auxiliary function to get frequency of
     a time series from IBGE's database.
     """
-    return list_periods(aggregate_code).loc["frequency", :].values
+    return list_periods(aggregate).loc["frequency", :].values
 
 
-def get_metadata(aggregate_code):
+def get_metadata(aggregate):
     """
     Get metadata of a time series from IBGE's database.
 
     Parameters
     ----------
-    aggregate_code : str
+    aggregate : str
         Aggregate's code.
 
     Returns
@@ -129,7 +129,7 @@ def get_metadata(aggregate_code):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate_code}/metadados"
+    url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate}/metadados"
     return ibge_metadata_to_df(url)
 
 ## List Metadata Functions
@@ -137,7 +137,7 @@ def get_metadata(aggregate_code):
 
 def search(*search, **searches):
     """
-    Function to list all aggregated variables in IBGE's database.
+    Function to list all aggregates in IBGE's database.
 
     Parameters
     ----------
@@ -171,13 +171,13 @@ def search(*search, **searches):
     return df
 
 
-def list_variables(aggregate_code, *search, **searches):
+def list_variables(aggregate, *search, **searches):
     """
     Function to list all variables associated with an aggregate.
 
     Parameters
     ----------
-    aggregate_code : int or str
+    aggregate : int or str
         Aggregate's code.
 
     *search
@@ -201,7 +201,7 @@ def list_variables(aggregate_code, *search, **searches):
     3    66                     IPCA - Peso mensal       %
     """
     baseurl = "https://servicodados.ibge.gov.br/api/v3"
-    query = f"/agregados/{aggregate_code}/variaveis/all?localidades=BR"
+    query = f"/agregados/{aggregate}/variaveis/all?localidades=BR"
     url = f"{baseurl}{query}"
     json = get_json(url)
     df = pd.io.json.json_normalize(json).iloc[:, :3]
@@ -210,13 +210,13 @@ def list_variables(aggregate_code, *search, **searches):
     return df
 
 
-def list_locations(aggregate_code):
+def list_locations(aggregate):
     """
     Function to list locations of a given aggregate.
 
     Parameters
     ----------
-    aggregate_code : int or str
+    aggregate : int or str
         Aggregate's code.
 
     Returns
@@ -233,7 +233,7 @@ def list_locations(aggregate_code):
     2    N7  mesoregion
     """
     baseurl = "https://servicodados.ibge.gov.br/api/v3"
-    query = f"/agregados/{aggregate_code}/metadados"
+    query = f"/agregados/{aggregate}/metadados"
     url = f"{baseurl}{query}"
     codes = get_json(url)["nivelTerritorial"]["Administrativo"]
     df = pd.DataFrame({"codes": codes})
@@ -241,13 +241,13 @@ def list_locations(aggregate_code):
     return df
 
 
-def list_periods(aggregate_code):
+def list_periods(aggregate):
     """
     Function to list periods of a given aggregate.
 
     Parameters
     ----------
-    aggregate_code : int or str
+    aggregate : int or str
         Aggregate's code.
 
     Returns
@@ -264,7 +264,7 @@ def list_periods(aggregate_code):
     end        201911
     """
     baseurl = "https://servicodados.ibge.gov.br/api/v3"
-    query = f"/agregados/{aggregate_code}/metadados"
+    query = f"/agregados/{aggregate}/metadados"
     url = f"{baseurl}{query}"
     json = get_json(url)["periodicidade"]
     df = pd.DataFrame.from_dict(json, orient="index", columns=["value"])
@@ -272,13 +272,13 @@ def list_periods(aggregate_code):
     return df
 
 
-def list_classifications(aggregate_code, *search, **searches):
+def list_classifications(aggregate, *search, **searches):
     """
     Function to list all classification of a given aggregate.
 
     Parameters
     ----------
-    aggregate_code : int or str
+    aggregate : int or str
         Aggregate's code.
 
     *search
@@ -303,7 +303,7 @@ def list_classifications(aggregate_code, *search, **searches):
     4  7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
     """
     baseurl = "https://servicodados.ibge.gov.br/api/v3/agregados"
-    url = f"{baseurl}/{aggregate_code}/metadados"
+    url = f"{baseurl}/{aggregate}/metadados"
     json = get_json(url)
     classifications = json["classificacoes"]
     df = pd.io.json.json_normalize(
@@ -323,8 +323,8 @@ def list_states(*search, **searches):
 
     Parameters
     ----------
-    aggregate_code : int or str
-        Aggregated variable's code.
+    aggregate : int or str
+        Aggregate's code.
 
     *search
         Strings to search in states' names.

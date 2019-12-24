@@ -4,7 +4,7 @@ Banco Central do Brasil
 Searching
 ---------
 
-A simple search:
+A simple :py:func:`search <seriesbr.bcb.search>`:
 
 .. ipython:: python
 
@@ -23,9 +23,9 @@ It's also possible to search for multiple strings:
    bcb.search("Atividade", "Econômica", "Índice")
 
 
-You can control how many results will be shown with the argument
-``rows`` (defaults to 10), and also from which row it'll start showing
-with ``start`` (defaults to 1).
+You can also control how many results will be shown with the argument
+``rows`` (defaults to 10), and from which row it'll start showing
+them with ``start`` (defaults to 1).
 
 .. ipython:: python
 
@@ -34,6 +34,8 @@ with ``start`` (defaults to 1).
 
 Getting time series
 -------------------
+
+Now let's get the actual values with :py:func:`seriesbr.bcb.get_series`.
 
 .. ipython:: python
 
@@ -61,14 +63,8 @@ NAs.
 Getting metadata
 ----------------
 
-.. ipython:: python
-
-   metadados = bcb.get_metadata(11)
-
-   metadados
-
+And this is how you would get a time series :py:func:`metadata <seriesbr.bcb.get_metadata>`.
 
 .. ipython:: python
-   :suppress:
 
-   plt.close('all')
+   bcb.get_metadata(11)
