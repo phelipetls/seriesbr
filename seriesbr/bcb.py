@@ -62,7 +62,6 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     2018-06-01   29.43
     2018-07-01   29.39
     """
-    assert codes, "You must pass at least one code."
     codes, names = return_codes_and_names(*codes)
     df = concat(
         (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
