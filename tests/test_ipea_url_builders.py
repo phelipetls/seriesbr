@@ -19,17 +19,17 @@ class TestUrlBuildersIPEA(unittest.TestCase):
         test = url.ipea_make_select_query(["FNTNOME"])
         self.assertEqual(test, correct)
 
-    def test_numeric_filter_query_no_name(self):
+    def test_filter_query_numeric_with_no_name(self):
         correct = "&$filter=SERNUMERICA eq 1"
         test = url.ipea_make_filter_query(names=None, metadatas={'SERNUMERICA': 1})
         self.assertEqual(test, correct)
 
-    def test_string_filter_query_no_name(self):
+    def test_filter_query_string_no_name(self):
         correct = "&$filter=contains(FNTNOME,'BCB')"
         test = url.ipea_make_filter_query(names=None, metadatas={'FNTNOME': 'BCB'})
         self.assertEqual(test, correct)
 
-    def test_string_and_numeric_filters_query_with_name(self):
+    def test_filters_query_string_and_numeric__with_name(self):
         correct = "&$filter=contains(SERNOME,'Spread') and contains(FNTNOME,'BCB') and TEMCODIGO eq 1"
         test = url.ipea_make_filter_query(names="Spread", metadatas={'FNTNOME': 'BCB', 'TEMCODIGO': 1})
         self.assertEqual(test, correct)
@@ -37,6 +37,21 @@ class TestUrlBuildersIPEA(unittest.TestCase):
     def test_raises_if_invalid_field(self):
         with self.assertRaises(ValueError):
             url.ipea_make_filter_query("", {"INVALID_FILTER": "INVALID"})
+
+    def test_dates_query_start_and_end(self):
+        correct = "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-01-01T00:00:00-00:00"
+        test = url.ipea_make_dates_query(start="2019-01-01T00:00:00-00:00", end="2019-01-01T00:00:00-00:00")
+        self.assertEqual(test, correct)
+
+    def test_dates_query_start(self):
+        correct = "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00"
+        test = url.ipea_make_dates_query(start="2019-01-01T00:00:00-00:00")
+        self.assertEqual(test, correct)
+
+    def test_dates_query_start(self):
+        correct = "&$filter=VALDATA le 2019-01-01T00:00:00-00:00"
+        test = url.ipea_make_dates_query(end="2019-01-01T00:00:00-00:00")
+        self.assertEqual(test, correct)
 
 
 if __name__ == "__main__":
