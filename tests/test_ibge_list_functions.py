@@ -42,6 +42,13 @@ class TestListMetadataFunctions(unittest.TestCase):
         correct = ["frequencia", "inicio", "fim"]
         self.assertListEqual(test, correct)
 
+    @patch('seriesbr.helpers.metadata.get_json')
+    def test_get_frequency(self, mocked_get_metadata):
+        mocked_get_metadata.return_value = get_sample_json("ibge_metadata")
+        test = "anual"
+        correct = ibge.get_frequency(1419)
+        self.assertEqual(test, correct)
+
 
 class TestListRegionsFunctions(unittest.TestCase):
 

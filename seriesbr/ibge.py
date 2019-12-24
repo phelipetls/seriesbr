@@ -101,7 +101,7 @@ def get_frequency(aggregate):
     This is needed because in case of a yearly time
     series, there can't be months in the url.
     """
-    return list_periods(aggregate).loc["frequency", :].values
+    return list_periods(aggregate).loc["frequencia", :].values
 
 
 def get_metadata(aggregate):
