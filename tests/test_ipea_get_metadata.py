@@ -14,10 +14,10 @@ def mocked_metadata_to_df(url):
     return url
 
 
-@patch('seriesbr.ipea.ipea_metadata_to_df', mocked_metadata_to_df)
 class TestIPEAMetadata(unittest.TestCase):
     ## Test metadata function
 
+    @patch('seriesbr.ipea.ipea_metadata_to_df', mocked_metadata_to_df)
     def test_get_metadata(self):
         self.assertEqual(ipea.get_metadata("BM12_CRLIN12"), "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_CRLIN12')")
 
