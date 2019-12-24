@@ -39,39 +39,40 @@ bcb.get_series({"Spread": 20786, "Selic": 11}, start="2015", end="2016", join="i
 #+begin_example
             Spread     Selic
 Date                        
-2015-04-01   28.93  0.047279
-2015-06-01   30.31  0.049037
-2015-07-01   31.24  0.050788
-2015-09-01   31.49  0.052531
-2015-10-01   32.64  0.052531
-2015-12-01   31.64  0.052531
 2016-02-01   35.80  0.052531
 2016-03-01   37.09  0.052531
+2015-04-01   28.93  0.047279
 2016-04-01   38.74  0.052531
+2015-06-01   30.31  0.049037
 2016-06-01   39.09  0.052531
+2015-07-01   31.24  0.050788
 2016-07-01   39.90  0.052531
 2016-08-01   40.38  0.052531
+2015-09-01   31.49  0.052531
 2016-09-01   40.97  0.052531
+2015-10-01   32.64  0.052531
 2016-11-01   41.64  0.051660
+2015-12-01   31.64  0.052531
 2016-12-01   39.84  0.050788
 #+end_example
 
 #+BEGIN_SRC python :session :exports both
-bcb.search("Selic", "mensal", "Percentual")
+bcb.search("Juros", "mensal", "Percentual")
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
   codigo_sgs                                              title periodicidade     unidade_medida
 0       4189  Taxa de juros - Selic acumulada no mês anualiz...        mensal  Percentual ao ano
-1       4177  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-2       4175  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-3       4173  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-4       4174  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-5       4178  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-6       4176  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-7       4180  Dívida mobiliária - Participação por indexador...        mensal         Percentual
-8       4179  Dívida mobiliária - Participação por indexador...        mensal         Percentual
+1      20714  Taxa média de juros das operações de crédito -...        mensal  Percentual ao ano
+2      25433  Taxa média mensal de juros das operações de cr...        mensal  Percentual ao mês
+3       5757  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+4       5755  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+5       5754  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+6       5756  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+7       5752  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+8       5751  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+9       5760  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
 #+end_example
 
 ** License
@@ -80,8 +81,9 @@ bcb.search("Selic", "mensal", "Percentual")
 
 ** Contributing
 
-Please, if you find any bugs or room for improvement open an issue or a pull request!
-This would certainly be appreciated. Thanks.
+If you find any bugs or if you think something could be improved,
+please open an issue or a pull request! This would be much appreciated.
+Thanks.
 
 ** Support
 
