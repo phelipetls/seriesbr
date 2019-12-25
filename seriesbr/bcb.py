@@ -70,7 +70,7 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
         **kwargs,
     )
     df.index = to_datetime(df.index, format="%d/%m/%Y")
-    return df
+    return df.sort_index()
 
 
 def search(*search, rows=10, start=1):
