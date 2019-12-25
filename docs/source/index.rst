@@ -94,7 +94,7 @@ Here's how to get series from both BCB and IPEA:
 .. |pypi| image:: https://img.shields.io/pypi/v/seriesbr.svg
    :target: https://pypi.org/project/seriesbr/
 .. |downloads| image:: https://img.shields.io/pypi/dm/seriesbr
-    :target: https://pypi.org/project/seriesbr/
+    :target: https://pypistats.org/packages/seriesbr
 .. |travis| image:: https://travis-ci.org/phelipetls/seriesbr.svg?branch=master
    :target: https://travis-ci.org/phelipetls/seriesbr
 .. |codecov| image:: https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg
