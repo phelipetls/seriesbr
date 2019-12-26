@@ -84,7 +84,7 @@ def ibge_json_to_df(url, freq="mensal"):
     # dropping less useful columns
     df = df.drop(
         [c for c in df.columns if c.endswith("(Código)")]
-        + ["Mês", "Unidade de Medida", "Brasil"],
+        + ["Mês", "Unidade de Medida", "Brasil", "Nível Territorial"],
         axis="columns",
         errors="ignore",
     )
