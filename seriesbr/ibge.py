@@ -261,10 +261,10 @@ def list_periods(aggregate):
     Examples
     --------
     >>> ibge.list_periods(1419)
-                value
-    frequency  mensal
-    start      201201
-    end        201911
+               valores
+    frequencia  mensal
+    inicio      201201
+    fim         201911
     """
     periods = get_metadata(aggregate).loc["periodicidade"][0]
     return pd.DataFrame(periods.values(), index=periods.keys(), columns=["valores"])
