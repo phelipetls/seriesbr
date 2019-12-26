@@ -88,8 +88,6 @@ Here's how to get series from both BCB and IPEA:
    @savefig index.png
    plt.subplots_adjust(top=.9)
 
-.. automodule:: seriesbr.bcb
-
 .. |plot| image:: ../../imgs/example.png
 .. |pypi| image:: https://img.shields.io/pypi/v/seriesbr.svg
    :target: https://pypi.org/project/seriesbr/
