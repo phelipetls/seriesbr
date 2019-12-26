@@ -11,7 +11,7 @@ Learn more about it in our [repository](https://github.com/phelipetls/seriesbr) 
 
 setuptools.setup(
     name="seriesbr",
-    version="0.1.1",
+    version="0.1.2",
     author="Phelipe Teles",
     author_email="phelipe_teles@hotmail.com",
     description="Get requests for brazilian economic time series databases",
