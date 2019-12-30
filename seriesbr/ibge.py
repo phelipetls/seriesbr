@@ -19,11 +19,11 @@ def get_series(
     start=None,
     end=None,
     last_n=None,
-    city=None,
-    state=None,
-    macroregion=None,
-    microregion=None,
-    mesoregion=None,
+    municipalities=None,
+    states=None,
+    macroregions=None,
+    microregions=None,
+    mesoregions=None,
     brazil=None,
     classifications=None,
 ):
@@ -48,19 +48,19 @@ def get_series(
     last_n : int or str, optional
         Return only last n observations.
 
-    city : str, int, bool a list, optional
-        Cities' codes.
+    municipalities : str, int, bool a list, optional
+        Municipalities' codes.
 
-    state : str, int, bool or a list, optional
+    states : str, int, bool or a list, optional
         States' codes.
 
-    macroregion : str, int, bool or a list, optional
+    macroregions : str, int, bool or a list, optional
         Macroregions' codes.
 
-    microregion : str, int, bool or a list, optional
+    microregions : str, int, bool or a list, optional
         Microregions' codes.
 
-    mesoregion : str, int, bool or a list, optional
+    mesoregions : str, int, bool or a list, optional
         Mesoregions' codes.
 
     classifications : dict, int, str or list, optional
@@ -85,7 +85,7 @@ def get_series(
     frequency = get_frequency(code)
     dates = ibge_make_dates_query(start, end, last_n, frequency)
     variables = ibge_make_variables_query(variables)
-    locations = ibge_make_locations_query(city, state, macroregion, microregion, mesoregion, brazil)
+    locations = ibge_make_locations_query(municipalities, states, macroregions, microregions, mesoregions, brazil)
     classifications = ibge_make_classifications_query(classifications)
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
     return ibge_json_to_df(url, frequency)

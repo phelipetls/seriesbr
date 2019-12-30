@@ -341,7 +341,7 @@ def ibge_make_variables_query(variables=None):
 
 
 locations_dict = {
-    "N6": "city",
+    "N6": "municipality",
     "N3": "state",
     "N2": "macroregion",
     "N7": "mesoregion",
@@ -353,14 +353,14 @@ locations_dict = {
 location_ids = {location: code for code, location in locations_dict.items()}
 
 
-def ibge_make_locations_query(city=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
+def ibge_make_locations_query(municipality=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
     """
     Auxiliary function to filter an IBGE's
     aggregate by variables.
 
     Parameters
     ----------
-    city
+    municipality
     state
     macroregion
     microregion

@@ -153,16 +153,16 @@ microregions (Baixadas, Norte Fluminense etc. in Rio de Janeiro), cities
 and states, see the :py:func:`documentation <seriesbr.ibge.get_series>` for details.
 
 If a given location is available for an aggregate, you can assign "all" 
-(anything that would be True to Python) and it will return data for every
-instance of that location, but you could also pass a list or a single code
-to select specific locations.
+(actually anything that would be evaluated as ``True`` in Python) and it
+will return data for every instance of that location, but you could also
+pass a list or a single code to select specific locations.
 
 By default, it will get data for the whole country. If you want data for
 other regions and also for Brazil as a whole, you can do the following:
 
 .. ipython:: python
 
-   ipca_by_area = ibge.get_series(1419, mesoregion=True, brazil="yes", last_n=1)
+   ipca_by_area = ibge.get_series(1419, mesoregions=True, brazil="yes", last_n=1)
 
    ipca_by_area
 
