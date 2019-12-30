@@ -81,9 +81,15 @@ def ibge_json_to_df(url, freq="mensal"):
     df = df.rename_axis("Date")
     # handling numerical values
     df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
+    # getting location code name
+    location_key = json[0]["D1C"]
     # dropping less useful columns
     df = df.drop(
-        [c for c in df.columns if c.endswith("(Código)")]
+        [
+            c
+            for c in df.columns
+            if c.endswith("(Código)") and c not in [location_key, "Variável (Código)"]
+        ]
         + ["Mês", "Unidade de Medida", "Brasil", "Nível Territorial"],
         axis="columns",
         errors="ignore",
