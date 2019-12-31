@@ -43,7 +43,7 @@ class TestUrlBuildersDatesIBGE(unittest.TestCase):
         test = url.ibge_make_dates_query(start="02-2019", end="03-2019")
         self.assertEqual(test, correct)
 
-    @patch('seriesbr.helpers.url.today_date', mocked_today_date)
+    @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
     def test_make_dates_query_start(self):
         correct = "/periodos/201902-201912"
         test = url.ibge_make_dates_query(start="02-2019", freq="mensal")
@@ -64,21 +64,22 @@ class TestUrlBuildersDatesIBGE(unittest.TestCase):
         test = url.ibge_make_dates_query(start="06-2018", end="02-2019", freq="anual")
         self.assertEqual(test, correct)
 
-    @patch('seriesbr.helpers.url.today_date', mocked_today_date)
+    @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
     def test_make_dates_query_monthly(self):
         correct = "/periodos/190001-201912"
         test = url.ibge_make_dates_query()
         self.assertEqual(test, correct)
 
-    @patch('seriesbr.helpers.url.today_date', mocked_today_date)
+    @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
     def test_make_dates_query_quarterly(self):
         correct = "/periodos/190001-201904"
         test = url.ibge_make_dates_query(freq="trimestral")
         self.assertEqual(test, correct)
 
-    def test_make_dates_raise_if_not_quarter(self):
-        with self.assertRaises(ValueError):
-            url.ibge_make_dates_query(end="12-2018", freq="trimestral")
+    def test_make_dates_query_quarterly_specific_dates(self):
+        correct = "/periodos/201801-201804"
+        test = url.ibge_make_dates_query(start="2018", end="2018", freq="trimestral")
+        self.assertEqual(test, correct)
 
 
 class TestUrlBuildersLocationsIBGE(unittest.TestCase):
@@ -99,15 +100,15 @@ class TestUrlBuildersLocationsIBGE(unittest.TestCase):
             "&localidades=BR"
         ]
         test = [
-            url.ibge_make_locations_query(city=1),
-            url.ibge_make_locations_query(city=[1, 2, 3]),
-            url.ibge_make_locations_query(city="all"),
-            url.ibge_make_locations_query(city="all", state=[4, 5], brazil="yes"),
-            url.ibge_make_locations_query(city=True, state=[4, 5]),
-            url.ibge_make_locations_query(city=True, state=[4, 5], mesoregion="yes"),
-            url.ibge_make_locations_query(city=True, state=True, mesoregion=True),
-            url.ibge_make_locations_query(city=["1", "2", "3"]),
-            url.ibge_make_locations_query(city=["all"]),
+            url.ibge_make_locations_query(municipality=1),
+            url.ibge_make_locations_query(municipality=[1, 2, 3]),
+            url.ibge_make_locations_query(municipality="all"),
+            url.ibge_make_locations_query(municipality="all", state=[4, 5], brazil="yes"),
+            url.ibge_make_locations_query(municipality=True, state=[4, 5]),
+            url.ibge_make_locations_query(municipality=True, state=[4, 5], mesoregion="yes"),
+            url.ibge_make_locations_query(municipality=True, state=True, mesoregion=True),
+            url.ibge_make_locations_query(municipality=["1", "2", "3"]),
+            url.ibge_make_locations_query(municipality=["all"]),
             url.ibge_make_locations_query(brazil="yes"),
             url.ibge_make_locations_query()
         ]
@@ -115,6 +116,6 @@ class TestUrlBuildersLocationsIBGE(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(failfast=True)
 
 # vi: nowrap

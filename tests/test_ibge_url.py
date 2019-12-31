@@ -132,7 +132,7 @@ class IBGEtest(unittest.TestCase):
     @unittest.skipIf(sys.version_info.minor < 7, "Incompatible order of locations")
     def test_url_start_classifications_and_regions(self):
         correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201912/variaveis/63?classificacao=315[7169,7170]&localidades=N7[all]|BR&view=flat"
-        test = ibge.get_series(1419, variables=63, start="07-2017", mesoregion="all", brazil="yes", classifications={315: [7169, 7170]})
+        test = ibge.get_series(1419, variables=63, start="07-2017", mesoregions="all", brazil="yes", classifications={315: [7169, 7170]})
         self.assertEqual(test, correct)
 
     def test_crazy_date(self):
