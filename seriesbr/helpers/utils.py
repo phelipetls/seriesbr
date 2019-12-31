@@ -101,8 +101,10 @@ def do_search(df, search, searches):
             regex = build_regex(search)
             other_searches.append(f"{field}.str.contains('{regex}')")
         other_searches = " and " + " and ".join(other_searches)
-        return df.query(name_search + other_searches, engine='python')
-    return df.query(name_search, engine='python')
+        return df.query(name_search + other_searches, engine="python").reset_index(
+            drop=True
+        )
+    return df.query(name_search, engine="python").reset_index(drop=True)
 
 
 def build_regex(strings):
@@ -125,3 +127,5 @@ def clean_json(json):
     df = pd.io.json.json_normalize(json, sep='_')
     df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
     return df
+
+# vi: nowrap

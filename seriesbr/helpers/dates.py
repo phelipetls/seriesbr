@@ -140,7 +140,7 @@ def today_date():
     return datetime.datetime.today()
 
 
-def month_to_quarter(date):
+def month_to_quarter(date, fmt=None):
     """
     Convert month to quarter, i.e.,
     12 -> 4, 6 -> 2, 7 -> 3 etc.
@@ -158,6 +158,8 @@ def month_to_quarter(date):
         >>> dates.month_to_quarter(datetime.datetime(2019, 12, 1))
         datetime.datetime(2019, 4, 1, 0, 0)
     """
+    if isinstance(date, str) and fmt:
+        date = datetime.datetime.strptime(date, fmt)
     quarter = divmod(date.month, 3)[0] + bool(divmod(date.month, 3)[1])
     return date.replace(month=quarter)
 

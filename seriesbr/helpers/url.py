@@ -1,7 +1,7 @@
 import re
 from .utils import cat, isiterable
 from .ipea_metadata_list import ipea_metadata_list
-from .dates import today_date, month_to_quarter, check_if_quarter, parse_dates
+from .dates import month_to_quarter, check_if_quarter, parse_dates
 
 ## IPEA
 
@@ -300,8 +300,8 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     if last_n:
         return f"/periodos/-{last_n}"
     if freq == "trimestral":
-        if end == today_date().strftime("%Y%m"):
-            end = month_to_quarter(today_date()).strftime("%Y%m")
+        start = month_to_quarter(start, "%Y%m").strftime("%Y%m")
+        end = month_to_quarter(end, "%Y%m").strftime("%Y%m")
         check_if_quarter((start, end))
     elif freq == "anual":
         start, end = start[:-2], end[:-2]
