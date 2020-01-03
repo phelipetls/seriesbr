@@ -1,9 +1,11 @@
+import functools
 import requests
 import json
 
 s = requests.Session()
 
 
+@functools.lru_cache(maxsize=16)
 def get_json(url, **kwargs):
     """
     Auxiliary function to make get requests
