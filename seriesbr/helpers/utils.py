@@ -19,10 +19,16 @@ def return_codes_and_names(*args):
         First element with codes and second element
         with names.
     """
+    codes, names = [], []
     for arg in args:
         if isinstance(arg, dict):
-            return arg.values(), arg.keys()
-    return args, args
+            for key, val in arg.items():
+                codes.append(val)
+                names.append(key)
+        else:
+            codes.append(arg)
+            names.append(arg)
+    return codes, names
 
 
 def cat(something, sep):

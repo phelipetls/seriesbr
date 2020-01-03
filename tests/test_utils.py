@@ -57,7 +57,7 @@ class TestUtils(unittest.TestCase):
 
     def test_return_codes_and_names_dict(self):
         test = [list(x) for x in utils.return_codes_and_names({"A": 1, "B": 2}, 2, 3)]
-        correct = [[1, 2], ["A", "B"]]
+        correct = [[1, 2, 2, 3], ["A", "B", 2, 3]]
         self.assertListEqual(test, correct)
 
     def test_return_codes_and_names_no_dict(self):
