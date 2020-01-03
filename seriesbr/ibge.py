@@ -170,7 +170,7 @@ def search(*search, **searches):
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
     if search or searches:
-        return do_search(df, search, searches)
+        return do_search(df, search, searches).reset_index(drop=True)
     return df
 
 
@@ -209,7 +209,7 @@ def list_variables(aggregate, *search, **searches):
     json = get_json(url)
     df = pd.io.json.json_normalize(json).iloc[:, :3]
     if search or searches:
-        return do_search(df, search, searches)
+        return do_search(df, search, searches).reset_index(drop=True)
     return df
 
 
@@ -308,7 +308,7 @@ def list_classifications(aggregate, *search, **searches):
         meta_prefix="classificacao_"
     )
     if search or searches:
-        return do_search(df, search, searches)
+        return do_search(df, search, searches).reset_index(drop=True)
     return df
 
 

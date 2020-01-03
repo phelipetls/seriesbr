@@ -101,10 +101,8 @@ def do_search(df, search, searches):
             regex = build_regex(search)
             other_searches.append(f"{field}.str.contains('{regex}')")
         other_searches = " and " + " and ".join(other_searches)
-        return df.query(name_search + other_searches, engine="python").reset_index(
-            drop=True
-        )
-    return df.query(name_search, engine="python").reset_index(drop=True)
+        return df.query(name_search + other_searches, engine="python")
+    return df.query(name_search, engine="python")
 
 
 def build_regex(strings):
