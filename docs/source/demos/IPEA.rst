@@ -95,6 +95,18 @@ To get time series values, use :py:func:`seriesbr.ipea.get_series`.
    ipea.get_series({"Taxa de juros - Over / Selic": "BM12_TJOVER12",
                     "Taxa de juros - CDB": "BM12_TJCDBN12"}, join="inner")
 
+You could also filter by date:
+
+.. ipython:: python
+
+   ipea.get_series(
+       {"Taxa de juros - Over / Selic": "BM12_TJOVER12"},
+       "BM12_TJCDBN12",
+       join="inner",
+       start="072015",
+       end="072016",
+   )
+
 
 Getting metadata
 ----------------
