@@ -44,12 +44,15 @@ def ipea_json_to_df(url, code, name):
     json = get_json(url)["value"]
     df = pd.DataFrame(json)
     # removing utc component from date string
-    df["VALDATA"] = df["VALDATA"].str[:-6]
-    df = df.set_index("VALDATA")
-    df = df.rename_axis("Date")
+    try:
+        df["VALDATA"] = df["VALDATA"].str[:-6]
+        df = df.set_index("VALDATA")
+        df = df.rename_axis("Date")
     # casting numerical values
-    df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
-    df.columns = [name if name else code]
+        df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
+        df.columns = [name if name else code]
+    except KeyError:
+        return
     return df
 
 
