@@ -149,8 +149,13 @@ It would be great if we could plot the inflation rate by metropolitan
 area, a mesoregion, like they did.
 
 But apart from mesoregions, there are also macroregions (Sul, Sudeste),
-microregions (Baixadas, Norte Fluminense etc. in Rio de Janeiro), cities
+microregions (Baixadas, Norte Fluminense etc. in Rio de Janeiro), municipalities
 and states, see the :py:func:`documentation <seriesbr.ibge.get_series>` for details.
+
+.. note::
+
+   Since v0.1.3 arguments for locations are in plural, i.e., macroregions,
+   municipalities, microregions, mesoregions and states.
 
 If a given location is available for an aggregate, you can assign "all" 
 (actually anything that would be evaluated as ``True`` in Python) and it
