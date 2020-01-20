@@ -36,3 +36,6 @@ _codebraid
 # unittests
 .coverage
 .coverage.*
+
+# flake
+.flake8
