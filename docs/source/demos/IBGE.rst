@@ -175,7 +175,7 @@ other regions and also for Brazil as a whole, you can do the following:
 .. ipython:: python
 
    ipca_by_area.pivot_table(
-       index="Região Metropolitana e Brasil", columns="Variável", values="Valor"
+       index="Brasil e Região Metropolitana", columns="Variável", values="Valor"
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada em 12 meses"
    ).plot.barh(
