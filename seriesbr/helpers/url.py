@@ -397,7 +397,7 @@ def ibge_make_locations_query(municipality=None, state=None, macroregion=None, m
         elif type(codes) == int:
             query.append(f"{location_ids[location]}[{codes}]")
         elif codes:
-            query.append(f"{location_ids[location]}[all]")
+            query.append(f"{location_ids[location]}")
     return prefix + "|".join(query)
 
 # vi: nowrap
