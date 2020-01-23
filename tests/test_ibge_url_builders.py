@@ -89,13 +89,12 @@ class TestUrlBuildersLocationsIBGE(unittest.TestCase):
         correct = [
             "&localidades=N6[1]",
             "&localidades=N6[1,2,3]",
-            "&localidades=N6[all]",
-            "&localidades=N6[all]|N3[4,5]|BR",
-            "&localidades=N6[all]|N3[4,5]",
-            "&localidades=N6[all]|N3[4,5]|N7[all]",
-            "&localidades=N6[all]|N3[all]|N7[all]",
+            "&localidades=N6",
+            "&localidades=N6|N3[4,5]|BR",
+            "&localidades=N6|N3[4,5]",
+            "&localidades=N6|N3[4,5]|N7",
+            "&localidades=N6|N3|N7",
             "&localidades=N6[1,2,3]",
-            "&localidades=N6[all]",
             "&localidades=BR",
             "&localidades=BR"
         ]
@@ -108,7 +107,6 @@ class TestUrlBuildersLocationsIBGE(unittest.TestCase):
             url.ibge_make_locations_query(municipality=True, state=[4, 5], mesoregion="yes"),
             url.ibge_make_locations_query(municipality=True, state=True, mesoregion=True),
             url.ibge_make_locations_query(municipality=["1", "2", "3"]),
-            url.ibge_make_locations_query(municipality=["all"]),
             url.ibge_make_locations_query(brazil="yes"),
             url.ibge_make_locations_query()
         ]
