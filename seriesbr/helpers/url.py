@@ -3,7 +3,7 @@ from .utils import cat, isiterable
 from .ipea_metadata_list import ipea_metadata_list
 from .dates import month_to_quarter, check_if_quarter, parse_dates
 
-## IPEA
+# IPEA
 
 
 def ipea_make_dates_query(start=None, end=None):
@@ -74,7 +74,9 @@ def ipea_make_select_query(metadatas):
     # SERCODIGO,PERNOME,UNINOME,SERNOME,ANOTHERFILTER,ANOTHERFILTER
     # where ANOTHER must be something not alreay selected by default
     defaults = ["SERCODIGO", "SERNOME", "PERNOME", "UNINOME"]
-    selected = defaults + [metadata for metadata in metadatas if metadata not in defaults]
+    selected = defaults + [
+        metadata for metadata in metadatas if metadata not in defaults
+    ]
     return f"?$select={','.join(selected)}"
 
 
@@ -159,7 +161,8 @@ def contains_operator(metadata, values):
     "(contains(['FNTNOME', 'UNINOME'],'A') or contains(['FNTNOME', 'UNINOME'],'B'))"
     """
     if isinstance(values, (list, tuple)):
-        return "(" + " or ".join([f"contains({metadata},'{item}')" for item in values]) + ")"
+        filters = [f"contains({metadata},'{item}')" for item in values]
+        return f"({' or '.join(filters)})"
     else:
         return f"contains({metadata},'{values}')"
 
@@ -188,7 +191,8 @@ def equal_operator(metadata, values):
     "(['SERNUMERICA', 'PAICODIGO'] eq 1 or ['SERNUMERICA', 'PAICODIGO'] eq 'A')"
     """
     if isinstance(values, (list, tuple)):
-        return "(" + " or ".join([f"{metadata} eq {quote_if_str(item)}" for item in values]) + ")"
+        filters = [f"{metadata} eq {quote_if_str(item)}" for item in values]
+        return f"({' or '.join(filters)})"
     else:
         return f"{metadata} eq {quote_if_str(values)}"
 
@@ -212,7 +216,8 @@ def quote_if_str(something):
     """
     return f"'{something}'" if isinstance(something, str) else f"{something}"
 
-## IBGE
+
+# IBGE
 
 
 def ibge_make_classifications_query(classifications=None):
@@ -255,7 +260,9 @@ def ibge_make_classifications_query(classifications=None):
     elif isinstance(classifications, (int, str)):
         return f"classificacao={classifications}[all]"
     elif isinstance(classifications, list):
-        piped_classifications = '|'.join([f"{classification}[all]" for classification in classifications])
+        piped_classifications = "|".join(
+            [f"{classification}[all]" for classification in classifications]
+        )
         return f"classificacao={piped_classifications}"
     else:
         return ""
@@ -353,7 +360,14 @@ locations_dict = {
 location_ids = {location: code for code, location in locations_dict.items()}
 
 
-def ibge_make_locations_query(municipality=None, state=None, macroregion=None, microregion=None, mesoregion=None, brazil=None):
+def ibge_make_locations_query(
+    municipality=None,
+    state=None,
+    macroregion=None,
+    microregion=None,
+    mesoregion=None,
+    brazil=None,
+):
     """
     Auxiliary function to filter an IBGE's
     aggregate by variables.
@@ -377,7 +391,7 @@ def ibge_make_locations_query(municipality=None, state=None, macroregion=None, m
     >>> url.ibge_make_location_query()
     '&localidades=BR'
     >>> url.ibge_make_location_query(city=True)
-    '&localidades=N6[all]'
+    '&localidades=N6'
     >>> url.ibge_make_location_query(city=1)
     '&localidades=N6[1]'
     >>> url.ibge_make_location_query(city=[2, 3, 4])
