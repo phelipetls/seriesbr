@@ -80,7 +80,7 @@ def ipea_make_select_query(metadatas):
     return f"?$select={','.join(selected)}"
 
 
-def ipea_make_filter_query(names, metadatas):
+def ipea_make_filter_query(names, metadatas={}):
     """
     Auxiliary function to make filter
     query for IBGE's database API.
@@ -107,7 +107,7 @@ def ipea_make_filter_query(names, metadatas):
 
     Examples
     --------
-        >>> url.ipea_make_filter_query("SELIC", {})
+        >>> url.ipea_make_filter_query("SELIC")
         "&$filter=contains(SERNOME,'SELIC')"
 
         >>> url.ipea_make_filter_query("SELIC", {"PERNOME": ["mensal", "trimestral"], "FNTNOME": "IBGE"})
@@ -123,7 +123,7 @@ def ipea_make_filter_query(names, metadatas):
         raise ValueError(error_msg)
     # building filter query
     prefix = "&$filter="
-    filter_by_name = contains_operator("SERNOME", names) if names else ""
+    filter_by_name = contains_operator("SERNOME", names, " and ") if names else ""
     filter_by_metadata = ""
     metadata_filters = []
     if metadatas:
@@ -137,7 +137,7 @@ def ipea_make_filter_query(names, metadatas):
     return f"{prefix}{filter_by_name}{filter_by_metadata}"
 
 
-def contains_operator(metadata, values):
+def contains_operator(metadata, values, logical_operator=" or "):
     """
     Auxiliary function to make string with
     OData's contains logical operator.
@@ -157,12 +157,12 @@ def contains_operator(metadata, values):
 
     Examples
     --------
-    >>> url.contains_operator(["FNTNOME", "UNINOME"], ["A", "B"])
-    "(contains(['FNTNOME', 'UNINOME'],'A') or contains(['FNTNOME', 'UNINOME'],'B'))"
+    >>> url.contains_operator("FNTNOME", ["A", "B"])
+    "(contains('FNTNOME','A') or contains('FNTNOME','B'))"
     """
     if isinstance(values, (list, tuple)):
         filters = [f"contains({metadata},'{item}')" for item in values]
-        return f"({' or '.join(filters)})"
+        return f"({logical_operator.join(filters)})"
     else:
         return f"contains({metadata},'{values}')"
 
@@ -187,8 +187,8 @@ def equal_operator(metadata, values):
 
     Examples
     --------
-    >>> url.equal_operator(["SERNUMERICA", "PAICODIGO"], [1, "A"])
-    "(['SERNUMERICA', 'PAICODIGO'] eq 1 or ['SERNUMERICA', 'PAICODIGO'] eq 'A')"
+    >>> url.equal_operator("SERNUMERICA", [1, "A"])
+    "('SERNUMERICA'' eq 1 or 'SERNUMERICA', eq 'A')"
     """
     if isinstance(values, (list, tuple)):
         filters = [f"{metadata} eq {quote_if_str(item)}" for item in values]
@@ -413,5 +413,6 @@ def ibge_make_locations_query(
         elif codes:
             query.append(f"{location_ids[location]}")
     return prefix + "|".join(query)
+
 
 # vi: nowrap

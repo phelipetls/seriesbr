@@ -34,6 +34,11 @@ class TestUrlBuildersIPEA(unittest.TestCase):
         test = url.ipea_make_filter_query(names="Spread", metadatas={'FNTNOME': 'BCB', 'TEMCODIGO': 1})
         self.assertEqual(test, correct)
 
+    def test_filters_query_string_and_numeric_with_multiple_names(self):
+        correct = "&$filter=(contains(SERNOME,'Spread') and contains(SERNOME,'Taxa'))"
+        test = url.ipea_make_filter_query(names=["Spread", "Taxa"])
+        self.assertEqual(test, correct)
+
     def test_raises_if_invalid_field(self):
         with self.assertRaises(ValueError):
             url.ipea_make_filter_query("", {"INVALID_FILTER": "INVALID"})
