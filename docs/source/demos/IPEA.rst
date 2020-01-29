@@ -15,7 +15,7 @@ with an arbitrary number of arguments:
 
    from seriesbr import ipea
 
-   ipea.search("Taxa", "Selic", "recursos", "livres")
+   ipea.search("Taxa", "Selic")
 
 
 And it also accepts keyword arguments to filter by metadata.
