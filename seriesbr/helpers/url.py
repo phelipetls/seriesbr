@@ -116,25 +116,27 @@ def ipea_make_filter_query(names, metadatas={}):
         >>> url.ipea_make_filter_query("SELIC", {"SERSTATUS": "A", "SERNUMERICA": 1})
         "&$filter=contains(SERNOME,'SELIC') and SERSTATUS eq 'A' and SERNUMERICA eq 1"
     """
-    # error handling
-    joined_metadatas = " or ".join(metadatas)
-    error_msg = f"{joined_metadatas}: not a valid metadata. Call ipea.list_metadata() if you need help."
-    if any([field not in ipea_metadata_list for field in metadatas]):
+    # friendly error message in case of invalid metadata
+    invalid_metadatas = [
+        metadata for metadata in metadatas if metadata not in ipea_metadata_list
+    ]
+    error_msg = f"{' or '.join(invalid_metadatas)}: non-valid metadata. Call ipea.list_metadata() if you need help."
+    if invalid_metadatas:
         raise ValueError(error_msg)
     # building filter query
     prefix = "&$filter="
-    filter_by_name = contains_operator("SERNOME", names, " and ") if names else ""
-    filter_by_metadata = ""
-    metadata_filters = []
+    filter_name = contains_operator("SERNOME", names, " and ") if names else ""
+    filter_metadata = ""
     if metadatas:
+        metadata_filters = []
         for metadata, value in metadatas.items():
             if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
                 metadata_filters.append(equal_operator(metadata, value))
             else:
                 metadata_filters.append(contains_operator(metadata, value))
-        filter_by_metadata = " and " if filter_by_name else ""
-        filter_by_metadata += " and ".join(metadata_filters)
-    return f"{prefix}{filter_by_name}{filter_by_metadata}"
+        filter_metadata = " and " if filter_name else ""
+        filter_metadata += " and ".join(metadata_filters)
+    return f"{prefix}{filter_name}{filter_metadata}"
 
 
 def contains_operator(metadata, values, logical_operator=" or "):
@@ -162,7 +164,8 @@ def contains_operator(metadata, values, logical_operator=" or "):
     """
     if isinstance(values, (list, tuple)):
         filters = [f"contains({metadata},'{item}')" for item in values]
-        return f"({logical_operator.join(filters)})"
+        filters_joined = logical_operator.join(filters)
+        return f"({filters_joined})"
     else:
         return f"contains({metadata},'{values}')"
 
