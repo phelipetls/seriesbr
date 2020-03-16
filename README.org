@@ -4,7 +4,6 @@
   :END:
 
 [[https://pypi.org/project/seriesbr/][file:https://img.shields.io/pypi/v/seriesbr.svg]]
-[[https://pypistats.org/packages/seriesbr][file:https://img.shields.io/pypi/dm/seriesbr]]
 [[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
 [[https://codecov.io/gh/phelipetls/seriesbr][file:https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg]]
 
@@ -30,6 +29,14 @@ See our documentation at [[https://seriesbr.readthedocs.io/][readthedocs]].
 
 ** Example Usage
 
+#+BEGIN_SRC python :session :noexport:
+import pandas as pd
+
+pd.set_option("expand_frame_repr", False)
+#+END_SRC
+
+#+RESULTS:
+
 #+BEGIN_SRC python :session :exports both
 from seriesbr import bcb
 
@@ -40,21 +47,21 @@ bcb.get_series({"Spread": 20786, "Selic": 11}, start="2015", end="2016", join="i
 #+begin_example
             Spread     Selic
 Date                        
-2015-04-01   28.93  0.047279
-2015-06-01   30.31  0.049037
-2015-07-01   31.24  0.050788
-2015-09-01   31.49  0.052531
-2015-10-01   32.64  0.052531
-2015-12-01   31.64  0.052531
-2016-02-01   35.80  0.052531
-2016-03-01   37.09  0.052531
-2016-04-01   38.74  0.052531
-2016-06-01   39.09  0.052531
-2016-07-01   39.90  0.052531
-2016-08-01   40.38  0.052531
-2016-09-01   40.97  0.052531
-2016-11-01   41.64  0.051660
-2016-12-01   39.84  0.050788
+2015-04-01   28.41  0.047279
+2015-06-01   29.75  0.049037
+2015-07-01   30.67  0.050788
+2015-09-01   30.89  0.052531
+2015-10-01   32.00  0.052531
+2015-12-01   31.08  0.052531
+2016-02-01   35.15  0.052531
+2016-03-01   36.44  0.052531
+2016-04-01   38.05  0.052531
+2016-06-01   38.36  0.052531
+2016-07-01   39.21  0.052531
+2016-08-01   39.71  0.052531
+2016-09-01   40.22  0.052531
+2016-11-01   40.84  0.051660
+2016-12-01   39.12  0.050788
 #+end_example
 
 #+BEGIN_SRC python :session :exports both
