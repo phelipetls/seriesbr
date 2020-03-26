@@ -2,9 +2,9 @@ import re
 import pandas as pd
 
 
-def return_codes_and_names(*args):
+def collect_codes_and_names(*args):
     """
-    Auxiliary function to label columns of a
+    Auxiliary function to help label columns of a
     DataFrame.
 
     If it finds a dictionary, it will use its keys
@@ -72,10 +72,11 @@ def isiterable(something):
     return True and not isinstance(something, str)
 
 
-def do_search(df, search, searches):
+def search_df(df, name, other=[]):
     """
     Auxiliary function to search for regex
-    in a column of a DataFrame.
+    in a column of a DataFrame. This is a
+    wrapper around the DataFrame query method.
 
     It builds a string to be passed to
     the query method of a DataFrame.
@@ -87,7 +88,7 @@ def do_search(df, search, searches):
 
     search : list of strings
 
-    searches : dict
+    other : dict
 
     Raises
     ------
@@ -96,24 +97,31 @@ def do_search(df, search, searches):
         non-existent column.
     """
     df_cols = df.columns.tolist()
-    for col in searches:
+
+    # check if additional searched columns exists
+    for col in other:
         if col not in df_cols:
-            raise ValueError(f"{col} is a non-existing column.")
-    regex = build_regex(search)
+            raise ValueError(f"{col} is not an existing column.")
+
+    # build regex string to search variable name
+    regex = build_regex(name)
     name_search = f"nome.str.contains('{regex}')"
-    if searches:
+
+    # build regexes to search additional fields, if any
+    if other:
         other_searches = []
-        for field, search in searches.items():
+        for field, search in other.items():
             regex = build_regex(search)
             other_searches.append(f"{field}.str.contains('{regex}')")
         other_searches = " and " + " and ".join(other_searches)
         return df.query(name_search + other_searches, engine="python")
+
     return df.query(name_search, engine="python")
 
 
 def build_regex(strings):
     """
-    Build regex by joining strings by '|'
+    Build regex by joining strings with '|' but
     only if it is an iterable other than a str.
     """
     # (?iu) sets unicode and ignore case flags

@@ -1,34 +1,28 @@
 import os
 import sys
-import json
 import unittest
 
-from pathlib import Path
 from unittest.mock import patch
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from seriesbr import ipea
-
-
-def get_sample_json(filename):
-    json_path = Path(__file__).resolve().parent / "sample_jsons" / filename
-    with json_path.open() as json_file:
-        return json.load(json_file)
+from seriesbr import ipea  # noqa: E402
+from mock_helpers import get_json  # noqa: E402
 
 
 class IPEAListFunctionsTest(unittest.TestCase):
-
-    @patch('seriesbr.helpers.lists.get_json')
+    @patch("seriesbr.helpers.lists.get_json")
     def test_list_themes(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ipea_temas")
+        mocked_get_json.return_value = get_json("ipea_temas.json")
+
         test = ipea.list_themes().columns.tolist()
         correct = ["TEMCODIGO", "TEMCODIGO_PAI", "TEMNOME"]
         self.assertListEqual(test, correct)
 
-    @patch('seriesbr.helpers.lists.get_json')
+    @patch("seriesbr.helpers.lists.get_json")
     def test_list_countries(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ipea_paises")
+        mocked_get_json.return_value = get_json("ipea_paises.json")
+
         test = ipea.list_countries().columns.tolist()
         correct = ["PAICODIGO", "PAINOME"]
         self.assertListEqual(test, correct)

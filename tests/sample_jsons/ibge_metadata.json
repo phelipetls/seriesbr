@@ -1,0 +1,120 @@
+{
+    "id": 3745,
+    "nome": "Pessoas de 10 a 17 anos de idade, ocupadas na semana de refer\u00eancia, por grupos de idade e posi\u00e7\u00e3o na ocupa\u00e7\u00e3o e categoria do emprego no trabalho principal e Percentual de pessoas de 10 a 17 anos de idade, ocupadas na semana de refer\u00eancia, distribu\u00eddo pela posi\u00e7\u00e3o na ocupa\u00e7\u00e3o e categoria do emprego no trabalho principal, por grupos de idade",
+    "URL": "http://sidra.ibge.gov.br/tabela/3745",
+    "pesquisa": "Censo Demogr\u00e1fico",
+    "assunto": "Trabalho infantil",
+    "periodicidade": {
+        "frequencia": "anual",
+        "inicio": 2010,
+        "fim": 2010
+    },
+    "nivelTerritorial": {
+        "Administrativo": [
+            "N15",
+            "N1",
+            "N2",
+            "N8",
+            "N9",
+            "N6",
+            "N14",
+            "N7",
+            "N13",
+            "N3"
+        ],
+        "Especial": [],
+        "IBGE": []
+    },
+    "variaveis": [
+        {
+            "id": 3620,
+            "nome": "Pessoas de 10 a 17 anos de idade, ocupadas na semana de refer\u00eancia",
+            "unidade": "Pessoas",
+            "sumarizacao": [
+                "nivelTerritorial"
+            ]
+        },
+        {
+            "id": 3705,
+            "nome": "Percentual de pessoas de 10 a 17 anos de idade, ocupadas na semana de refer\u00eancia, distribu\u00eddo pela posi\u00e7\u00e3o na ocupa\u00e7\u00e3o e categoria do emprego no trabalho principal",
+            "unidade": "%",
+            "sumarizacao": []
+        }
+    ],
+    "classificacoes": [
+        {
+            "id": 58,
+            "nome": "Grupo de idade",
+            "sumarizacao": {
+                "status": true,
+                "excecao": []
+            },
+            "categorias": [
+                {
+                    "id": 95253,
+                    "nome": "Total",
+                    "unidade": null,
+                    "nivel": 0
+                },
+                {
+                    "id": 118282,
+                    "nome": "10 a 13 anos",
+                    "unidade": null,
+                    "nivel": 1
+                },
+                {
+                    "id": 114536,
+                    "nome": "14 ou 15 anos",
+                    "unidade": null,
+                    "nivel": 1
+                },
+                {
+                    "id": 114534,
+                    "nome": "16 ou 17 anos",
+                    "unidade": null,
+                    "nivel": 1
+                }
+            ]
+        },
+        {
+            "id": 11913,
+            "nome": "Posi\u00e7\u00e3o na ocupa\u00e7\u00e3o e categoria do emprego no trabalho principal",
+            "sumarizacao": {
+                "status": true,
+                "excecao": []
+            },
+            "categorias": [
+                {
+                    "id": 96165,
+                    "nome": "Total",
+                    "unidade": null,
+                    "nivel": 0
+                },
+                {
+                    "id": 96166,
+                    "nome": "Empregado",
+                    "unidade": null,
+                    "nivel": 1
+                },
+                {
+                    "id": 31307,
+                    "nome": "Conta pr\u00f3pria e empregador",
+                    "unidade": null,
+                    "nivel": 1
+                },
+                {
+                    "id": 9885,
+                    "nome": "N\u00e3o remunerado",
+                    "unidade": null,
+                    "nivel": 1
+                },
+                {
+                    "id": 96173,
+                    "nome": "Trabalhador na produ\u00e7\u00e3o para o pr\u00f3prio consumo",
+                    "unidade": null,
+                    "nivel": 1
+                }
+            ]
+        }
+    ]
+}

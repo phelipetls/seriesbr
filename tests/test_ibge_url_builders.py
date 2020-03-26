@@ -4,13 +4,12 @@ import unittest
 import datetime
 from unittest.mock import patch
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import seriesbr.helpers.url as url
+import seriesbr.helpers.url as url  # noqa: E402
 
 
 class TestUrlBuildersIBGE(unittest.TestCase):
-
     def test_make_classifications_query_str(self):
         correct = "classificacao=315[all]"
         test = url.ibge_make_classifications_query("315")
@@ -37,13 +36,12 @@ def mocked_today_date():
 
 
 class TestUrlBuildersDatesIBGE(unittest.TestCase):
-
     def test_make_dates_query_start_end(self):
         correct = "/periodos/201902-201903"
         test = url.ibge_make_dates_query(start="02-2019", end="03-2019")
         self.assertEqual(test, correct)
 
-    @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
+    @patch("seriesbr.helpers.dates.today_date", mocked_today_date)
     def test_make_dates_query_start(self):
         correct = "/periodos/201902-201912"
         test = url.ibge_make_dates_query(start="02-2019", freq="mensal")
@@ -64,13 +62,13 @@ class TestUrlBuildersDatesIBGE(unittest.TestCase):
         test = url.ibge_make_dates_query(start="06-2018", end="02-2019", freq="anual")
         self.assertEqual(test, correct)
 
-    @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
+    @patch("seriesbr.helpers.dates.today_date", mocked_today_date)
     def test_make_dates_query_monthly(self):
         correct = "/periodos/190001-201912"
         test = url.ibge_make_dates_query()
         self.assertEqual(test, correct)
 
-    @patch('seriesbr.helpers.dates.today_date', mocked_today_date)
+    @patch("seriesbr.helpers.dates.today_date", mocked_today_date)
     def test_make_dates_query_quarterly(self):
         correct = "/periodos/190001-201904"
         test = url.ibge_make_dates_query(freq="trimestral")
@@ -82,35 +80,63 @@ class TestUrlBuildersDatesIBGE(unittest.TestCase):
         self.assertEqual(test, correct)
 
 
+@unittest.skipIf(sys.version_info.minor < 7, "Incompatible order of locations")
 class TestUrlBuildersLocationsIBGE(unittest.TestCase):
+    def test_location_default_to_brazil(self):
+        correct = "&localidades=BR"
+        test = url.ibge_make_locations_query()
+        self.assertEqual(test, correct)
 
-    @unittest.skipIf(sys.version_info.minor < 7, "Incompatible order of locations")
-    def test_make_cities_query(self):
-        correct = [
-            "&localidades=N6[1]",
-            "&localidades=N6[1,2,3]",
-            "&localidades=N6",
-            "&localidades=N6|N3[4,5]|BR",
-            "&localidades=N6|N3[4,5]",
-            "&localidades=N6|N3[4,5]|N7",
-            "&localidades=N6|N3|N7",
-            "&localidades=N6[1,2,3]",
-            "&localidades=BR",
-            "&localidades=BR"
-        ]
-        test = [
-            url.ibge_make_locations_query(municipality=1),
-            url.ibge_make_locations_query(municipality=[1, 2, 3]),
-            url.ibge_make_locations_query(municipality="all"),
-            url.ibge_make_locations_query(municipality="all", state=[4, 5], brazil="yes"),
-            url.ibge_make_locations_query(municipality=True, state=[4, 5]),
-            url.ibge_make_locations_query(municipality=True, state=[4, 5], mesoregion="yes"),
-            url.ibge_make_locations_query(municipality=True, state=True, mesoregion=True),
-            url.ibge_make_locations_query(municipality=["1", "2", "3"]),
-            url.ibge_make_locations_query(brazil="yes"),
-            url.ibge_make_locations_query()
-        ]
-        self.assertListEqual(test, correct)
+    def test_location_brazil_kwarg_only(self):
+        correct = "&localidades=BR"
+        test = url.ibge_make_locations_query(brazil="yes")
+        self.assertEqual(test, correct)
+
+    def test_location_all_value(self):
+        correct = "&localidades=N6"
+        test = url.ibge_make_locations_query(municipality="all")
+        self.assertEqual(test, correct)
+
+    def test_location_boolean_value(self):
+        correct = "&localidades=N6"
+        test = url.ibge_make_locations_query(municipality=True)
+        self.assertEqual(test, correct)
+
+    def test_location_list_multiple_values(self):
+        correct = "&localidades=N6[1,2,3]"
+        test = url.ibge_make_locations_query(municipality=[1, 2, 3])
+        self.assertEqual(test, correct)
+
+    def test_location_list_single_value(self):
+        correct = "&localidades=N6[1]"
+        test = url.ibge_make_locations_query(municipality=1)
+        self.assertEqual(test, correct)
+
+    def test_location_multiple_municipalities(self):
+        correct = "&localidades=N6[1,2,3]"
+        test = url.ibge_make_locations_query(municipality=["1", "2", "3"])
+        self.assertEqual(test, correct)
+
+    def test_location_various_regions_boolean_values(self):
+        correct = "&localidades=N6|N3|N7"
+        test = url.ibge_make_locations_query(
+            municipality=True, state=True, mesoregion=True
+        )
+        self.assertEqual(test, correct)
+
+    def test_location_various_regions_mixed_values(self):
+        correct = "&localidades=N6|N3[4,5]|N7"
+        test = url.ibge_make_locations_query(
+            municipality=True, state=[4, 5], mesoregion="yes"
+        )
+        self.assertEqual(test, correct)
+
+    def test_mixed_kwargs_and_values(self):
+        correct = "&localidades=N6|N3[4,5]|BR"
+        test = url.ibge_make_locations_query(
+            municipality="all", state=[4, 5], brazil="yes"
+        )
+        self.assertEqual(test, correct)
 
 
 if __name__ == "__main__":

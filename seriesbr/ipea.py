@@ -1,6 +1,7 @@
 from pandas import concat, DataFrame, to_datetime
+
 from .helpers.dates import parse_dates
-from .helpers.utils import return_codes_and_names
+from .helpers.utils import collect_codes_and_names
 from .helpers.lists import list_metadata_helper
 from .helpers.response import ipea_json_to_df
 from .helpers.metadata import ipea_metadata_to_df
@@ -9,7 +10,7 @@ from .helpers.ipea_metadata_list import ipea_metadata_list
 from .helpers.url import (
     ipea_make_select_query,
     ipea_make_filter_query,
-    ipea_make_dates_query,
+    ipea_make_date_query,
 )
 
 
@@ -23,7 +24,7 @@ def get_serie(code, name=None, start=None, end=None):
     resource_path = f"ValoresSerie(SERCODIGO='{code}')"
     select = "?$select=VALDATA,VALVALOR"
     start, end = parse_dates(start, end, api="ipea")
-    dates = ipea_make_dates_query(start, end)
+    dates = ipea_make_date_query(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
     return ipea_json_to_df(url, code, name)
 
@@ -61,14 +62,13 @@ def get_series(*codes, start=None, end=None, **kwargs):
     2018-02-01           0.47          61188.0
     2018-03-01           0.53          56151.0
     """
-    codes, names = return_codes_and_names(*codes)
+    codes, names = collect_codes_and_names(*codes)
     df = concat(
         (get_serie(code, name, start, end) for code, name in zip(codes, names)),
         axis="columns",
         sort=True,
         **kwargs,
     )
-    df.index = to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
     return df
 
 

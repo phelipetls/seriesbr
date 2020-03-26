@@ -1,0 +1,220 @@
+{
+    "@odata.context": "http://www.ipeadata.gov.br/api/odata4/$metadata#Temas",
+    "value": [
+        {
+            "TEMCODIGO": 28,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Agropecu\u00e1ria"
+        },
+        {
+            "TEMCODIGO": 23,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Assist\u00eancia social"
+        },
+        {
+            "TEMCODIGO": 10,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Balan\u00e7o de pagamentos"
+        },
+        {
+            "TEMCODIGO": 7,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "C\u00e2mbio"
+        },
+        {
+            "TEMCODIGO": 5,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Com\u00e9rcio exterior"
+        },
+        {
+            "TEMCODIGO": 2,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Consumo e vendas"
+        },
+        {
+            "TEMCODIGO": 8,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Contas nacionais"
+        },
+        {
+            "TEMCODIGO": 81,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Contas Regionais"
+        },
+        {
+            "TEMCODIGO": 24,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Corre\u00e7\u00e3o monet\u00e1ria"
+        },
+        {
+            "TEMCODIGO": 37,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Demografia"
+        },
+        {
+            "TEMCODIGO": 54,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Deputado Estadual"
+        },
+        {
+            "TEMCODIGO": 55,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Deputado Federal"
+        },
+        {
+            "TEMCODIGO": 38,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Desenvolvimento humano"
+        },
+        {
+            "TEMCODIGO": 11,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Economia internacional"
+        },
+        {
+            "TEMCODIGO": 29,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Educa\u00e7\u00e3o"
+        },
+        {
+            "TEMCODIGO": 63,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Eleitorado"
+        },
+        {
+            "TEMCODIGO": 12,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Emprego"
+        },
+        {
+            "TEMCODIGO": 19,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Estoque de capital"
+        },
+        {
+            "TEMCODIGO": 6,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Finan\u00e7as p\u00fablicas"
+        },
+        {
+            "TEMCODIGO": 39,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Financeiras"
+        },
+        {
+            "TEMCODIGO": 32,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Geogr\u00e1fico"
+        },
+        {
+            "TEMCODIGO": 56,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Governador"
+        },
+        {
+            "TEMCODIGO": 31,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Habita\u00e7\u00e3o"
+        },
+        {
+            "TEMCODIGO": 79,
+            "TEMCODIGO_PAI": 38,
+            "TEMNOME": "IDHm2000"
+        },
+        {
+            "TEMCODIGO": 15,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Indicadores sociais"
+        },
+        {
+            "TEMCODIGO": 40,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Mercado de trabalho"
+        },
+        {
+            "TEMCODIGO": 3,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Moeda e cr\u00e9dito"
+        },
+        {
+            "TEMCODIGO": 27,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Percep\u00e7\u00e3o e expectativa"
+        },
+        {
+            "TEMCODIGO": 14,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Popula\u00e7\u00e3o"
+        },
+        {
+            "TEMCODIGO": 9,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Pre\u00e7os"
+        },
+        {
+            "TEMCODIGO": 57,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Prefeito"
+        },
+        {
+            "TEMCODIGO": 58,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Presidente"
+        },
+        {
+            "TEMCODIGO": 1,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Produ\u00e7\u00e3o"
+        },
+        {
+            "TEMCODIGO": 16,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Proje\u00e7\u00f5es"
+        },
+        {
+            "TEMCODIGO": 30,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Renda"
+        },
+        {
+            "TEMCODIGO": 13,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Sal\u00e1rio e renda"
+        },
+        {
+            "TEMCODIGO": 41,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Sa\u00fade"
+        },
+        {
+            "TEMCODIGO": 20,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Seguran\u00e7a P\u00fablica"
+        },
+        {
+            "TEMCODIGO": 59,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Senador"
+        },
+        {
+            "TEMCODIGO": 17,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Sinopse macroecon\u00f4mica"
+        },
+        {
+            "TEMCODIGO": 33,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Transporte"
+        },
+        {
+            "TEMCODIGO": 26,
+            "TEMCODIGO_PAI": null,
+            "TEMNOME": "Vendas"
+        },
+        {
+            "TEMCODIGO": 60,
+            "TEMCODIGO_PAI": 18,
+            "TEMNOME": "Vereador"
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "@odata.context": "http://ipeadata2-homologa.ipea.gov.br/api/v1/$metadata#Collection(OdataV4.Models.Valor)",
+    "value": [
+        {
+            "VALDATA": "2016-01-01T00:00:00-02:00",
+            "VALVALOR": 5.44
+        },
+        {
+            "VALDATA": "2016-02-01T00:00:00-02:00",
+            "VALVALOR": 5.47
+        },
+        {
+            "VALDATA": "2016-03-01T00:00:00-03:00",
+            "VALVALOR": 5.51
+        },
+        {
+            "VALDATA": "2016-04-01T00:00:00-03:00",
+            "VALVALOR": 5.65
+        },
+        {
+            "VALDATA": "2016-05-01T00:00:00-03:00",
+            "VALVALOR": 5.79
+        },
+        {
+            "VALDATA": "2016-06-01T00:00:00-03:00",
+            "VALVALOR": 5.62
+        },
+        {
+            "VALDATA": "2016-07-01T00:00:00-03:00",
+            "VALVALOR": 5.7
+        },
+        {
+            "VALDATA": "2016-08-01T00:00:00-03:00",
+            "VALVALOR": 5.76
+        },
+        {
+            "VALDATA": "2016-09-01T00:00:00-03:00",
+            "VALVALOR": 5.78
+        },
+        {
+            "VALDATA": "2016-10-01T00:00:00-03:00",
+            "VALVALOR": 5.79
+        },
+        {
+            "VALDATA": "2016-11-01T00:00:00-02:00",
+            "VALVALOR": 5.74
+        },
+        {
+            "VALDATA": "2016-12-01T00:00:00-02:00",
+            "VALVALOR": 5.63
+        }
+    ]
+}

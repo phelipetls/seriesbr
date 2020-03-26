@@ -1,6 +1,7 @@
 from pandas import concat, to_datetime
+
 from .helpers.dates import parse_dates
-from .helpers.utils import return_codes_and_names
+from .helpers.utils import collect_codes_and_names
 from .helpers.response import bcb_json_to_df
 from .helpers.searching import bcb_get_search_results
 from .helpers.metadata import bcb_metadata_to_df
@@ -11,7 +12,7 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
     Auxiliary function to return a single time series
     from BCB database.
     """
-    assert isinstance(code, str) or isinstance(code, int), "Not a valid code format."
+    assert isinstance(code, (str, int)), "Not a valid code format."
     baseurl = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
     if last_n:
         url = f"{baseurl}/ultimos/{last_n}?formato=json"
@@ -62,14 +63,13 @@ def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
     2018-06-01   29.43
     2018-07-01   29.39
     """
-    codes, names = return_codes_and_names(*codes)
+    codes, names = collect_codes_and_names(*codes)
     df = concat(
         (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
         axis="columns",
         sort=True,
         **kwargs,
     )
-    df.index = to_datetime(df.index, format="%d/%m/%Y")
     return df.sort_index()
 
 

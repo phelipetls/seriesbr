@@ -1,84 +1,96 @@
 import os
 import sys
-import json
 import unittest
-from pathlib import Path
+
 from unittest.mock import patch
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from seriesbr import ibge
+from seriesbr import ibge  # noqa: E402
+from mock_helpers import get_json, mock_json  # noqa: E402
 
 
-def get_sample_json(filename):
-    json_path = Path(__file__).resolve().parent / "sample_jsons" / filename
-    with json_path.open() as json_file:
-        return json.load(json_file)
+class TestListVariablesFunction(unittest.TestCase):
+    def setUp(self):
+        mock_json(
+            path="seriesbr.ibge.get_json", json=get_json("ibge_variables.json")
+        ).start()
+
+    def test_ibge_list_variables(self):
+        self.assertFalse(ibge.list_variables(1419).empty)
+
+    def tearDown(self):
+        patch.stopall()
 
 
 class TestListMetadataFunctions(unittest.TestCase):
+    def setUp(self):
+        # simulate getting a JSON response from a search query
+        mock_json(
+            path="seriesbr.ibge.get_json", json=get_json("ibge_metadata.json")
+        ).start()
 
-    @patch('seriesbr.ibge.get_json')
-    def test_ibge_list_variables(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_variables")
-        self.assertFalse(ibge.list_variables(1419).empty)
+        # simulate getting a JSON response from a metadata query
+        mock_json(
+            path="seriesbr.helpers.metadata.get_json",
+            json=get_json("ibge_metadata.json"),
+        ).start()
 
-    @patch('seriesbr.ibge.get_json')
-    def test_ibge_list_locations(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_metadata")
+    def test_ibge_list_locations(self):
         self.assertFalse(ibge.list_locations(1419).empty)
 
-    @patch('seriesbr.helpers.metadata.get_json')
-    def test_list_classifications(self, mocked_get_metadata):
-        mocked_get_metadata.return_value = get_sample_json("ibge_metadata")
+    def test_list_classifications(self):
         test = ibge.list_classifications(1419).columns.tolist()
-        correct = ['id', 'nome', 'unidade', 'nivel', 'classificacao_id', 'classificacao_nome']
+        correct = [
+            "id",
+            "nome",
+            "unidade",
+            "nivel",
+            "classificacao_id",
+            "classificacao_nome",
+        ]
         self.assertListEqual(test, correct)
 
-    @patch('seriesbr.helpers.metadata.get_json')
-    def test_list_periods(self, mocked_get_metadata):
-        mocked_get_metadata.return_value = get_sample_json("ibge_metadata")
+    def test_list_periods(self):
         test = ibge.list_periods(1419).index.tolist()
         correct = ["frequencia", "inicio", "fim"]
         self.assertListEqual(test, correct)
 
-    @patch('seriesbr.helpers.metadata.get_json')
-    def test_get_frequency(self, mocked_get_metadata):
-        mocked_get_metadata.return_value = get_sample_json("ibge_metadata")
+    def test_get_frequency(self):
         test = "anual"
         correct = ibge.get_frequency(1419)
         self.assertEqual(test, correct)
 
+    def tearDown(self):
+        patch.stopall()
 
+
+@patch("seriesbr.helpers.lists.get_json")
 class TestListRegionsFunctions(unittest.TestCase):
+    """Test list regions functions"""
 
-    @patch('seriesbr.helpers.lists.get_json')
     def test_list_macroregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_regioes")
+        mocked_get_json.return_value = get_json("ibge_regioes.json")
         self.assertFalse(ibge.list_macroregions().empty)
 
-    @patch('seriesbr.helpers.lists.get_json')
     def test_list_microregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_microrregioes")
+        mocked_get_json.return_value = get_json("ibge_microrregioes.json")
         self.assertFalse(ibge.list_microregions().empty)
 
-    @patch('seriesbr.helpers.lists.get_json')
     def test_list_mesoregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_mesorregioes")
+        mocked_get_json.return_value = get_json("ibge_mesorregioes.json")
         self.assertFalse(ibge.list_mesoregions().empty)
 
-    @patch('seriesbr.helpers.lists.get_json')
     def test_list_cities(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_municipios")
+        mocked_get_json.return_value = get_json("ibge_municipios.json")
         self.assertFalse(ibge.list_cities().empty)
 
-    @patch('seriesbr.helpers.lists.get_json')
     def test_list_states(self, mocked_get_json):
-        mocked_get_json.return_value = get_sample_json("ibge_estados")
+        mocked_get_json.return_value = get_json("ibge_estados.json")
         self.assertFalse(ibge.list_states().empty)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(failfast=True)
 
 # vi: nowrap

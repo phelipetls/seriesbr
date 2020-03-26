@@ -6,7 +6,7 @@ from .dates import month_to_quarter, check_if_quarter, parse_dates
 # IPEA
 
 
-def ipea_make_dates_query(start=None, end=None):
+def ipea_make_date_query(start=None, end=None):
     """
     Auxiliary function to return the right
     string for filtering dates via IPEA api.

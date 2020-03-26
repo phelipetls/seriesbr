@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from .request import get_json
-from .utils import clean_json, do_search
+from .utils import clean_json, search_df
 
 
 # IBGE
@@ -31,7 +31,7 @@ def list_regions_helper(region, search, searches):
     json = get_json(url)
     df = clean_json(json)
     if search or searches:
-        return do_search(df, search, searches)
+        return search_df(df, search, searches)
     return df
 
 

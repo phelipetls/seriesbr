@@ -1,25 +1,22 @@
 import os
 import sys
-import json
 import unittest
+
 from unittest.mock import patch
-from pathlib import Path
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import seriesbr.ibge as ibge
+import seriesbr.ibge as ibge  # noqa: E402
+from mock_helpers import get_json  # noqa: E402
 
 
 class TestIbgeGetMetadata(unittest.TestCase):
+    """Test if get_metadata parses JSON correctly"""
 
-    def setUp(self):
-        json_path = Path(__file__).resolve().parent / "sample_jsons" / "ibge_metadata"
-        with json_path.open() as json_file:
-            self.json = json.load(json_file)
-
-    @patch('seriesbr.ibge.get_json')
+    @patch("seriesbr.helpers.metadata.get_json")
     def test_ibge_get_metadata(self, mocked_get_json):
-        mocked_get_json.return_value = self.json
+        mocked_get_json.return_value = get_json("ibge_metadata.json")
+
         self.assertFalse(ibge.get_metadata(1419).empty)
 
 

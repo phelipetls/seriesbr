@@ -5,16 +5,16 @@ import datetime
 
 from unittest.mock import patch
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from seriesbr import ibge
-from seriesbr.helpers.url import (
+from seriesbr import ibge  # noqa: E402
+from seriesbr.helpers.url import (  # noqa: E402
     ibge_make_classifications_query,
     ibge_make_variables_query,
 )
 
 
-def mocked_ibge_json_to_df(url, frequency):
+def mocked_ibge_json_to_df(url, *args):
     return url
 
 
@@ -31,67 +31,70 @@ def mocked_get_frequency(code):
     return "mensal"
 
 
-@patch('seriesbr.ibge.ibge_json_to_df', mocked_ibge_json_to_df)
-@patch('seriesbr.helpers.dates.today_date', mocked_today_date)
-@patch('seriesbr.ibge.get_frequency', mocked_get_frequency)
+BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos"
+
+
+@patch("seriesbr.ibge.ibge_json_to_df", mocked_ibge_json_to_df)
+@patch("seriesbr.helpers.dates.today_date", mocked_today_date)
+@patch("seriesbr.ibge.get_frequency", mocked_get_frequency)
 class IBGEtest(unittest.TestCase):
 
     maxDiff = None
 
     def test_url_no_dates(self):
         test = ibge.get_series(1419)
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201912/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/190001-201912/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
-    ## Testing year-only date formats
+    # Testing year-only date formats
 
     def test_url_with_start_date_year_only(self):
         test = ibge.get_series(1419, start="2019")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201901-201912/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/201901-201912/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_url_end_date_year_only(self):
         test = ibge.get_series(1419, end="2018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201812/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/190001-201812/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_url_start_and_end_date_year_only(self):
         test = ibge.get_series(1419, start="2017", end="2018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201701-201812/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/201701-201812/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
-    ## Testing month-year date formats
+    # Testing month-year date formats
 
     def test_url_start_date_month_and_year(self):
         test = ibge.get_series(1419, start="09-2018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201809-201912/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/201809-201912/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_url_end_date_month_and_year(self):
         test = ibge.get_series(1419, end="09/2018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201809/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/190001-201809/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_url_start_and_end_date_month_and_year(self):
         test = ibge.get_series(1419, start="07-2017", end="092018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201809/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/201707-201809/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
-    ## Testing complete dates -- shouldn't make any difference as days are ignore here
+    # Testing complete dates -- shouldn't make any difference as days are ignore here
 
     def test_url_start_date_complete_dates(self):
         test = ibge.get_series(1419, start="03-09-2018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201809-201912/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/201809-201912/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_url_end_date_complete_dates(self):
         test = ibge.get_series(1419, end="06/09/2018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/190001-201809/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/190001-201809/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_url_start_and_end_date_complete_dates(self):
         test = ibge.get_series(1419, start="05072017", end="12092018")
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201809/variaveis?&localidades=BR&view=flat"
+        correct = BASEURL + "/201707-201809/variaveis?&localidades=BR&view=flat"
         self.assertEqual(test, correct)
 
     def test_ibge_make_classifications_query_simple(self):
@@ -125,14 +128,29 @@ class IBGEtest(unittest.TestCase):
         self.assertEqual(test, correct)
 
     def test_url_start_and_classifications(self):
-        test = ibge.get_series(1419, start="07-2017", classifications={315: [7169, 7170]})
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201912/variaveis?classificacao=315[7169,7170]&localidades=BR&view=flat"
+        test = ibge.get_series(
+            1419, start="07-2017", classifications={315: [7169, 7170]}
+        )
+        correct = (
+            BASEURL
+            + "/201707-201912/variaveis?classificacao=315[7169,7170]&localidades=BR&view=flat"  # noqa: W503
+        )
         self.assertEqual(test, correct)
 
     @unittest.skipIf(sys.version_info.minor < 7, "Incompatible order of locations")
     def test_url_start_classifications_and_regions(self):
-        correct = "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201707-201912/variaveis/63?classificacao=315[7169,7170]&localidades=N7|BR&view=flat"
-        test = ibge.get_series(1419, variables=63, start="07-2017", mesoregions="all", brazil="yes", classifications={315: [7169, 7170]})
+        correct = (
+            BASEURL
+            + "/201707-201912/variaveis/63?classificacao=315[7169,7170]&localidades=N7|BR&view=flat"  # noqa: W503
+        )
+        test = ibge.get_series(
+            1419,
+            variables=63,
+            start="07-2017",
+            mesoregions="all",
+            brazil="yes",
+            classifications={315: [7169, 7170]},
+        )
         self.assertEqual(test, correct)
 
     def test_crazy_date(self):

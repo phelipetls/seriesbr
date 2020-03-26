@@ -6,23 +6,8 @@ metadata_list = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
 
 def bcb_get_search_results(url):
     """
-    Auxiliary function to request BCB's search
-    results and turn json into a DataFrame.
-
-    Parameters
-    ----------
-    url : str
-        Url to be requested.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the search results.
-
-    Raises
-    ------
-    AssertionError
-        If nothing was found.
+    Request a BCB search result (CKAN API) and parse it into
+    a DataFrame. Get only the columns in `metadata_list`.
     """
     json = get_json(url)
     search_results = json["result"]["results"]
@@ -32,23 +17,8 @@ def bcb_get_search_results(url):
 
 def ipea_get_search_results(url):
     """
-    Auxiliary function to request IPEA's search
-    results and turn json into a DataFrame.
-
-    Parameters
-    ----------
-    url : str
-        Url to be requested.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the search results.
-
-    Raises
-    ------
-    AssertionError
-        If nothing was found.
+    Request a IPEA search result and parse it into a
+    DataFrame.
     """
     json = get_json(url)
     search_results = json["value"]

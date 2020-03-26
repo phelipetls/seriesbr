@@ -1,15 +1,16 @@
 import pandas as pd
+
 from .helpers.request import get_json
 from .helpers.response import ibge_json_to_df
 from .helpers.metadata import ibge_metadata_to_df
-from .helpers.utils import do_search
+from .helpers.utils import search_df
 from .helpers.lists import list_regions_helper
 from .helpers.url import (
     ibge_make_dates_query,
     ibge_make_variables_query,
     ibge_make_locations_query,
     ibge_make_classifications_query,
-    locations_dict
+    locations_dict,
 )
 
 
@@ -74,23 +75,23 @@ def get_series(
     Examples
     --------
     >>> ibge.get_series(1419, start="11-2019", end="11-2019")
-               Nível Territorial                               Variável Geral, grupo, subgrupo, item e subitem   Valor
+                Nível Territorial                              Variável   Geral, grupo, subgrupo, item e subitem   Valor
     Date
-    2019-11-01            Brasil                 IPCA - Variação mensal                           Índice geral    0.51
-    2019-11-01            Brasil       IPCA - Variação acumulada no ano                           Índice geral    3.12
-    2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses                           Índice geral    3.27
-    2019-11-01            Brasil                     IPCA - Peso mensal                           Índice geral  100.00
+    2019-11-01            Brasil                 IPCA - Variação mensal   Índice geral                              0.51
+    2019-11-01            Brasil       IPCA - Variação acumulada no ano   Índice geral                              3.12
+    2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses   Índice geral                              3.27
+    2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
     frequency = get_frequency(code)
     dates = ibge_make_dates_query(start, end, last_n, frequency)
     variables = ibge_make_variables_query(variables)
-    locations = ibge_make_locations_query(municipalities, states, macroregions, microregions, mesoregions, brazil)
+    locations = ibge_make_locations_query(
+        municipalities, states, macroregions, microregions, mesoregions, brazil
+    )
     classifications = ibge_make_classifications_query(classifications)
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
     return ibge_json_to_df(url, frequency)
-
-## Get metadata
 
 
 def get_frequency(aggregate):
@@ -135,8 +136,6 @@ def get_metadata(aggregate):
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate}/metadados"
     return ibge_metadata_to_df(url)
 
-## List Metadata Functions
-
 
 def search(*search, **searches):
     """
@@ -170,7 +169,7 @@ def search(*search, **searches):
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
     if search or searches:
-        return do_search(df, search, searches).reset_index(drop=True)
+        return search_df(df, search, searches).reset_index(drop=True)
     return df
 
 
@@ -209,7 +208,7 @@ def list_variables(aggregate, *search, **searches):
     json = get_json(url)
     df = pd.io.json.json_normalize(json).iloc[:, :3]
     if search or searches:
-        return do_search(df, search, searches).reset_index(drop=True)
+        return search_df(df, search, searches).reset_index(drop=True)
     return df
 
 
@@ -302,13 +301,10 @@ def list_classifications(aggregate, *search, **searches):
     """
     classifications = get_metadata(aggregate).loc["classificacoes"][0]
     df = pd.io.json.json_normalize(
-        classifications,
-        "categorias",
-        meta=["id", "nome"],
-        meta_prefix="classificacao_"
+        classifications, "categorias", meta=["id", "nome"], meta_prefix="classificacao_"
     )
     if search or searches:
-        return do_search(df, search, searches).reset_index(drop=True)
+        return search_df(df, search, searches).reset_index(drop=True)
     return df
 
 
@@ -460,5 +456,6 @@ def list_mesoregions(*search, **searches):
     4  1301   Norte Amazonense     13       AM  Amazonas          1            N       Norte
     """
     return list_regions_helper("mesorregioes", search, searches)
+
 
 # vi: nowrap
