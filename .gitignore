@@ -33,6 +33,7 @@ _codebraid
 .\#*
 
 # unittests
+htmlcov
 .coverage
 .coverage.*
 
