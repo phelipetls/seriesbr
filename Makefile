@@ -1,19 +1,48 @@
+SHELL=/bin/bash
+
+PACKAGE = seriesbr
+TEST_DIR = tests
+UNITTEST = unittest discover -vfs 
+
 test:
-	cd tests && python3 -m unittest -v -f
+	python3 -m $(UNITTEST) $(TEST_DIR)
+
+clean:
+	rm -rf build dist .egg $(PACKAGE).egg-info
 
 publish:
 	python3 setup.py sdist bdist_wheel
 	twine upload --skip-existing dist/*
-	rm -rf build dist .egg seriesbr.egg-info
+	rm -rf build dist .egg $(PACKAGE).egg-info
 
-docs:
-	cd docs && make html
-
-coverage:
-	pytest --cov=seriesbr
+publish-test:
+	python3 setup.py sdist bdist_wheel
+	python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	rm -rf build dist .egg $(PACKAGE).egg-info
 
 lint:
-	flake8 seriesbr
+	flake8 $(PACKAGE)
+
+COVERAGE = coverage run --source $(PACKAGE)/ -m $(UNITTEST) $(TEST_DIR)
 
 cov:
-	pytest --cov=seriesbr --cov-report term-missing
+	$(COVERAGE)
+	coverage report
+	coverage erase
+
+htmlcov:
+	$(COVERAGE)
+	coverage html
+	coverage erase
+	firefox htmlcov/index.html
+
+fix:
+	nvim -q <(flake8 --exclude=venv* .)
+
+PROFILE_SCRIPT = profiler.py
+PROFILE_OUTPUT = profile.txt
+
+profile:
+	python3 -m cProfile -o $(PROFILE_OUTPUT) -s cumtime $(PROFILE_SCRIPT)
+
+.PHONY: test publish lint cov fix htmlcov profile
