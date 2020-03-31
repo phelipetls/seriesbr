@@ -1,8 +1,8 @@
 import re
 
 from pandas import concat, to_datetime
+from .helpers.utils import collect_codes_and_names
 from . import bcb, ipea
-from .helpers.utils import return_codes_and_names
 
 
 def get_series(*codes, start=None, end=None, **kwargs):
@@ -50,14 +50,12 @@ def get_series(*codes, start=None, end=None, **kwargs):
     2015-11-01          5.22  33.31
     2015-12-01          5.28  31.64
     """
-    codes, names = return_codes_and_names(*codes)
+    codes, names = collect_codes_and_names(*codes)
     series = []
     for code, name in zip(codes, names):
         if re.search(r"^\d+$", str(code)):
             df = bcb.get_serie(code, name, start, end)
-            df.index = to_datetime(df.index, format="%d/%m/%Y")
         else:
             df = ipea.get_serie(code, name, start, end)
-            df.index = to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
         series.append(df)
     return concat(series, axis="columns", **kwargs)
