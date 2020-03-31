@@ -120,20 +120,28 @@ def ipea_make_filter_query(names, metadatas={}):
     invalid_metadatas = [
         metadata for metadata in metadatas if metadata not in ipea_metadata_list
     ]
-    error_msg = f"{' or '.join(invalid_metadatas)}: non-valid metadata. Call ipea.list_metadata() if you need help."
+    error_msg = f"{', '.join(invalid_metadatas)}: non-valid metadata. Call ipea.list_metadata() if you need help."
     if invalid_metadatas:
         raise ValueError(error_msg)
+
     # building filter query
     prefix = "&$filter="
+
+    # string to filter by name
     filter_name = contains_operator("SERNOME", names, " and ") if names else ""
+
+    # start building string to filter by additional metadata
     filter_metadata = ""
     if metadatas:
         metadata_filters = []
         for metadata, value in metadatas.items():
+            # if metadata is numeric, use OData equal operator
             if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
                 metadata_filters.append(equal_operator(metadata, value))
+            # else, use contains operator
             else:
                 metadata_filters.append(contains_operator(metadata, value))
+        # if user filtered by name, prepend metadatas filter with an 'and'
         filter_metadata = " and " if filter_name else ""
         filter_metadata += " and ".join(metadata_filters)
     return f"{prefix}{filter_name}{filter_metadata}"

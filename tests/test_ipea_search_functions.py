@@ -7,6 +7,8 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from seriesbr import ipea  # noqa: E402
+from mock_helpers import get_json, mock_json  # noqa: E402
+from seriesbr.helpers.searching import ipea_get_search_results  # noqa: E402
 
 
 def mocked_get_search_results_ipea(url):
@@ -104,6 +106,22 @@ class TestIPEASearch(unittest.TestCase):
         filter_ = "&$filter=(PAICODIGO eq 'USA' or PAICODIGO eq 'BRA') and (contains(UNINOME,'%') or contains(UNINOME,'(% a.a.)'))"
 
         self.assertEqual(test, self.base + select_ + filter_)
+
+
+class TestIpeaGetSearchResults(unittest.TestCase):
+    def setUp(self):
+        mock_json(
+            path="seriesbr.helpers.searching.get_json",
+            json=get_json("ipea_search_results.json"),
+        ).start()
+
+    def test_ipea_get_search_results(self):
+        df = ipea_get_search_results("url")
+
+        self.assertFalse(df.empty)
+
+    def tearDown(self):
+        patch.stopall()
 
 
 if __name__ == "__main__":
