@@ -3,7 +3,7 @@ import sys
 import unittest
 
 from unittest.mock import patch
-from mock_helpers import get_json
+from mock_helpers import get_sample_json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -28,7 +28,7 @@ class TestIPEAMetadata(unittest.TestCase):
 class TestIpeaMetadataToDataFrame(unittest.TestCase):
     @patch("seriesbr.helpers.metadata.get_json")
     def test_ipea_metadata_to_df(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("ipea_metadata.json")
+        mocked_get_json.return_value = get_sample_json("ipea_metadata.json")
 
         df = ipea.ipea_metadata_to_df("url")
         self.assertFalse(df.empty)

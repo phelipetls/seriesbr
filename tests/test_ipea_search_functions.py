@@ -7,7 +7,7 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from seriesbr import ipea  # noqa: E402
-from mock_helpers import get_json, mock_json  # noqa: E402
+from mock_helpers import get_sample_json, mock_json  # noqa: E402
 from seriesbr.helpers.searching import ipea_get_search_results  # noqa: E402
 
 
@@ -112,7 +112,7 @@ class TestIpeaGetSearchResults(unittest.TestCase):
     def setUp(self):
         mock_json(
             path="seriesbr.helpers.searching.get_json",
-            json=get_json("ipea_search_results.json"),
+            json=get_sample_json("ipea_search_results.json"),
         ).start()
 
     def test_ipea_get_search_results(self):

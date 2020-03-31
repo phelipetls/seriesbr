@@ -7,7 +7,7 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from seriesbr import bcb  # noqa: E402
-from mock_helpers import get_json  # noqa: E402
+from mock_helpers import get_sample_json  # noqa: E402
 from seriesbr.bcb import bcb_get_search_results  # noqa: E402
 
 
@@ -40,7 +40,7 @@ class TestBCBSearchDataFrame(unittest.TestCase):
 
     @patch("seriesbr.helpers.searching.get_json")
     def test_bcb_get_search_results(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("bcb_search_results.json")
+        mocked_get_json.return_value = get_sample_json("bcb_search_results.json")
 
         df = bcb_get_search_results("https://fake.com?json=call")
 

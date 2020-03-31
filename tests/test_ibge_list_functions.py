@@ -7,13 +7,13 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from seriesbr import ibge  # noqa: E402
-from mock_helpers import get_json, mock_json  # noqa: E402
+from mock_helpers import get_sample_json, mock_json  # noqa: E402
 
 
 class TestListVariablesFunction(unittest.TestCase):
     def setUp(self):
         mock_json(
-            path="seriesbr.ibge.get_json", json=get_json("ibge_variables.json")
+            path="seriesbr.ibge.get_json", json=get_sample_json("ibge_variables.json")
         ).start()
 
     def test_ibge_list_variables(self):
@@ -27,13 +27,13 @@ class TestListMetadataFunctions(unittest.TestCase):
     def setUp(self):
         # simulate getting a JSON response from a search query
         mock_json(
-            path="seriesbr.ibge.get_json", json=get_json("ibge_metadata.json")
+            path="seriesbr.ibge.get_json", json=get_sample_json("ibge_metadata.json")
         ).start()
 
         # simulate getting a JSON response from a metadata query
         mock_json(
             path="seriesbr.helpers.metadata.get_json",
-            json=get_json("ibge_metadata.json"),
+            json=get_sample_json("ibge_metadata.json"),
         ).start()
 
     def test_ibge_list_locations(self):
@@ -70,23 +70,23 @@ class TestListRegionsFunctions(unittest.TestCase):
     """Test list regions functions"""
 
     def test_list_macroregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("ibge_regioes.json")
+        mocked_get_json.return_value = get_sample_json("ibge_regioes.json")
         self.assertFalse(ibge.list_macroregions().empty)
 
     def test_list_microregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("ibge_microrregioes.json")
+        mocked_get_json.return_value = get_sample_json("ibge_microrregioes.json")
         self.assertFalse(ibge.list_microregions().empty)
 
     def test_list_mesoregions(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("ibge_mesorregioes.json")
+        mocked_get_json.return_value = get_sample_json("ibge_mesorregioes.json")
         self.assertFalse(ibge.list_mesoregions().empty)
 
     def test_list_cities(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("ibge_municipios.json")
+        mocked_get_json.return_value = get_sample_json("ibge_municipios.json")
         self.assertFalse(ibge.list_cities().empty)
 
     def test_list_states(self, mocked_get_json):
-        mocked_get_json.return_value = get_json("ibge_estados.json")
+        mocked_get_json.return_value = get_sample_json("ibge_estados.json")
         self.assertFalse(ibge.list_states().empty)
 
 

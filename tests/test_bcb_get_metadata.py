@@ -7,7 +7,7 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from seriesbr import bcb  # noqa: E402
-from mock_helpers import get_json, mock_json  # noqa: E402
+from mock_helpers import get_sample_json, mock_json  # noqa: E402
 
 URL = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs:20786"
 
@@ -27,7 +27,7 @@ class TestBCBGetMetadata(unittest.TestCase):
     def setUp(self):
         mock_json(
             path="seriesbr.helpers.metadata.get_json",
-            json=get_json("bcb_metadata.json"),
+            json=get_sample_json("bcb_metadata.json"),
         ).start()
 
     def test_dataframe(self):
