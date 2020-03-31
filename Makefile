@@ -9,6 +9,7 @@ test:
 
 clean:
 	rm -rf build dist .egg $(PACKAGE).egg-info
+	coverage erase
 
 publish:
 	python3 setup.py sdist bdist_wheel
@@ -28,12 +29,10 @@ COVERAGE = coverage run --source $(PACKAGE)/ -m $(UNITTEST) $(TEST_DIR)
 cov:
 	$(COVERAGE)
 	coverage report
-	coverage erase
 
 htmlcov:
 	$(COVERAGE)
 	coverage html
-	coverage erase
 	firefox htmlcov/index.html
 
 fix:
