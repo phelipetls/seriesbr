@@ -1,5 +1,5 @@
 import re
-from .utils import cat, isiterable
+from .utils import cat, is_iterable
 from .ipea_metadata_list import ipea_metadata_list
 from .dates import month_to_quarter, check_if_quarter, parse_dates
 
@@ -350,7 +350,7 @@ def ibge_make_variables_query(variables=None):
     >>> url.ibge_make_variables_query()
     '/variaveis/'
     """
-    if isiterable(variables):
+    if is_iterable(variables):
         return f"/variaveis/{cat(variables, '|')}"
     elif variables:
         return f"/variaveis/{variables}"

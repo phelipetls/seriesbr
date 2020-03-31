@@ -42,27 +42,27 @@ class TestIsIterable(unittest.TestCase):
     """This function only disregards strings as iterables"""
 
     def test_is_isterable_list(self):
-        test = utils.isiterable([1])
+        test = utils.is_iterable([1])
         correct = True
         self.assertEqual(test, correct)
 
     def test_is_isterable_tuple(self):
-        test = utils.isiterable((1,))
+        test = utils.is_iterable((1,))
         correct = True
         self.assertEqual(test, correct)
 
     def test_is_isterable_int(self):
-        test = utils.isiterable(1)
+        test = utils.is_iterable(1)
         correct = False
         self.assertEqual(test, correct)
 
     def test_is_isterable_dict(self):
-        test = utils.isiterable({1: 1})
+        test = utils.is_iterable({1: 1})
         correct = True
         self.assertEqual(test, correct)
 
     def test_is_isterable_str(self):
-        test = utils.isiterable("1")
+        test = utils.is_iterable("1")
         correct = False
         self.assertEqual(test, correct)
 

@@ -51,10 +51,10 @@ def cat(something, sep):
         String with values in something joined
         by sep.
     """
-    return sep.join(map(str, something)) if isiterable(something) else something
+    return sep.join(map(str, something)) if is_iterable(something) else something
 
 
-def isiterable(something):
+def is_iterable(something):
     """
     Auxiliary function to test if something is
     an iterable (unless it's a str).
@@ -126,7 +126,7 @@ def build_regex(strings):
     """
     # (?iu) sets unicode and ignore case flags
     flags = r'(?iu)'
-    if isiterable(strings):
+    if is_iterable(strings):
         return f"{flags}{'|'.join(map(str, strings))}"
     return f"{flags}{strings}"
 
