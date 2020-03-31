@@ -1,4 +1,3 @@
-requests
 seriesbr
 requests-mock
 coverage

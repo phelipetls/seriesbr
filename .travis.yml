@@ -5,11 +5,11 @@ python:
   - "3.8"
 # command to install dependencies
 install:
-  - pip3 install pytest pytest-cov codecov
   - pip3 install -r requirements.txt
+  - pip3 install -r requirements-dev.txt
 # command to run tests
 script:
-  - pytest --cov-report term --cov=seriesbr
+  - make cov
 after_success:
   - codecov
 branches:
