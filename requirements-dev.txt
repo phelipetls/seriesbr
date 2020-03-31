@@ -2,3 +2,4 @@ seriesbr
 requests-mock
 coverage
 pytest
+codecov
