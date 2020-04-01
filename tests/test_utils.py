@@ -3,7 +3,7 @@ import sys
 import pandas
 import unittest
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -102,9 +102,7 @@ class TestSearchDataFrame(unittest.TestCase):
         query.assert_called_with(correct, engine="python")
 
     def test_search_name_and_additional_col_as_lists(self, query):
-        utils.search_df(
-            df, ["nome", "outro"], {"pesquisa_nome": ["pesquisa", "outra"]}
-        )
+        utils.search_df(df, ["nome", "outro"], {"pesquisa_nome": ["pesquisa", "outra"]})
         correct = "nome.str.contains('(?iu)nome|outro') and pesquisa_nome.str.contains('(?iu)pesquisa|outra')"
         query.assert_called_with(correct, engine="python")
 

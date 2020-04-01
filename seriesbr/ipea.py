@@ -1,4 +1,4 @@
-from pandas import concat, DataFrame, to_datetime
+from pandas import concat, DataFrame
 
 from .helpers.dates import parse_dates
 from .helpers.utils import collect_codes_and_names

@@ -2,7 +2,7 @@ SHELL=/bin/bash
 
 PACKAGE = seriesbr
 TEST_DIR = tests
-UNITTEST = unittest discover -vfs 
+UNITTEST = unittest discover -vfs
 
 test:
 	python3 -m $(UNITTEST) $(TEST_DIR)

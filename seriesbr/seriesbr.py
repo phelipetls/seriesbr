@@ -1,6 +1,6 @@
 import re
 
-from pandas import concat, to_datetime
+from pandas import concat
 from .helpers.utils import collect_codes_and_names
 from . import bcb, ipea
 
