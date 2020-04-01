@@ -29,7 +29,7 @@ Let's first :py:func:`search <seriesbr.ibge.search>` for IPCA's code:
 
    import pandas as pd
 
-   pd.set_option('display.expand_frame_repr', False, 'display.max_colwidth', -1, 'display.max_rows', 10)
+   pd.set_option('display.expand_frame_repr', False, 'display.max_colwidth', None, 'display.max_rows', 10)
 
    from seriesbr import ibge
 

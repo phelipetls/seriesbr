@@ -3,7 +3,7 @@ import pandas as pd
 from .helpers.request import get_json
 from .helpers.response import ibge_json_to_df
 from .helpers.metadata import ibge_metadata_to_df
-from .helpers.utils import search_df
+from .helpers.utils import search_df, json_normalize
 from .helpers.lists import list_regions_helper
 from .helpers.url import (
     ibge_make_dates_query,
@@ -165,7 +165,7 @@ def search(*search, **searches):
     3103    52  Folha de pagamento nominal por trabalhador por...          DG  Pesquisa Industrial Mensal - Dados Gerais
     """
     json = get_json("https://servicodados.ibge.gov.br/api/v3/agregados")
-    df = pd.io.json.json_normalize(
+    df = json_normalize(
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
     if search or searches:
@@ -206,7 +206,7 @@ def list_variables(aggregate, *search, **searches):
     query = f"/agregados/{aggregate}/variaveis/all?localidades=BR"
     url = f"{baseurl}{query}"
     json = get_json(url)
-    df = pd.io.json.json_normalize(json).iloc[:, :3]
+    df = json_normalize(json).iloc[:, :3]
     if search or searches:
         return search_df(df, search, searches).reset_index(drop=True)
     return df
@@ -300,7 +300,7 @@ def list_classifications(aggregate, *search, **searches):
     4  7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
     """
     classifications = get_metadata(aggregate).loc["classificacoes"][0]
-    df = pd.io.json.json_normalize(
+    df = json_normalize(
         classifications, "categorias", meta=["id", "nome"], meta_prefix="classificacao_"
     )
     if search or searches:

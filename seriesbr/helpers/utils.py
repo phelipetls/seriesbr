@@ -1,6 +1,22 @@
 import re
 import pandas as pd
 
+from distutils.version import StrictVersion
+
+OLD_PANDAS = StrictVersion(pd.__version__) <= StrictVersion("0.25.3")
+
+
+def json_normalize(*args, **kwargs):
+    """
+    Wrapper for dealing with pd.io.json.json_normalize
+    deprecation warnings
+    """
+    return (
+        pd.io.json.json_normalize(*args, **kwargs)
+        if OLD_PANDAS
+        else pd.json_normalize(*args, **kwargs)
+    )
+
 
 def collect_codes_and_names(*args):
     """
@@ -57,7 +73,7 @@ def cat(something, sep):
 def is_iterable(something):
     """
     Auxiliary function to test if something is
-    an iterable (unless it's a str).
+    an iterable (unless it is a str).
 
     Returns
     -------
@@ -125,7 +141,7 @@ def build_regex(strings):
     only if it is an iterable other than a str.
     """
     # (?iu) sets unicode and ignore case flags
-    flags = r'(?iu)'
+    flags = r"(?iu)"
     if is_iterable(strings):
         return f"{flags}{'|'.join(map(str, strings))}"
     return f"{flags}{strings}"
@@ -133,11 +149,12 @@ def build_regex(strings):
 
 def clean_json(json):
     """
-    Helper function to turn JSON into a DataFrame
-    and clean its columns names.
+    Helper function to turn IBGE API JSON responses
+    into DataFrames and clean its column names.
     """
-    df = pd.io.json.json_normalize(json, sep='_')
-    df = df.rename(lambda x: '_'.join(re.split(r'_', x)[-2:]), axis='columns')
+    df = json_normalize(json, sep="_")
+    df = df.rename(lambda x: "_".join(re.split(r"_", x)[-2:]), axis="columns")
     return df
+
 
 # vi: nowrap
