@@ -39,3 +39,6 @@ htmlcov
 
 # flake
 .flake8
+
+# docs
+docs/source/savefig/*
