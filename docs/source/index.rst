@@ -10,6 +10,7 @@ SeriesBR
 |downloads|
 |travis|
 |codecov|
+|docs|
 
 **SeriesBR** is a Python package to interact with brazilian time series databases such as:
 
@@ -98,11 +99,13 @@ Here's how to get series from both BCB and IPEA:
 .. |pypi| image:: https://img.shields.io/pypi/v/seriesbr.svg
    :target: https://pypi.org/project/seriesbr/
 .. |downloads| image:: https://img.shields.io/pypi/dm/seriesbr
-    :target: https://pypistats.org/packages/seriesbr
+   :target: https://pypistats.org/packages/seriesbr
 .. |travis| image:: https://travis-ci.org/phelipetls/seriesbr.svg?branch=master
    :target: https://travis-ci.org/phelipetls/seriesbr
 .. |codecov| image:: https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/phelipetls/seriesbr
+.. |docs| image:: https://readthedocs.org/projects/seriesbr/badge/?version=latest
+   :target: https://seriesbr.readthedocs.io/en/latest/?badge=latest
 
 Indices and tables
 ==================
