@@ -46,12 +46,12 @@ You could also search for a specific research (or any other column) in this way:
 In fact, you can search in a similar way within any column. Also notice
 that the string is a regex.
 
-We want the aggregate that goes by the code 1419. So now let's take a
+We want the aggregate that goes by the code 7060. So now let's take a
 look at the available variables with :py:func:`seriesbr.ibge.list_variables`.
 
 .. ipython:: python
 
-   ibge.list_variables(1419)
+   ibge.list_variables(7060)
 
 
 We will use all of them eventually, but it is good to know them if you
@@ -69,7 +69,7 @@ This means they're products' major groups, not subgroups etc.
 .. ipython:: python
 
    categories = ibge.list_classifications(
-       1419,
+       7060,
        "Índice geral",
        "^\d\.[A-z ]+",
    )
@@ -86,7 +86,7 @@ Getting time series
 Now let's use all this information we've gathered and get the actual values
 with :py:func:`seriesbr.ibge.get_series`.
 
-The aggregate is 1419, we will use every variable so no need to filter
+The aggregate is 7060, we will use every variable so no need to filter
 that.
 
 Since we have the codes for classifications and categories, we can just
@@ -99,7 +99,7 @@ get all of its categories.
 
 .. ipython:: python
 
-   ipca = ibge.get_series(1419, last_n=1, classifications={315: categories.id.to_list()})
+   ipca = ibge.get_series(7060, last_n=1, classifications={315: categories.id.to_list()})
 
    ipca
 
@@ -115,7 +115,7 @@ Now let's visualize the inflation rate by product / service.
    ipca.pivot_table(
        index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
-       "IPCA - Variação acumulada em 12 meses"
+       "IPCA - Variação acumulada no ano"
    ).plot(
        kind="barh", title="IPCA por Produto / Serviço", figsize=(10, 8)
    ).legend(
@@ -167,7 +167,7 @@ other regions and also for Brazil as a whole, you can do the following:
 
 .. ipython:: python
 
-   ipca_by_area = ibge.get_series(1419, mesoregions=True, brazil="yes", last_n=1)
+   ipca_by_area = ibge.get_series(7060, mesoregions=True, brazil="yes", last_n=1)
 
    ipca_by_area
 
@@ -177,7 +177,7 @@ other regions and also for Brazil as a whole, you can do the following:
    ipca_by_area.pivot_table(
        index="Região Metropolitana e Brasil", columns="Variável", values="Valor"
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
-       "IPCA - Variação acumulada em 12 meses"
+       "IPCA - Variação acumulada no ano"
    ).plot.barh(
        title="IPCA por Área Metropolitana", figsize=(10, 8)
    ).legend(
@@ -218,6 +218,11 @@ Truck Drivers' strike in 2018.
    @savefig ipca_truckers_strike.png
    plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
+.. note::
+
+    Notice that the appropriate aggregate no longer is 7060, but 1419.
+    This is because, for some reason, the aggregate 1419 ended in 2019.
+
 
 Getting metadata
 ----------------
@@ -226,7 +231,7 @@ To :py:func:`get metadata<seriesbr.ibge.get_metadata>` of a time series:
 
 .. ipython:: python
 
-   ibge.get_metadata(1419).head()
+   ibge.get_metadata(7060).head()
 
 
 .. ipython:: python

@@ -74,13 +74,13 @@ bcb.search("Juros", "mensal", "Percentual")
 0       4189  Taxa de juros - Selic acumulada no mês anualiz...        mensal  Percentual ao ano
 1      20714  Taxa média de juros das operações de crédito -...        mensal  Percentual ao ano
 2      25433  Taxa média mensal de juros das operações de cr...        mensal  Percentual ao mês
-3       5757  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
-4       5755  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
-5       5754  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
-6       5756  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
-7       5752  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
-8       5751  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
-9       5760  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+3       5760  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+4       5758  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+5       5759  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+6       5757  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+7       5755  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+8       5754  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
+9       5756  NFSP sem desvalorização cambial (% PIB) - Flux...        mensal         Percentual
 #+end_example
 
 ** License

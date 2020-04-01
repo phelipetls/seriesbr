@@ -28,6 +28,12 @@ Get the latest version with:
 
    $ pip3 install --upgrade seriesbr
 
+.. note::
+
+    Pandas v1.0.0 is out! It is highly recommended that you updgrade it.
+    There were a few breaking changes that in the future will no longer be
+    supported by this library as well.
+
 
 Main Features
 -------------
