@@ -14,7 +14,7 @@ or [documentation](https://seriesbr.readthedocs.io).
 
 setuptools.setup(
     name="seriesbr",
-    version="0.1.6",
+    version="0.1.7",
     author="Phelipe Teles",
     author_email="phelipe_teles@hotmail.com",
     description="A Python interface to interact with brazilian time series databases",
