@@ -16,16 +16,16 @@ class IPEAListFunctionsTest(unittest.TestCase):
         mocked_get_json.return_value = get_sample_json("ipea_temas.json")
 
         test = ipea.list_themes().columns.tolist()
-        correct = ["TEMCODIGO", "TEMCODIGO_PAI", "TEMNOME"]
-        self.assertListEqual(test, correct)
+        expected = ["TEMCODIGO", "TEMCODIGO_PAI", "TEMNOME"]
+        self.assertListEqual(test, expected)
 
     @patch("seriesbr.helpers.lists.get_json")
     def test_list_countries(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ipea_paises.json")
 
         test = ipea.list_countries().columns.tolist()
-        correct = ["PAICODIGO", "PAINOME"]
-        self.assertListEqual(test, correct)
+        expected = ["PAICODIGO", "PAINOME"]
+        self.assertListEqual(test, expected)
 
     def test_list_metadata(self):
         df = ipea.list_metadata()

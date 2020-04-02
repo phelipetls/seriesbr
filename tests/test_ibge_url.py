@@ -43,103 +43,103 @@ class IBGEtest(unittest.TestCase):
 
     def test_url_no_dates(self):
         test = ibge.get_series(1419)
-        correct = BASEURL + "/190001-201912/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/190001-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     # Testing year-only date formats
 
     def test_url_with_start_date_year_only(self):
         test = ibge.get_series(1419, start="2019")
-        correct = BASEURL + "/201901-201912/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/201901-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_url_end_date_year_only(self):
         test = ibge.get_series(1419, end="2018")
-        correct = BASEURL + "/190001-201812/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/190001-201812/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_url_start_and_end_date_year_only(self):
         test = ibge.get_series(1419, start="2017", end="2018")
-        correct = BASEURL + "/201701-201812/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/201701-201812/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     # Testing month-year date formats
 
     def test_url_start_date_month_and_year(self):
         test = ibge.get_series(1419, start="09-2018")
-        correct = BASEURL + "/201809-201912/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/201809-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_url_end_date_month_and_year(self):
         test = ibge.get_series(1419, end="09/2018")
-        correct = BASEURL + "/190001-201809/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/190001-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_url_start_and_end_date_month_and_year(self):
         test = ibge.get_series(1419, start="07-2017", end="092018")
-        correct = BASEURL + "/201707-201809/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/201707-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     # Testing complete dates -- shouldn't make any difference as days are ignore here
 
     def test_url_start_date_complete_dates(self):
         test = ibge.get_series(1419, start="03-09-2018")
-        correct = BASEURL + "/201809-201912/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/201809-201912/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_url_end_date_complete_dates(self):
         test = ibge.get_series(1419, end="06/09/2018")
-        correct = BASEURL + "/190001-201809/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/190001-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_url_start_and_end_date_complete_dates(self):
         test = ibge.get_series(1419, start="05072017", end="12092018")
-        correct = BASEURL + "/201707-201809/variaveis?&localidades=BR&view=flat"
-        self.assertEqual(test, correct)
+        expected = BASEURL + "/201707-201809/variaveis?&localidades=BR&view=flat"
+        self.assertEqual(test, expected)
 
     def test_ibge_make_classifications_query_simple(self):
         test = ibge_make_classifications_query(315)
-        correct = "classificacao=315[all]"
-        self.assertEqual(test, correct)
+        expected = "classificacao=315[all]"
+        self.assertEqual(test, expected)
 
     def test_ibge_make_classifications_query_list(self):
         test = ibge_make_classifications_query([315, 22])
-        correct = "classificacao=315[all]|22[all]"
-        self.assertEqual(test, correct)
+        expected = "classificacao=315[all]|22[all]"
+        self.assertEqual(test, expected)
 
     def test_ibge_make_classifications_query_dict(self):
         test = ibge_make_classifications_query({315: [7169, 7170, 7445], 22: [1, 3]})
-        correct = "classificacao=315[7169,7170,7445]|22[1,3]"
-        self.assertEqual(test, correct)
+        expected = "classificacao=315[7169,7170,7445]|22[1,3]"
+        self.assertEqual(test, expected)
 
     def test_ibge_make_variables_query_simple(self):
         test = ibge_make_variables_query(15)
-        correct = "/variaveis/15"
-        self.assertEqual(test, correct)
+        expected = "/variaveis/15"
+        self.assertEqual(test, expected)
 
     def test_ibge_make_variables_query_list(self):
         test = ibge_make_variables_query([15, 16, 12])
-        correct = "/variaveis/15|16|12"
-        self.assertEqual(test, correct)
+        expected = "/variaveis/15|16|12"
+        self.assertEqual(test, expected)
 
     def test_ibge_make_variables_query_none(self):
         test = ibge_make_variables_query(None)
-        correct = "/variaveis"
-        self.assertEqual(test, correct)
+        expected = "/variaveis"
+        self.assertEqual(test, expected)
 
     def test_url_start_and_classifications(self):
         test = ibge.get_series(
             1419, start="07-2017", classifications={315: [7169, 7170]}
         )
-        correct = (
+        expected = (
             BASEURL
             + "/201707-201912/variaveis?classificacao=315[7169,7170]&localidades=BR&view=flat"  # noqa: W503
         )
-        self.assertEqual(test, correct)
+        self.assertEqual(test, expected)
 
     @unittest.skipIf(sys.version_info.minor < 7, "Incompatible order of locations")
     def test_url_start_classifications_and_regions(self):
-        correct = (
+        expected = (
             BASEURL
             + "/201707-201912/variaveis/63?classificacao=315[7169,7170]&localidades=N7|BR&view=flat"  # noqa: W503
         )
@@ -151,7 +151,7 @@ class IBGEtest(unittest.TestCase):
             brazil="yes",
             classifications={315: [7169, 7170]},
         )
-        self.assertEqual(test, correct)
+        self.assertEqual(test, expected)
 
     def test_crazy_date(self):
         with self.assertRaises(ValueError):

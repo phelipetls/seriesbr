@@ -13,7 +13,7 @@ URL = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs
 
 
 class TestBCBGetMetadata_URL(unittest.TestCase):
-    """Test if the get_metadata builds the correct url"""
+    """Test if the get_metadata builds the expected url"""
 
     @patch("seriesbr.bcb.bcb_metadata_to_df")
     def test_url(self, mocked_bcb_metadata_to_df):

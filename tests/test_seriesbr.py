@@ -33,13 +33,13 @@ class TestSeriesBr(unittest.TestCase):
 
     def test_data_frame_columns(self):
         test = self.df.columns.tolist()
-        correct = ["BM12_CRLIN12", 20786]
-        self.assertListEqual(test, correct)
+        expected = ["BM12_CRLIN12", 20786]
+        self.assertListEqual(test, expected)
 
     def test_data_frame_columns_dtypes(self):
         test = [pd.api.types.is_float(dtype) for dtype in self.df.dtypes]
-        correct = [True, True]
-        self.assertLessEqual(test, correct)
+        expected = [True, True]
+        self.assertLessEqual(test, expected)
 
     def test_data_frame_index_dtype(self):
         test = self.df.index

@@ -17,22 +17,22 @@ def mocked_search_results(url):
 
 @patch("seriesbr.bcb.bcb_get_search_results", mocked_search_results)
 class TestBCBSearchURL(unittest.TestCase):
-    """Test if BCB search functions build correct URL"""
+    """Test if BCB search functions build expected URL"""
 
     def test_search_bcb(self):
         test = bcb.search("spread")
-        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc"
-        self.assertEqual(test, correct)
+        expected = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc"
+        self.assertEqual(test, expected)
 
     def test_search_with_more_args_bcb(self):
         test = bcb.search("spread", "mensal", "livre")
-        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
-        self.assertEqual(test, correct)
+        expected = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
+        self.assertEqual(test, expected)
 
     def test_search_with_more_args_and_rows_bcb(self):
         test = bcb.search("spread", "mensal", "livre", rows=30, start=5)
-        correct = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
-        self.assertEqual(test, correct)
+        expected = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
+        self.assertEqual(test, expected)
 
 
 class TestBCBSearchDataFrame(unittest.TestCase):
@@ -45,9 +45,9 @@ class TestBCBSearchDataFrame(unittest.TestCase):
         df = bcb_get_search_results("https://fake.com?json=call")
 
         test = df.columns.tolist()
-        correct = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
+        expected = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
 
-        self.assertListEqual(test, correct)
+        self.assertListEqual(test, expected)
 
 
 if __name__ == "__main__":

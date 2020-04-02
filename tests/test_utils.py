@@ -19,23 +19,23 @@ class TestCat(unittest.TestCase):
 
     def test_concatenate_list(self):
         test = utils.cat([1, 2, 3, 4], ",")
-        correct = "1,2,3,4"
-        self.assertEqual(test, correct)
+        expected = "1,2,3,4"
+        self.assertEqual(test, expected)
 
     def test_concatenate_number(self):
         test = utils.cat(2, ",")
-        correct = 2
-        self.assertEqual(test, correct)
+        expected = 2
+        self.assertEqual(test, expected)
 
     def test_concatenate_tuple(self):
         test = utils.cat((4, 5), ",")
-        correct = "4,5"
-        self.assertEqual(test, correct)
+        expected = "4,5"
+        self.assertEqual(test, expected)
 
     def test_concatenate_string(self):
         test = utils.cat("123", ",")
-        correct = "123"
-        self.assertEqual(test, correct)
+        expected = "123"
+        self.assertEqual(test, expected)
 
 
 class TestIsIterable(unittest.TestCase):
@@ -43,28 +43,28 @@ class TestIsIterable(unittest.TestCase):
 
     def test_is_isterable_list(self):
         test = utils.is_iterable([1])
-        correct = True
-        self.assertEqual(test, correct)
+        expected = True
+        self.assertEqual(test, expected)
 
     def test_is_isterable_tuple(self):
         test = utils.is_iterable((1,))
-        correct = True
-        self.assertEqual(test, correct)
+        expected = True
+        self.assertEqual(test, expected)
 
     def test_is_isterable_int(self):
         test = utils.is_iterable(1)
-        correct = False
-        self.assertEqual(test, correct)
+        expected = False
+        self.assertEqual(test, expected)
 
     def test_is_isterable_dict(self):
         test = utils.is_iterable({1: 1})
-        correct = True
-        self.assertEqual(test, correct)
+        expected = True
+        self.assertEqual(test, expected)
 
     def test_is_isterable_str(self):
         test = utils.is_iterable("1")
-        correct = False
-        self.assertEqual(test, correct)
+        expected = False
+        self.assertEqual(test, expected)
 
 
 df = pandas.DataFrame(
@@ -78,40 +78,40 @@ class TestSearchDataFrame(unittest.TestCase):
 
     def test_search_int(self, query):
         utils.search_df(df, 1)
-        correct = "nome.str.contains('(?iu)1')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)1')"
+        query.assert_called_with(expected, engine="python")
 
     def test_search_str(self, query):
         utils.search_df(df, "oi")
-        correct = "nome.str.contains('(?iu)oi')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)oi')"
+        query.assert_called_with(expected, engine="python")
 
     def test_search_simple_list(self, query):
         utils.search_df(df, [1])
-        correct = "nome.str.contains('(?iu)1')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)1')"
+        query.assert_called_with(expected, engine="python")
 
     def test_search_full_list(self, query):
         utils.search_df(df, [1, 2, 3])
-        correct = "nome.str.contains('(?iu)1|2|3')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)1|2|3')"
+        query.assert_called_with(expected, engine="python")
 
     def test_search_name_and_additional_col_as_str(self, query):
         utils.search_df(df, "nome", {"pesquisa_nome": "pesquisa"})
-        correct = "nome.str.contains('(?iu)nome') and pesquisa_nome.str.contains('(?iu)pesquisa')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)nome') and pesquisa_nome.str.contains('(?iu)pesquisa')"
+        query.assert_called_with(expected, engine="python")
 
     def test_search_name_and_additional_col_as_lists(self, query):
         utils.search_df(df, ["nome", "outro"], {"pesquisa_nome": ["pesquisa", "outra"]})
-        correct = "nome.str.contains('(?iu)nome|outro') and pesquisa_nome.str.contains('(?iu)pesquisa|outra')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)nome|outro') and pesquisa_nome.str.contains('(?iu)pesquisa|outra')"
+        query.assert_called_with(expected, engine="python")
 
     def test_search_with_two_additional_cols(self, query):
         utils.search_df(
             df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"], "pesquisa_id": "AA"}
         )
-        correct = "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI') and pesquisa_id.str.contains('(?iu)AA')"
-        query.assert_called_with(correct, engine="python")
+        expected = "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI') and pesquisa_id.str.contains('(?iu)AA')"
+        query.assert_called_with(expected, engine="python")
 
 
 class TestSearchDfErrorHandling(unittest.TestCase):
@@ -133,13 +133,13 @@ class TestReturnCodesAndNames(unittest.TestCase):
 
     def test_collect_codes_and_names_dict(self):
         test = utils.collect_codes_and_names({"A": 1, "B": 2}, 2, 3)
-        correct = ([1, 2, 2, 3], ["A", "B", 2, 3])
-        self.assertTupleEqual(test, correct)
+        expected = ([1, 2, 2, 3], ["A", "B", 2, 3])
+        self.assertTupleEqual(test, expected)
 
     def test_collect_codes_and_names_no_dict(self):
         test = utils.collect_codes_and_names(2, 3, 4)
-        correct = ([2, 3, 4], [2, 3, 4])
-        self.assertTupleEqual(test, correct)
+        expected = ([2, 3, 4], [2, 3, 4])
+        self.assertTupleEqual(test, expected)
 
 
 if __name__ == "__main__":

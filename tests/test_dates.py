@@ -12,33 +12,33 @@ class TestDates(unittest.TestCase):
 
     def test_date_with_month_and_year(self):
         test = parse_date("08-2018", api="bcb")
-        correct = "01/08/2018"
-        self.assertEqual(test, correct)
+        expected = "01/08/2018"
+        self.assertEqual(test, expected)
 
     def test_date_full(self):
         test = parse_date("01-12-2018", api="bcb")
-        correct = "01/12/2018"
-        self.assertEqual(test, correct)
+        expected = "01/12/2018"
+        self.assertEqual(test, expected)
 
     def test_date_with_year_only_as_start_date(self):
         test = parse_date("2018", api="bcb")
-        correct = "01/01/2018"
-        self.assertEqual(test, correct)
+        expected = "01/01/2018"
+        self.assertEqual(test, expected)
 
     def test_date_with_year_only_as_end_date(self):
         test = parse_date("2018", api="bcb", start=False)
-        correct = "31/12/2018"
-        self.assertEqual(test, correct)
+        expected = "31/12/2018"
+        self.assertEqual(test, expected)
 
     def test_date_abbreviated_month(self):
         test = parse_date("oct2018", api="bcb")
-        correct = "01/10/2018"
-        self.assertEqual(test, correct)
+        expected = "01/10/2018"
+        self.assertEqual(test, expected)
 
     def test_date_complete_month(self):
         test = parse_date("january2018", api="bcb")
-        correct = "01/01/2018"
-        self.assertEqual(test, correct)
+        expected = "01/01/2018"
+        self.assertEqual(test, expected)
 
 
 if __name__ == "__main__":

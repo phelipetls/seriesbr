@@ -41,7 +41,7 @@ class TestListMetadataFunctions(unittest.TestCase):
 
     def test_list_classifications(self):
         test = ibge.list_classifications(1419).columns.tolist()
-        correct = [
+        expected = [
             "id",
             "nome",
             "unidade",
@@ -49,17 +49,17 @@ class TestListMetadataFunctions(unittest.TestCase):
             "classificacao_id",
             "classificacao_nome",
         ]
-        self.assertListEqual(test, correct)
+        self.assertListEqual(test, expected)
 
     def test_list_periods(self):
         test = ibge.list_periods(1419).index.tolist()
-        correct = ["frequencia", "inicio", "fim"]
-        self.assertListEqual(test, correct)
+        expected = ["frequencia", "inicio", "fim"]
+        self.assertListEqual(test, expected)
 
     def test_get_frequency(self):
         test = "anual"
-        correct = ibge.get_frequency(1419)
-        self.assertEqual(test, correct)
+        expected = ibge.get_frequency(1419)
+        self.assertEqual(test, expected)
 
     def tearDown(self):
         patch.stopall()
