@@ -240,7 +240,7 @@ def list_locations(aggregate):
     codes = get_json(url)["nivelTerritorial"]["Administrativo"]
     df = pd.DataFrame({"codes": codes})
     df["parameters"] = [locations_dict.get(code) for code in df.codes]
-    return df
+    return df.loc[df.parameters.notnull(), :]
 
 
 def list_periods(aggregate):
