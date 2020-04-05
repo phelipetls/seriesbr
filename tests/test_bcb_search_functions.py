@@ -14,6 +14,7 @@ from seriesbr.bcb import bcb_get_search_results  # noqa: E402
 def mocked_search_results(url):
     return url
 
+BASEURL = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
 
 @patch("seriesbr.bcb.bcb_get_search_results", mocked_search_results)
 class TestBCBSearchURL(unittest.TestCase):
@@ -21,17 +22,17 @@ class TestBCBSearchURL(unittest.TestCase):
 
     def test_search_bcb(self):
         test = bcb.search("spread")
-        expected = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc"
+        expected = BASEURL + "q=spread&rows=10&start=1&sort=score desc"
         self.assertEqual(test, expected)
 
     def test_search_with_more_args_bcb(self):
         test = bcb.search("spread", "mensal", "livre")
-        expected = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
+        expected = BASEURL + "q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
         self.assertEqual(test, expected)
 
     def test_search_with_more_args_and_rows_bcb(self):
         test = bcb.search("spread", "mensal", "livre", rows=30, start=5)
-        expected = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
+        expected = BASEURL + "q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
         self.assertEqual(test, expected)
 
 

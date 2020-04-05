@@ -27,52 +27,62 @@ BASEURL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?format=json"
 @patch("seriesbr.helpers.dates.today_date", mocked_today_date)
 class BCBtest(unittest.TestCase):
     def test_url_no_dates(self):
+        test = bcb.get_serie(11)
         expected = BASEURL + "&dataInicial=01/01/1900&dataFinal=02/12/2019"
-        self.assertEqual(bcb.get_serie(11), expected)
+        self.assertEqual(test, expected)
 
     # Testing start dates argument
 
     def test_url_start_date_year_only(self):
+        test = bcb.get_serie(11, start="2013")
         expected = BASEURL + "&dataInicial=01/01/2013&dataFinal=02/12/2019"
-        self.assertEqual(bcb.get_serie(11, start="2013"), expected)
+        self.assertEqual(test, expected)
 
     def test_url_start_date_month_and_year(self):
+        test = bcb.get_serie(11, start="07-2013")
         expected = BASEURL + "&dataInicial=01/07/2013&dataFinal=02/12/2019"
-        self.assertEqual(bcb.get_serie(11, start="07-2013"), expected)
+        self.assertEqual(test, expected)
 
     # Testing end dates argument
 
     def test_url_end_date_year_only(self):
+        test = bcb.get_serie(11, end="1990")
         expected = BASEURL + "&dataInicial=01/01/1900&dataFinal=31/12/1990"
-        self.assertEqual(bcb.get_serie(11, end="1990"), expected)
+        self.assertEqual(test, expected)
 
     def test_url_end_date_month_and_year(self):
+        test = bcb.get_serie(11, end="06-1990")
         expected = BASEURL + "&dataInicial=01/01/1900&dataFinal=30/06/1990"
-        self.assertEqual(bcb.get_serie(11, end="06-1990"), expected)
+        self.assertEqual(test, expected)
 
-    def test_url_complete_dates(self):
+    def test_url_end_date_full(self):
+        test = bcb.get_serie(11, end="05032016")
         expected = BASEURL + "&dataInicial=01/01/1900&dataFinal=05/03/2016"
-        self.assertEqual(bcb.get_serie(11, end="05032016"), expected)
+        self.assertEqual(test, expected)
 
     # Testing start and end dates arguments
 
     def test_url_start_and_end_date_year_only(self):
+        test = bcb.get_serie(11, start="2013", end="09/2014")
         expected = BASEURL + "&dataInicial=01/01/2013&dataFinal=30/09/2014"
-        self.assertEqual(bcb.get_serie(11, start="2013", end="09/2014"), expected)
+        self.assertEqual(test, expected)
 
     def test_url_start_and_end_date_month_and_year(self):
+        test = bcb.get_serie(11, start="07-2013", end="09-2014")
         expected = BASEURL + "&dataInicial=01/07/2013&dataFinal=30/09/2014"
-        self.assertEqual(bcb.get_serie(11, start="07-2013", end="09-2014"), expected)
+        self.assertEqual(test, expected)
 
-    def test_url_start_and_end_date_complete_dates(self):
+    def test_url_start_and_end_date_full_dates(self):
+        test = bcb.get_serie(11, start="05032016", end="25102017")
         expected = BASEURL + "&dataInicial=05/03/2016&dataFinal=25/10/2017"
-        self.assertEqual(bcb.get_serie(11, start="05032016", end="25102017"), expected)
+        self.assertEqual(test, expected)
 
     # Testing last_n argument
 
     def test_url_last_n(self):
+        test = bcb.get_serie(11, last_n=30)
         expected = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/30?formato=json"
-        self.assertEqual(bcb.get_serie(11, last_n=30), expected)
+        self.assertEqual(test, expected)
 
     # Testing invalid inputs
 

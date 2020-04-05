@@ -17,7 +17,8 @@ class TestIbgeGetMetadata(unittest.TestCase):
     def test_ibge_get_metadata(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ibge_metadata.json")
 
-        self.assertFalse(ibge.get_metadata(1419).empty)
+        df = ibge.get_metadata(1419)
+        self.assertFalse(df.empty)
 
 
 if __name__ == "__main__":

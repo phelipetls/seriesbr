@@ -30,12 +30,14 @@ def ipea_make_date_query(start=None, end=None):
     '&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00'
     """
     dates = ""
+
     if start and end:
         dates = f"&$filter=VALDATA ge {start} and VALDATA le {end}"
     elif start:
         dates = f"&$filter=VALDATA ge {start}"
     elif end:
         dates = f"&$filter=VALDATA le {end}"
+
     return dates
 
 
@@ -144,6 +146,7 @@ def ipea_make_filter_query(names, metadatas={}):
         # if user filtered by name, prepend metadatas filter with an 'and'
         filter_metadata = " and " if filter_name else ""
         filter_metadata += " and ".join(metadata_filters)
+
     return f"{prefix}{filter_name}{filter_metadata}"
 
 
@@ -174,8 +177,7 @@ def contains_operator(metadata, values, logical_operator=" or "):
         filters = [f"contains({metadata},'{item}')" for item in values]
         filters_joined = logical_operator.join(filters)
         return f"({filters_joined})"
-    else:
-        return f"contains({metadata},'{values}')"
+    return f"contains({metadata},'{values}')"
 
 
 def equal_operator(metadata, values):
@@ -204,8 +206,7 @@ def equal_operator(metadata, values):
     if isinstance(values, (list, tuple)):
         filters = [f"{metadata} eq {quote_if_str(item)}" for item in values]
         return f"({' or '.join(filters)})"
-    else:
-        return f"{metadata} eq {quote_if_str(values)}"
+    return f"{metadata} eq {quote_if_str(values)}"
 
 
 def quote_if_str(something):
@@ -262,21 +263,23 @@ def ibge_make_classifications_query(classifications=None):
     """
     if isinstance(classifications, dict):
         s = []
-        for classification, category in classifications.items():
-            if not category or category == "all":
+        for classification, categories in classifications.items():
+            if not categories or categories == "all":
                 s.append(f"{classification}[all]")
             else:
-                s.append(f"{classification}[{cat(category, ',')}]")
+                s.append(f"{classification}[{cat(categories, ',')}]")
         return "classificacao=" + "|".join(s)
+
     elif isinstance(classifications, (int, str)):
         return f"classificacao={classifications}[all]"
+
     elif isinstance(classifications, list):
-        piped_classifications = "|".join(
+        classifications = "|".join(
             [f"{classification}[all]" for classification in classifications]
         )
-        return f"classificacao={piped_classifications}"
-    else:
-        return ""
+        return f"classificacao={classifications}"
+
+    return ""
 
 
 def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
@@ -317,12 +320,15 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     start, end = parse_dates(start, end, "ibge")
     if last_n:
         return f"/periodos/-{last_n}"
+
     if freq == "trimestral":
         start = month_to_quarter(start, "%Y%m").strftime("%Y%m")
         end = month_to_quarter(end, "%Y%m").strftime("%Y%m")
         check_if_quarter((start, end))
+
     elif freq == "anual":
         start, end = start[:-2], end[:-2]
+
     return f"/periodos/{start}-{end}"
 
 
@@ -348,7 +354,7 @@ def ibge_make_variables_query(variables=None):
     >>> url.ibge_make_variables_query([1, 2, 3])
     '/variaveis/1|2|3'
     >>> url.ibge_make_variables_query()
-    '/variaveis/'
+    '/variaveis'
     """
     if is_iterable(variables):
         return f"/variaveis/{cat(variables, '|')}"
@@ -414,6 +420,7 @@ def ibge_make_locations_query(
     query = []
     if all([code is None for code in locations.values()]):
         return prefix + "BR"
+
     for location, codes in locations.items():
         if location == "brazil" and codes:
             query.append("BR")
@@ -423,6 +430,7 @@ def ibge_make_locations_query(
             query.append(f"{location_ids[location]}[{codes}]")
         elif codes:
             query.append(f"{location_ids[location]}")
+
     return prefix + "|".join(query)
 
 

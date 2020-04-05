@@ -37,7 +37,16 @@ class TestListMetadataFunctions(unittest.TestCase):
         ).start()
 
     def test_ibge_list_locations(self):
-        self.assertFalse(ibge.list_locations(1419).empty)
+        test = ibge.list_locations(1419).parameters.tolist()
+        expected = [
+            "brazil",
+            "macroregion",
+            "microregion",
+            "municipality",
+            "mesoregion",
+            "state",
+        ]
+        self.assertListEqual(test, expected)
 
     def test_list_classifications(self):
         test = ibge.list_classifications(1419).columns.tolist()
@@ -57,8 +66,8 @@ class TestListMetadataFunctions(unittest.TestCase):
         self.assertListEqual(test, expected)
 
     def test_get_frequency(self):
-        test = "anual"
-        expected = ibge.get_frequency(1419)
+        test = ibge.get_frequency(1419)
+        expected = "anual"
         self.assertEqual(test, expected)
 
     def tearDown(self):
@@ -71,23 +80,33 @@ class TestListRegionsFunctions(unittest.TestCase):
 
     def test_list_macroregions(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ibge_regioes.json")
-        self.assertFalse(ibge.list_macroregions().empty)
+
+        df = ibge.list_macroregions()
+        self.assertFalse(df.empty)
 
     def test_list_microregions(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ibge_microrregioes.json")
-        self.assertFalse(ibge.list_microregions().empty)
+
+        df = ibge.list_microregions()
+        self.assertFalse(df.empty)
 
     def test_list_mesoregions(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ibge_mesorregioes.json")
-        self.assertFalse(ibge.list_mesoregions().empty)
+
+        df = ibge.list_mesoregions()
+        self.assertFalse(df.empty)
 
     def test_list_cities(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ibge_municipios.json")
-        self.assertFalse(ibge.list_cities().empty)
+
+        df = ibge.list_cities()
+        self.assertFalse(df.empty)
 
     def test_list_states(self, mocked_get_json):
         mocked_get_json.return_value = get_sample_json("ibge_estados.json")
-        self.assertFalse(ibge.list_states().empty)
+
+        df = ibge.list_states()
+        self.assertFalse(df.empty)
 
 
 if __name__ == "__main__":

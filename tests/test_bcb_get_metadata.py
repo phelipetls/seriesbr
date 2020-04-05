@@ -9,8 +9,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from seriesbr import bcb  # noqa: E402
 from mock_helpers import get_sample_json, mock_json  # noqa: E402
 
-URL = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs:20786"
-
 
 class TestBCBGetMetadata_URL(unittest.TestCase):
     """Test if the get_metadata builds the expected url"""
@@ -18,7 +16,9 @@ class TestBCBGetMetadata_URL(unittest.TestCase):
     @patch("seriesbr.bcb.bcb_metadata_to_df")
     def test_url(self, mocked_bcb_metadata_to_df):
         bcb.get_metadata(20786)
-        mocked_bcb_metadata_to_df.assert_called_with(URL)
+
+        expected_url = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs:20786"
+        mocked_bcb_metadata_to_df.assert_called_with(expected_url)
 
 
 class TestBCBGetMetadata(unittest.TestCase):
