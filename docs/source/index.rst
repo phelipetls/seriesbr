@@ -7,7 +7,6 @@ SeriesBR
 ========
 
 |pypi|
-|downloads|
 |travis|
 |codecov|
 |docs|
