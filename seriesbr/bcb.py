@@ -18,8 +18,7 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
         url = f"{baseurl}/ultimos/{last_n}?formato=json"
     else:
         start, end = parse_dates(start, end, api="bcb")
-        dates = f"&dataInicial={start}" if start else start
-        dates += f"&dataFinal={end}" if end else end
+        dates = f"&dataInicial={start}&dataFinal={end}"
         url = f"{baseurl}?format=json{dates}"
     return bcb_json_to_df(url, code, name)
 
@@ -104,11 +103,13 @@ def search(*search, rows=10, start=1):
     4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     """
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    params = f"q={search[0]}&rows={rows}&start={start}&sort=score desc"
-    filter_params = ""
-    if len(search) > 1:
-        filter_params = f"&fq={'+'.join([name for name in search[1:]])}"
-    url = f"{baseurl}{params}{filter_params}"
+    # separate search terms
+    first, others = search[0], search[1:]
+    params = f"q={first}&rows={rows}&start={start}&sort=score desc"
+    other_params = ""
+    if others:
+        other_params = f"&fq={'+'.join([name for name in others])}"
+    url = f"{baseurl}{params}{other_params}"
     return bcb_get_search_results(url)
 
 
