@@ -6,10 +6,10 @@ from .helpers.metadata import ibge_metadata_to_df
 from .helpers.utils import search_df, json_normalize
 from .helpers.lists import list_regions_helper
 from .helpers.url import (
-    ibge_make_dates_query,
-    ibge_make_variables_query,
-    ibge_make_locations_query,
-    ibge_make_classifications_query,
+    ibge_dates,
+    ibge_variables,
+    ibge_locations,
+    ibge_classifications,
     locations_dict,
 )
 
@@ -84,12 +84,12 @@ def get_series(
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
     frequency = get_frequency(code)
-    dates = ibge_make_dates_query(start, end, last_n, frequency)
-    variables = ibge_make_variables_query(variables)
-    locations = ibge_make_locations_query(
+    dates = ibge_dates(start, end, last_n, frequency)
+    variables = ibge_variables(variables)
+    locations = ibge_locations(
         municipalities, states, macroregions, microregions, mesoregions, brazil
     )
-    classifications = ibge_make_classifications_query(classifications)
+    classifications = ibge_classifications(classifications)
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
     return ibge_json_to_df(url, frequency)
 

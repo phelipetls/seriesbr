@@ -8,9 +8,9 @@ from .helpers.metadata import ipea_metadata_to_df
 from .helpers.searching import ipea_get_search_results
 from .helpers.ipea_metadata_list import ipea_metadata_list
 from .helpers.url import (
-    ipea_make_select_query,
-    ipea_make_filter_query,
-    ipea_make_date_query,
+    ipea_select,
+    ipea_filter,
+    ipea_date,
 )
 
 
@@ -24,7 +24,7 @@ def get_serie(code, name=None, start=None, end=None):
     resource_path = f"ValoresSerie(SERCODIGO='{code}')"
     select = "?$select=VALDATA,VALVALOR"
     start, end = parse_dates(start, end, api="ipea")
-    dates = ipea_make_date_query(start, end)
+    dates = ipea_date(start, end)
     url = f"{baseurl}{resource_path}{select}{dates}"
     return ipea_json_to_df(url, code, name)
 
@@ -102,8 +102,8 @@ def search(*SERNOME, **metadatas):
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"
-    select_query = ipea_make_select_query(metadatas)
-    filter_query = ipea_make_filter_query(SERNOME, metadatas)
+    select_query = ipea_select(metadatas)
+    filter_query = ipea_filter(SERNOME, metadatas)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
     return ipea_get_search_results(url)
 

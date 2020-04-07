@@ -6,7 +6,7 @@ from .dates import month_to_quarter, check_if_quarter, parse_dates
 # IPEA
 
 
-def ipea_make_date_query(start=None, end=None):
+def ipea_date(start=None, end=None):
     """
     Auxiliary function to return the right
     string for filtering dates via IPEA api.
@@ -41,7 +41,7 @@ def ipea_make_date_query(start=None, end=None):
     return dates
 
 
-def ipea_make_select_query(metadatas):
+def ipea_select(metadatas):
     """
     Auxiliary function to make select
     query for IBGE's web API.
@@ -61,15 +61,15 @@ def ipea_make_select_query(metadatas):
 
     Examples
     --------
-        >>> url.ipea_make_select_query("")
+        >>> url.ipea_select("")
         '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME'
 
-        >>> url.ipea_make_select_query(["FNTNOME"])
+        >>> url.ipea_select(["FNTNOME"])
         '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME'
 
         If a metadata is already selected by default, nothing changes:
 
-        >>> url.ipea_make_select_query(["PERNOME"])
+        >>> url.ipea_select(["PERNOME"])
         '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME'
     """
     # to get the string
@@ -82,7 +82,7 @@ def ipea_make_select_query(metadatas):
     return f"?$select={','.join(selected)}"
 
 
-def ipea_make_filter_query(names, metadatas={}):
+def ipea_filter(names, metadatas={}):
     """
     Auxiliary function to make filter
     query for IBGE's database API.
@@ -109,13 +109,13 @@ def ipea_make_filter_query(names, metadatas={}):
 
     Examples
     --------
-        >>> url.ipea_make_filter_query("SELIC")
+        >>> url.ipea_filter("SELIC")
         "&$filter=contains(SERNOME,'SELIC')"
 
-        >>> url.ipea_make_filter_query("SELIC", {"PERNOME": ["mensal", "trimestral"], "FNTNOME": "IBGE"})
+        >>> url.ipea_filter("SELIC", {"PERNOME": ["mensal", "trimestral"], "FNTNOME": "IBGE"})
         "&$filter=contains(SERNOME,'SELIC') and (contains(PERNOME,'mensal') or contains(PERNOME,'trimestral')) and contains(FNTNOME,'IBGE')"
 
-        >>> url.ipea_make_filter_query("SELIC", {"SERSTATUS": "A", "SERNUMERICA": 1})
+        >>> url.ipea_filter("SELIC", {"SERSTATUS": "A", "SERNUMERICA": 1})
         "&$filter=contains(SERNOME,'SELIC') and SERSTATUS eq 'A' and SERNUMERICA eq 1"
     """
     # friendly error message in case of invalid metadata
@@ -232,7 +232,7 @@ def quote_if_str(something):
 # IBGE
 
 
-def ibge_make_classifications_query(classifications=None):
+def ibge_classifications(classifications=None):
     """
     Auxiliary function to make classifications
     part of the URL.
@@ -252,13 +252,13 @@ def ibge_make_classifications_query(classifications=None):
 
     Examples
     --------
-    >>> url.ibge_make_classification_query({1: [2, 3]})
+    >>> url.ibge_classification({1: [2, 3]})
     'classificacao=1[2,3]'
 
-    >>> url.ibge_make_classification_query([1, 2])
+    >>> url.ibge_classification([1, 2])
     'classificacao=1[all]|2[all]'
 
-    >>> url.ibge_make_classification_query(3)
+    >>> url.ibge_classification(3)
     'classificacao=3[all]'
     """
     if isinstance(classifications, dict):
@@ -282,7 +282,7 @@ def ibge_make_classifications_query(classifications=None):
     return ""
 
 
-def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
+def ibge_dates(start=None, end=None, last_n=None, freq=None):
     """
     Auxiliary function to filter a time series'
     periods.
@@ -308,13 +308,13 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
 
     Examples
     --------
-    >>> url.ibge_make_dates_query(last_n=5)
+    >>> url.ibge_dates(last_n=5)
     '/periodos/-5'
-    >>> url.ibge_make_dates_query(start="012017")
+    >>> url.ibge_dates(start="012017")
     '/periodos/201701-201912'
-    >>> url.ibge_make_dates_query(end="072017")
+    >>> url.ibge_dates(end="072017")
     '/periodos/190001-201707'
-    >>> url.ibge_make_dates_query(start="052015", end="072017")
+    >>> url.ibge_dates(start="052015", end="072017")
     '/periodos/201505-201707'
     """
     start, end = parse_dates(start, end, "ibge")
@@ -332,7 +332,7 @@ def ibge_make_dates_query(start=None, end=None, last_n=None, freq=None):
     return f"/periodos/{start}-{end}"
 
 
-def ibge_make_variables_query(variables=None):
+def ibge_variables(variables=None):
     """
     Auxiliary function to filter an IBGE's
     aggregate by variables.
@@ -349,11 +349,11 @@ def ibge_make_variables_query(variables=None):
 
     Examples
     --------
-    >>> url.ibge_make_variables_query(100)
+    >>> url.ibge_variables(100)
     '/variaveis/100'
-    >>> url.ibge_make_variables_query([1, 2, 3])
+    >>> url.ibge_variables([1, 2, 3])
     '/variaveis/1|2|3'
-    >>> url.ibge_make_variables_query()
+    >>> url.ibge_variables()
     '/variaveis'
     """
     if is_iterable(variables):
@@ -377,7 +377,7 @@ locations_dict = {
 location_ids = {location: code for code, location in locations_dict.items()}
 
 
-def ibge_make_locations_query(
+def ibge_locations(
     municipality=None,
     state=None,
     macroregion=None,
@@ -405,13 +405,13 @@ def ibge_make_locations_query(
 
     Examples
     --------
-    >>> url.ibge_make_location_query()
+    >>> url.ibge_location()
     '&localidades=BR'
-    >>> url.ibge_make_location_query(city=True)
+    >>> url.ibge_location(city=True)
     '&localidades=N6'
-    >>> url.ibge_make_location_query(city=1)
+    >>> url.ibge_location(city=1)
     '&localidades=N6[1]'
-    >>> url.ibge_make_location_query(city=[2, 3, 4])
+    >>> url.ibge_location(city=[2, 3, 4])
     '&localidades=N6[2,3,4]'
     """
     # note-to-self: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
