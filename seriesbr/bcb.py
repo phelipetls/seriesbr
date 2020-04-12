@@ -5,8 +5,10 @@ from .helpers.utils import collect_codes_and_names
 from .helpers.response import bcb_json_to_df
 from .helpers.searching import bcb_get_search_results
 from .helpers.metadata import bcb_metadata_to_df
+from .helpers.generators import concatenate_series
 
 
+@concatenate_series
 def get_serie(code, name=None, start=None, end=None, last_n=None):
     """
     Auxiliary function to return a single time series
@@ -21,55 +23,6 @@ def get_serie(code, name=None, start=None, end=None, last_n=None):
         dates = f"&dataInicial={start}&dataFinal={end}"
         url = f"{baseurl}?format=json{dates}"
     return bcb_json_to_df(url, code, name)
-
-
-def get_series(*codes, start=None, end=None, last_n=None, **kwargs):
-    """
-    Get multiple series into a DataFrame.
-
-    Parameters
-    ----------
-    codes : dict, str, int
-        Dictionary like {"name1": cod1, "name2": cod2}
-        or a bunch of code numbers, e.g. cod1, cod2.
-
-    start : str, optional
-        Initial date, month or day first.
-
-    end : str, optional
-        End date, month or day first.
-
-    last_n : int, optional
-        Ignore other arguments and get last n observations.
-
-    **kwargs
-        Passed to pandas.concat.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with series' values.
-
-    Examples
-    --------
-    >>> bcb.get_series({"Spread": 20786}, start="02-2018", end="072018")
-                Spread
-    Date
-    2018-02-01   33.97
-    2018-03-01   33.66
-    2018-04-01   33.03
-    2018-05-01   30.92
-    2018-06-01   29.43
-    2018-07-01   29.39
-    """
-    codes, names = collect_codes_and_names(*codes)
-    df = concat(
-        (get_serie(code, name, start, end, last_n) for code, name in zip(codes, names)),
-        axis="columns",
-        sort=True,
-        **kwargs,
-    )
-    return df.sort_index()
 
 
 def search(*search, rows=10, start=1):
