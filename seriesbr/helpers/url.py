@@ -41,7 +41,7 @@ def ipea_date(start=None, end=None):
     return dates
 
 
-def ipea_select(metadatas):
+def ipea_select(metadata):
     """
     Auxiliary function to make select
     query for IBGE's web API.
@@ -51,13 +51,13 @@ def ipea_select(metadatas):
 
     Parameters
     ----------
-    metadatas : dict
-        Metadatas used in the search.
+    metadata : dict
+        metadata used in the search.
 
     Returns
     -------
     str
-        A string to select metadatas.
+        A string to select metadata.
 
     Examples
     --------
@@ -77,12 +77,12 @@ def ipea_select(metadatas):
     # where ANOTHER must be something not alreay selected by default
     defaults = ["SERCODIGO", "SERNOME", "PERNOME", "UNINOME"]
     selected = defaults + [
-        metadata for metadata in metadatas if metadata not in defaults
+        metadata for metadata in metadata if metadata not in defaults
     ]
     return f"?$select={','.join(selected)}"
 
 
-def ipea_filter(names, metadatas={}):
+def ipea_filter(names, metadata={}):
     """
     Auxiliary function to make filter
     query for IBGE's database API.
@@ -92,15 +92,15 @@ def ipea_filter(names, metadatas={}):
     names : list of str
         Strings to filter by name.
 
-    metadatas : dict
-        Dictionary whose keys are metadatas
+    metadata : dict
+        Dictionary whose keys are metadata
         and values strings (or list of strings)
         to look up for.
 
     Returns
     -------
     str
-        A string to filter metadatas.
+        A string to filter metadata.
 
     Raises
     ------
@@ -120,7 +120,7 @@ def ipea_filter(names, metadatas={}):
     """
     # friendly error message in case of invalid metadata
     invalid_metadatas = [
-        metadata for metadata in metadatas if metadata not in ipea_metadata_list
+        metadata for metadata in metadata if metadata not in ipea_metadata_list
     ]
     error_msg = f"{', '.join(invalid_metadatas)}: non-valid metadata. Call ipea.list_metadata() if you need help."
     if invalid_metadatas:
@@ -134,16 +134,16 @@ def ipea_filter(names, metadatas={}):
 
     # start building string to filter by additional metadata
     filter_metadata = ""
-    if metadatas:
+    if metadata:
         metadata_filters = []
-        for metadata, value in metadatas.items():
+        for metadata, value in metadata.items():
             # if metadata is numeric, use OData equal operator
             if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
                 metadata_filters.append(equal_operator(metadata, value))
             # else, use contains operator
             else:
                 metadata_filters.append(contains_operator(metadata, value))
-        # if user filtered by name, prepend metadatas filter with an 'and'
+        # if user filtered by name, prepend metadata filter with an 'and'
         filter_metadata = " and " if filter_name else ""
         filter_metadata += " and ".join(metadata_filters)
 
@@ -158,9 +158,9 @@ def contains_operator(metadata, values, logical_operator=" or "):
     Parameters
     ----------
     metadata : str or list of str
-        Metadatas to be filtered.
+        Metadata to be filtered.
 
-    metadata : str or list of str
+    values : str or list of str
         Values to filter by.
 
     Returns
@@ -188,9 +188,9 @@ def equal_operator(metadata, values):
     Parameters
     ----------
     metadata : str or list of str
-        Metadatas to be filtered.
+        Metadata to be filtered.
 
-    metadata : str or list of str
+    values : str or list of str
         Values to filter by.
 
     Returns
@@ -226,7 +226,10 @@ def quote_if_str(something):
         A string around quote if something is a string,
         else just the object coerced to a string.
     """
-    return f"'{something}'" if isinstance(something, str) else f"{something}"
+    if isinstance(something, str):
+        return f"'{something}'"
+    else:
+        return f"{something}"
 
 
 # IBGE

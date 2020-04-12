@@ -72,7 +72,7 @@ def get_series(*codes, start=None, end=None, **kwargs):
     return df
 
 
-def search(*SERNOME, **metadatas):
+def search(*SERNOME, **metadata):
     """
     Function to search in IPEA's database.
 
@@ -81,7 +81,7 @@ def search(*SERNOME, **metadatas):
     *SERNOME
         String(s) to look up for in a series' name.
 
-    **metadatas
+    **metadata
         Keyword arguments where parameter is a valid metadata
         and value a str or list of str.
 
@@ -102,8 +102,8 @@ def search(*SERNOME, **metadatas):
     """
     baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
     resource_path = "Metadados"
-    select_query = ipea_select(metadatas)
-    filter_query = ipea_filter(SERNOME, metadatas)
+    select_query = ipea_select(metadata)
+    filter_query = ipea_filter(SERNOME, metadata)
     url = f"{baseurl}{resource_path}{select_query}{filter_query}"
     return ipea_get_search_results(url)
 

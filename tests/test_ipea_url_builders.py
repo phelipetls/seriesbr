@@ -22,18 +22,18 @@ class TestUrlBuildersIPEA(unittest.TestCase):
 
     def test_filter_query_numeric_with_no_name(self):
         expected = "&$filter=SERNUMERICA eq 1"
-        test = url.ipea_filter(names=None, metadatas={"SERNUMERICA": 1})
+        test = url.ipea_filter(names=None, metadata={"SERNUMERICA": 1})
         self.assertEqual(test, expected)
 
     def test_filter_query_string_no_name(self):
         expected = "&$filter=contains(FNTNOME,'BCB')"
-        test = url.ipea_filter(names=None, metadatas={"FNTNOME": "BCB"})
+        test = url.ipea_filter(names=None, metadata={"FNTNOME": "BCB"})
         self.assertEqual(test, expected)
 
     def test_filters_query_string_and_numeric__with_name(self):
         expected = "&$filter=contains(SERNOME,'Spread') and contains(FNTNOME,'BCB') and TEMCODIGO eq 1"
         test = url.ipea_filter(
-            names="Spread", metadatas={"FNTNOME": "BCB", "TEMCODIGO": 1}
+            names="Spread", metadata={"FNTNOME": "BCB", "TEMCODIGO": 1}
         )
         self.assertEqual(test, expected)
 
