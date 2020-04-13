@@ -9,23 +9,32 @@ from .helpers.generators import concatenate_series
 
 
 @concatenate_series
-def get_serie(code, name=None, start=None, end=None, last_n=None):
+def get_series(code, name=None, start=None, end=None, last_n=None):
     """
     Auxiliary function to return a single time series
     from BCB database.
     """
-    assert isinstance(code, (str, int)), "Not a valid code format."
-    baseurl = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
-    if last_n:
-        url = f"{baseurl}/ultimos/{last_n}?formato=json"
-    else:
-        start, end = parse_dates(start, end, api="bcb")
-        dates = f"&dataInicial={start}&dataFinal={end}"
-        url = f"{baseurl}?format=json{dates}"
+    url = build_url(code, start, end, last_n)
     return bcb_json_to_df(url, code, name)
 
 
-def search(*search, rows=10, start=1):
+def build_url(code, start=None, end=None, last_n=None):
+    assert isinstance(code, (str, int)), "Not a valid code format."
+
+    url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
+
+    if last_n:
+        url += f"/ultimos/{last_n}"
+        url += "?format=json"
+        return url
+
+    url += "?format=json"
+    start, end = parse_dates(start, end, api="bcb")
+    url += f"&dataInicial={start}&dataFinal={end}"
+    return url
+
+
+def search(*strings, rows=10, start=1):
     """
     Search for a name in the SGS database.
 
@@ -37,7 +46,7 @@ def search(*search, rows=10, start=1):
     start : int, default 1
         From which row to start showing the results.
 
-    *search
+    *strings
         Arbitrary number of strings to search.
 
     Returns
@@ -55,20 +64,27 @@ def search(*search, rows=10, start=1):
     3      22041  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     """
-    baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    # separate search terms
-    first, others = search[0], search[1:]
+    url = build_search_url(search, rows, start)
+    return bcb_get_search_results(url)
+
+
+def build_search_url(*strings, rows=10, start=1):
+    url = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+
+    first, others = strings[0], strings[1:]
     params = f"q={first}&rows={rows}&start={start}&sort=score desc"
+
     other_params = ""
     if others:
-        other_params = f"&fq={'+'.join([name for name in others])}"
-    url = f"{baseurl}{params}{other_params}"
-    return bcb_get_search_results(url)
+        joined_params = "+".join(others)
+        other_params = f"&fq={joined_params}"
+
+    return f"{url}{params}{other_params}"
 
 
 def get_metadata(code):
     """
-    Get metadata of a BCB's time series.
+    Get BCB's time series metadata.
 
     Parameters
     ----------
@@ -90,10 +106,14 @@ def get_metadata(code):
     relationships_as_object                                                 []
     vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
+    url = build_metadata_url(code)
+    return bcb_metadata_to_df(url)
+
+
+def build_metadata_url(code):
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"fq=codigo_sgs:{code}"
-    url = f"{baseurl}{params}"
-    return bcb_metadata_to_df(url)
+    return f"{baseurl}{params}"
 
 
 # vi: nowrap
