@@ -1,17 +1,15 @@
-import re
-
 from pandas import concat
-from .helpers.utils import collect_codes_and_names
-from . import bcb, ipea
+from seriesbr import bcb, ipea
+from seriesbr.helpers import utils
 
 
-def get_series(*codes, start=None, end=None, **kwargs):
+def get_series(*args, start=None, end=None, **kwargs):
     """
     Get multiple series from both BCB or IPEA.
 
     Parameters
     ----------
-    codes : dict, str, int
+    args : dict, str, int
         Dictionary like {"name1": cod1, "name2": cod2}
         or a bunch of code numbers, e.g. cod1, cod2.
 
@@ -50,12 +48,14 @@ def get_series(*codes, start=None, end=None, **kwargs):
     2015-11-01          5.22  33.31
     2015-12-01          5.28  31.64
     """
-    codes, names = collect_codes_and_names(*codes)
+    codes_and_labels = utils.collect(*args)
     series = []
-    for code, name in zip(codes, names):
-        if re.search(r"^\d+$", str(code)):
-            df = bcb.get_serie(code, name, start, end)
+
+    for label, code in codes_and_labels.items():
+        if str(code).isnumeric():
+            df = bcb.get_timeseries(code, label, start, end)
         else:
-            df = ipea.get_serie(code, name, start, end)
+            df = ipea.get_timeseries(code, label, start, end)
         series.append(df)
+
     return concat(series, axis="columns", **kwargs)

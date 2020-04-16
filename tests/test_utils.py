@@ -3,7 +3,7 @@ import sys
 import pandas
 import unittest
 
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -17,24 +17,24 @@ def return_first_argument(arg, **kwargs):
 class TestCat(unittest.TestCase):
     """This function concatenates every iterable with a delimiter, except for strings"""
 
-    def test_concatenate_list(self):
-        test = utils.cat([1, 2, 3, 4], ",")
-        expected = "1,2,3,4"
-        self.assertEqual(test, expected)
-
     def test_concatenate_number(self):
         test = utils.cat(2, ",")
         expected = 2
         self.assertEqual(test, expected)
 
-    def test_concatenate_tuple(self):
-        test = utils.cat((4, 5), ",")
-        expected = "4,5"
-        self.assertEqual(test, expected)
-
     def test_concatenate_string(self):
         test = utils.cat("123", ",")
         expected = "123"
+        self.assertEqual(test, expected)
+
+    def test_concatenate_list(self):
+        test = utils.cat([1, 2, 3, 4], ",")
+        expected = "1,2,3,4"
+        self.assertEqual(test, expected)
+
+    def test_concatenate_tuple(self):
+        test = utils.cat((4, 5), ",")
+        expected = "4,5"
         self.assertEqual(test, expected)
 
 
@@ -86,31 +86,36 @@ class TestSearchDataFrame(unittest.TestCase):
         expected = "nome.str.contains('(?iu)oi')"
         query.assert_called_with(expected, engine="python")
 
-    def test_search_simple_list(self, query):
-        utils.search_df(df, [1])
-        expected = "nome.str.contains('(?iu)1')"
-        query.assert_called_with(expected, engine="python")
-
-    def test_search_full_list(self, query):
+    def test_search_list(self, query):
         utils.search_df(df, [1, 2, 3])
         expected = "nome.str.contains('(?iu)1|2|3')"
         query.assert_called_with(expected, engine="python")
 
-    def test_search_name_and_additional_col_as_str(self, query):
+    def test_search_extra_col(self, query):
         utils.search_df(df, "nome", {"pesquisa_nome": "pesquisa"})
-        expected = "nome.str.contains('(?iu)nome') and pesquisa_nome.str.contains('(?iu)pesquisa')"
+        expected = (
+            "nome.str.contains('(?iu)nome')"
+            " and pesquisa_nome.str.contains('(?iu)pesquisa')"
+        )
         query.assert_called_with(expected, engine="python")
 
-    def test_search_name_and_additional_col_as_lists(self, query):
+    def test_search_multiple_values(self, query):
         utils.search_df(df, ["nome", "outro"], {"pesquisa_nome": ["pesquisa", "outra"]})
-        expected = "nome.str.contains('(?iu)nome|outro') and pesquisa_nome.str.contains('(?iu)pesquisa|outra')"
+        expected = (
+            "nome.str.contains('(?iu)nome|outro')"
+            " and pesquisa_nome.str.contains('(?iu)pesquisa|outra')"
+        )
         query.assert_called_with(expected, engine="python")
 
-    def test_search_with_two_additional_cols(self, query):
+    def test_search_with_two_extra_cols(self, query):
         utils.search_df(
             df, ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"], "pesquisa_id": "AA"}
         )
-        expected = "nome.str.contains('(?iu)oi|tudo') and pesquisa_nome.str.contains('(?iu)DD|DI') and pesquisa_id.str.contains('(?iu)AA')"
+        expected = (
+            "nome.str.contains('(?iu)oi|tudo')"
+            " and pesquisa_nome.str.contains('(?iu)DD|DI')"
+            " and pesquisa_id.str.contains('(?iu)AA')"
+        )
         query.assert_called_with(expected, engine="python")
 
 
@@ -123,23 +128,19 @@ class TestSearchDfErrorHandling(unittest.TestCase):
 
 
 class TestReturnCodesAndNames(unittest.TestCase):
-    """
-    Test function to collect arguments.
-
-    Dictionary keys are 'names' and all other values
-    are just values. This is used to help label the
-    returned DataFrame with the passed arguments.
-    """
+    """Test function to collect arguments."""
 
     def test_collect_codes_and_names_dict(self):
-        test = utils.collect_codes_and_names({"A": 1, "B": 2}, 2, 3)
-        expected = ([1, 2, 2, 3], ["A", "B", 2, 3])
-        self.assertTupleEqual(test, expected)
+        test = utils.collect({"A": 1, "B": 2}, 100)
+        expected = ({"A": 1, "B": 2, 100: 100})
+
+        self.assertEqual(test, expected)
 
     def test_collect_codes_and_names_no_dict(self):
-        test = utils.collect_codes_and_names(2, 3, 4)
-        expected = ([2, 3, 4], [2, 3, 4])
-        self.assertTupleEqual(test, expected)
+        test = utils.collect(11)
+        expected = ({11: 11})
+
+        self.assertEqual(test, expected)
 
 
 if __name__ == "__main__":

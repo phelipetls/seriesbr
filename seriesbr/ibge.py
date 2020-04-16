@@ -1,17 +1,6 @@
 import pandas as pd
 
-from .helpers.request import get_json
-from .helpers.response import ibge_json_to_df
-from .helpers.metadata import ibge_metadata_to_df
-from .helpers.utils import search_df, json_normalize
-from .helpers.lists import list_regions_helper
-from .helpers.url import (
-    ibge_dates,
-    ibge_variables,
-    ibge_locations,
-    ibge_classifications,
-    locations_dict,
-)
+from seriesbr.helpers import metadata, request, utils, timeseries, lists, api
 
 
 def get_series(
@@ -29,16 +18,15 @@ def get_series(
     classifications=None,
 ):
     """
-    Function to get variables associated with an
-    aggregate from IBGE's database.
+    Get an IBGE table
 
     Parameters
     ----------
     code : int
-        Aggregate's code.
+        Table code.
 
     variables : int or list of ints, optional
-        Which variables to select (if None, return all of them).
+        Variables codes.
 
     start : int or str, optional
         Initial date, month or day first.
@@ -50,22 +38,16 @@ def get_series(
         Return only last n observations.
 
     municipalities : str, int, bool a list, optional
-        Municipalities' codes.
 
     states : str, int, bool or a list, optional
-        States' codes.
 
     macroregions : str, int, bool or a list, optional
-        Macroregions' codes.
 
     microregions : str, int, bool or a list, optional
-        Microregions' codes.
 
     mesoregions : str, int, bool or a list, optional
-        Mesoregions' codes.
 
     classifications : dict, int, str or list, optional
-        Classifications' / categories' codes.
 
     Returns
     -------
@@ -83,41 +65,31 @@ def get_series(
     2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
     """
     baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
+
     frequency = get_frequency(code)
-    dates = ibge_dates(start, end, last_n, frequency)
-    variables = ibge_variables(variables)
-    locations = ibge_locations(
+    dates = api.ibge_dates(start, end, last_n, frequency)
+    variables = api.ibge_variables(variables)
+    locations = api.ibge_locations(
         municipalities, states, macroregions, microregions, mesoregions, brazil
     )
-    classifications = ibge_classifications(classifications)
+    classifications = api.ibge_classifications(classifications)
+
     url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
-    return ibge_json_to_df(url, frequency)
+    return timeseries.ibge_json_to_df(url, frequency)
 
 
-def get_frequency(aggregate):
+def get_frequency(table):
+    """Get a timeseries time frequency."""
+    return list_periods(table).loc["frequencia", :].values
+
+
+def build_url(table=""):
+    return f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
+
+
+def get_metadata(table):
     """
-    Auxiliary function to get frequency of
-    a time series from IBGE's database.
-
-    This is needed because in case of a yearly time
-    series, there can't be months in the url.
-    """
-    return list_periods(aggregate).loc["frequencia", :].values
-
-
-def get_metadata(aggregate):
-    """
-    Get metadata of a time series from IBGE's database.
-
-    Parameters
-    ----------
-    aggregate : str
-        Aggregate's code.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with metadata values.
+    Get a IBGE table metadata.
 
     Examples
     --------
@@ -133,26 +105,26 @@ def get_metadata(aggregate):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{aggregate}/metadados"
-    return ibge_metadata_to_df(url)
+    url = build_url(table) + "/metadados"
+    return metadata.ibge_metadata_to_df(url)
 
 
 def search(*search, **searches):
     """
-    Function to list all aggregates in IBGE's database.
+    List all IBGE tables.
 
     Parameters
     ----------
     *search
-        Strings to search in aggregates' names.
+        Strings to search for in a table name.
 
     **searches
-        Strings to search in other columns.
+        Strings to search in other field name,
+        e.g. `pesquisa_nome`.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with an aggregate's metadata.
 
     Examples
     --------
@@ -164,34 +136,23 @@ def search(*search, **searches):
     3102    49  Folha de pagamento nominal por tipo de índice ...          DG  Pesquisa Industrial Mensal - Dados Gerais
     3103    52  Folha de pagamento nominal por trabalhador por...          DG  Pesquisa Industrial Mensal - Dados Gerais
     """
-    json = get_json("https://servicodados.ibge.gov.br/api/v3/agregados")
-    df = json_normalize(
+    url = build_url()
+    json = request.get_json(url)
+
+    df = utils.json_normalize(
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
-    if search or searches:
-        return search_df(df, search, searches).reset_index(drop=True)
-    return df
+
+    return utils.search_list(df, search, searches)
 
 
-def list_variables(aggregate, *search, **searches):
+def list_variables(table, *search, **searches):
     """
-    Function to list all variables associated with an aggregate.
-
-    Parameters
-    ----------
-    aggregate : int or str
-        Aggregate's code.
-
-    *search
-        Names to search for.
-
-    **searches
-        Strings to search in other columns.
+    List all variables in a table.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with all available variables of an aggregate.
 
     Examples
     --------
@@ -202,60 +163,41 @@ def list_variables(aggregate, *search, **searches):
     2  2265  IPCA - Variação acumulada em 12 meses       %
     3    66                     IPCA - Peso mensal       %
     """
-    baseurl = "https://servicodados.ibge.gov.br/api/v3"
-    query = f"/agregados/{aggregate}/variaveis/all?localidades=BR"
-    url = f"{baseurl}{query}"
-    json = get_json(url)
-    df = json_normalize(json).iloc[:, :3]
-    if search or searches:
-        return search_df(df, search, searches).reset_index(drop=True)
-    return df
+    url = build_url(table)
+    url += "/variaveis/all?localidades=BR"
+    json = request.get_json(url)
+
+    df = utils.json_normalize(json).iloc[:, :3]
+
+    return utils.search_list(df, search, searches)
 
 
-def list_locations(aggregate):
+def list_locations(table):
     """
-    Function to list locations of a given aggregate.
-
-    Parameters
-    ----------
-    aggregate : int or str
-        Aggregate's code.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the available locations for an aggregate.
+    List all locations available in a table.
 
     Examples
     --------
     >>> ibge.list_locations(1419)
-      codes  parameters
+      codes   locations
     0    N1      brazil
     1    N6        city
     2    N7  mesoregion
     """
-    baseurl = "https://servicodados.ibge.gov.br/api/v3"
-    query = f"/agregados/{aggregate}/metadados"
-    url = f"{baseurl}{query}"
-    codes = get_json(url)["nivelTerritorial"]["Administrativo"]
+    url = build_url(table) + "/metadados"
+    metadata = request.get_json(url)
+
+    codes = metadata["nivelTerritorial"]["Administrativo"]
+
     df = pd.DataFrame({"codes": codes})
-    df["parameters"] = [locations_dict.get(code) for code in df.codes]
-    return df.loc[df.parameters.notnull(), :]
+    df["locations"] = df.codes.map(api.locations_codes_to_names)
+
+    return df.loc[df.locations.notnull(), :]
 
 
-def list_periods(aggregate):
+def list_periods(table):
     """
-    Function to list periods of a given aggregate.
-
-    Parameters
-    ----------
-    aggregate : int or str
-        Aggregate's code.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the frequency, initial and final dates of an aggregate.
+    List a time series periodicity.
 
     Examples
     --------
@@ -265,29 +207,15 @@ def list_periods(aggregate):
     inicio      201201
     fim         201911
     """
-    periods = get_metadata(aggregate).loc["periodicidade"][0]
+    metadata = get_metadata(table)
+    periods = metadata.loc["periodicidade"][0]
+
     return pd.DataFrame(periods.values(), index=periods.keys(), columns=["valores"])
 
 
-def list_classifications(aggregate, *search, **searches):
+def list_classifications(table, *search, **searches):
     """
-    Function to list all classification of a given aggregate.
-
-    Parameters
-    ----------
-    aggregate : int or str
-        Aggregate's code.
-
-    *search
-        Strings to search in categories' names.
-
-    **searches
-        Strings to search in other columns.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the classifications and their categories.
+    List all classifications and categories in a table.
 
     Examples
     --------
@@ -299,34 +227,18 @@ def list_classifications(aggregate, *search, **searches):
     3  7172  1101.Cereais, leguminosas e oleaginosas    None     -1              315  Geral, grupo, subgrupo, item e subitem
     4  7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
     """
-    classifications = get_metadata(aggregate).loc["classificacoes"][0]
-    df = json_normalize(
+    classifications = get_metadata(table).loc["classificacoes"][0]
+
+    df = utils.json_normalize(
         classifications, "categorias", meta=["id", "nome"], meta_prefix="classificacao_"
     )
-    if search or searches:
-        return search_df(df, search, searches).reset_index(drop=True)
-    return df
+
+    return utils.search_list(df, search, searches)
 
 
 def list_states(*search, **searches):
     """
-    Function to list all states and their codes.
-
-    Parameters
-    ----------
-    aggregate : int or str
-        Aggregate's code.
-
-    *search
-        Strings to search in states' names.
-
-    **searches
-        Strings to search in other columns.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the states and their codes.
+    List all states
 
     Examples
     --------
@@ -338,25 +250,12 @@ def list_states(*search, **searches):
     3  14    RR   Roraima          1            N       Norte
     4  15    PA      Pará          1            N       Norte
     """
-    return list_regions_helper("estados", search, searches)
+    return lists.list_region("estados", search, searches)
 
 
 def list_macroregions(*search, **searches):
     """
-    Function to list all macroregions and their codes.
-
-    Parameters
-    ----------
-    *search
-        Strings to search in macroregions' names.
-
-    **searches
-        Strings to search in other columns.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the macroregions and their codes.
+    List all macroregions
 
     Examples
     --------
@@ -368,25 +267,12 @@ def list_macroregions(*search, **searches):
     3   4     S           Sul
     4   5    CO  Centro-Oeste
     """
-    return list_regions_helper("regioes", search, searches)
+    return lists.list_region("regioes", search, searches)
 
 
-def list_cities(*search, **searches):
+def list_municipalities(*search, **searches):
     """
-    Function to list all cities and their codes.
-
-    Parameters
-    ----------
-    *search
-        Strings to search in cities' names.
-
-    **searches
-        Strings to search in other columns.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the cities and their codes.
+    List all municipalities
 
     Examples
     --------
@@ -398,25 +284,12 @@ def list_cities(*search, **searches):
     3178  3300225               Areal            33005               Três Rios            3303    Centro Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
     3179  3300233  Armação dos Búzios            33010                   Lagos            3304             Baixadas     33       RJ  Rio de Janeiro          3           SE     Sudeste
     """
-    return list_regions_helper("municipios", search, searches)
+    return lists.list_region("municipios", search, searches)
 
 
 def list_microregions(*search, **searches):
     """
-    Function to list all microregions.
-
-    Parameters
-    ----------
-    *search
-        Strings to search in microregions' names.
-
-    **searches
-        Strings to search in other columns.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with metadata about the microregions.
+    List all microregions
 
     Examples
     --------
@@ -425,25 +298,12 @@ def list_microregions(*search, **searches):
     348  33018         Rio de Janeiro            3306  Metropolitana do Rio de Janeiro     33       RJ  Rio de Janeiro          3           SE     Sudeste
     352  35004  São José do Rio Preto            3501            São José do Rio Preto     35       SP       São Paulo          3           SE     Sudeste
     """
-    return list_regions_helper("microrregioes", search, searches)
+    return lists.list_region("microrregioes", search, searches)
 
 
 def list_mesoregions(*search, **searches):
     """
-    Function to list all mesoregions and their codes.
-
-    Parameters
-    ----------
-    *search
-        Strings to search in mesoregions' names.
-
-    **searches
-        Strings to search in other columns.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with metadata about the mesoregions.
+    List all mesoregions.
 
     Examples
     --------
@@ -455,7 +315,7 @@ def list_mesoregions(*search, **searches):
     3  1202       Vale do Acre     12       AC      Acre          1            N       Norte
     4  1301   Norte Amazonense     13       AM  Amazonas          1            N       Norte
     """
-    return list_regions_helper("mesorregioes", search, searches)
+    return lists.list_region("mesorregioes", search, searches)
 
 
 # vi: nowrap

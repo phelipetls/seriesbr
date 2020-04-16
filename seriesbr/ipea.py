@@ -1,94 +1,70 @@
-from pandas import concat, DataFrame
+import pandas as pd
 
-from .helpers.dates import parse_dates
-from .helpers.utils import collect_codes_and_names
-from .helpers.lists import list_metadata_helper
-from .helpers.response import ipea_json_to_df
-from .helpers.metadata import ipea_metadata_to_df
-from .helpers.searching import ipea_get_search_results
-from .helpers.ipea_metadata_list import ipea_metadata_list
-from .helpers.url import (
-    ipea_select,
-    ipea_filter,
-    ipea_date,
-)
+from seriesbr.helpers import api, utils, dates, timeseries, metadata, lists, search_results
 
 
-def get_serie(code, name=None, start=None, end=None):
+def get_series(*args, start=None, end=None, **kwargs):
     """
-    Auxiliary function to return a single time series
-    from IPEA database.
-    """
-    assert isinstance(code, str), "Not a valid code format."
-    baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    resource_path = f"ValoresSerie(SERCODIGO='{code}')"
-    select = "?$select=VALDATA,VALVALOR"
-    start, end = parse_dates(start, end, api="ipea")
-    dates = ipea_date(start, end)
-    url = f"{baseurl}{resource_path}{select}{dates}"
-    return ipea_json_to_df(url, code, name)
+    Get multiple IPEA timeseries.
 
+    *args : int, dict
+        Arbitrary number of timeseries codes.
 
-def get_series(*codes, start=None, end=None, **kwargs):
-    """
-    Get multiple series into a DataFrame.
+    start : str, optional
+        Initial date.
 
-    Parameters
-    ----------
-    codes : dict, str
-        Dictionary like {"name1": code1, "name2": code2}
-        or a bunch of code strings, e.g. code1, code2.
-
-    start : str
-        Initial date, month or day first.
-
-    end : str
-        End date, month or day first.
+    end : str, optional
+        Final date.
 
     **kwargs
-        Passed to pandas.concat.
+        Passed to pandas.concat
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with series' values.
-
-    Examples
-    --------
-    >>> ipea.get_series("BM12_TJOVER12", "CAGED12_SALDO12", start="2018", end="03-2018")
-                BM12_TJOVER12  CAGED12_SALDO12
-    Date
-    2018-01-01           0.58          77822.0
-    2018-02-01           0.47          61188.0
-    2018-03-01           0.53          56151.0
     """
-    codes, names = collect_codes_and_names(*codes)
-    df = concat(
-        (get_serie(code, name, start, end) for code, name in zip(codes, names)),
+    codes_and_labels = utils.collect(*args)
+
+    return pd.concat(
+        (
+            get_timeseries(code, label, start=start, end=end)
+            for label, code in codes_and_labels.items()
+        ),
         axis="columns",
         sort=True,
         **kwargs,
     )
-    return df
+
+
+def get_timeseries(code, label=None, start=None, end=None):
+    """Return a single IPEA timeseries"""
+    assert isinstance(code, str), "Not a valid code format."
+
+    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
+    url += f"ValoresSerie(SERCODIGO='{code}')"
+    url += "?$select=VALDATA,VALVALOR"
+
+    start, end = dates.parse_dates(start, end, api="ipea")
+    url += api.ipea_date(start, end)
+
+    return timeseries.ipea_json_to_df(url, code, label)
 
 
 def search(*SERNOME, **metadata):
     """
-    Function to search in IPEA's database.
+    Search IPEA database.
 
     Parameters
     ----------
     *SERNOME
-        String(s) to look up for in a series' name.
+        Strings to search for in a timeseries name.
 
     **metadata
-        Keyword arguments where parameter is a valid metadata
-        and value a str or list of str.
+        Strings to search for in metadata.
 
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with the search results.
 
     Examples
     --------
@@ -100,18 +76,17 @@ def search(*SERNOME, **metadata):
     3    BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     4  BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     """
-    baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    resource_path = "Metadados"
-    select_query = ipea_select(metadata)
-    filter_query = ipea_filter(SERNOME, metadata)
-    url = f"{baseurl}{resource_path}{select_query}{filter_query}"
-    return ipea_get_search_results(url)
+    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
+    url += "Metadados"
+    url += api.ipea_select(metadata)
+    url += api.ipea_filter(SERNOME, metadata)
+
+    return search_results.ipea_get_search_results(url)
 
 
 def get_metadata(code):
     """
-    Get metadata of a series specified
-    by the a code.
+    Get metadata of a timeseries.
 
     Parameters
     ----------
@@ -120,7 +95,6 @@ def get_metadata(code):
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with series' metadata.
 
     Examples
     --------
@@ -132,10 +106,12 @@ def get_metadata(code):
     SERATUALIZACAO                      2019-12-17T05:06:00.793-02:00
     BASNOME                                            Macroeconômico
     """
-    baseurl = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    resource_path = f"Metadados('{code}')"
-    url = f"{baseurl}{resource_path}"
-    return ipea_metadata_to_df(url)
+    url = build_metadata_url(code)
+    return metadata.ipea_metadata_to_df(url)
+
+
+def build_metadata_url(code):
+    return f"http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{code}')"
 
 
 def list_themes():
@@ -159,7 +135,7 @@ def list_themes():
     3           7            NaN                   Câmbio
     4           5            NaN        Comércio exterior
     """
-    return list_metadata_helper("Temas")
+    return lists.list_metadata("Temas")
 
 
 def list_countries():
@@ -170,8 +146,6 @@ def list_countries():
     Returns
     -------
     pandas.DataFrame
-        A DataFrame with all available countries
-        in IPEA's database.
 
     Examples
     --------
@@ -183,7 +157,7 @@ def list_countries():
     3       AGO          Angola
     4       SAU  Arábia Saudita
     """
-    return list_metadata_helper("Paises")
+    return lists.list_metadata("Paises")
 
 
 def list_metadata():
@@ -204,8 +178,8 @@ def list_metadata():
     UNINOME    Unit of measurement
     BASNOME           Basis's name
     """
-    return DataFrame.from_dict(
-        ipea_metadata_list, orient="index", columns=["Description"]
+    return pd.DataFrame.from_dict(
+        metadata.ipea_metadata_list, orient="index", columns=["Description"]
     )
 
 

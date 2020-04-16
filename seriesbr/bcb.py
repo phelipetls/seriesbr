@@ -1,21 +1,49 @@
-from pandas import concat
+import pandas as pd
 
-from .helpers.dates import parse_dates
-from .helpers.utils import collect_codes_and_names
-from .helpers.response import bcb_json_to_df
-from .helpers.searching import bcb_get_search_results
-from .helpers.metadata import bcb_metadata_to_df
-from .helpers.generators import concatenate_series
+from seriesbr.helpers import utils, timeseries, metadata, dates, search_results
 
 
-@concatenate_series
-def get_series(code, name=None, start=None, end=None, last_n=None):
+def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
-    Auxiliary function to return a single time series
-    from BCB database.
+    Get multiple BCB timeseries.
+
+    *args : int, dict
+        Arbitrary number of timeseries codes.
+
+    start : str, optional
+        Initial date.
+
+    end : str, optional
+        Final date.
+
+    last_n : int, optional
+        Number of last observations.
+
+    **kwargs
+        Passed to pandas.concat
+
+    Returns
+    -------
+    pandas.DataFrame
     """
+    codes_and_labels = utils.collect(*args)
+
+    return pd.concat(
+        (
+            get_timeseries(code, label, start=start, end=end, last_n=last_n)
+            for label, code in codes_and_labels.items()
+        ),
+        axis="columns",
+        sort=True,
+        **kwargs,
+    )
+
+
+def get_timeseries(code, name=None, start=None, end=None, last_n=None):
+    """Return a single BCB timeseries"""
     url = build_url(code, start, end, last_n)
-    return bcb_json_to_df(url, code, name)
+
+    return timeseries.bcb_json_to_df(url, code, name)
 
 
 def build_url(code, start=None, end=None, last_n=None):
@@ -29,8 +57,10 @@ def build_url(code, start=None, end=None, last_n=None):
         return url
 
     url += "?format=json"
-    start, end = parse_dates(start, end, api="bcb")
+
+    start, end = dates.parse_dates(start, end, api="bcb")
     url += f"&dataInicial={start}&dataFinal={end}"
+
     return url
 
 
@@ -64,8 +94,8 @@ def search(*strings, rows=10, start=1):
     3      22041  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     """
-    url = build_search_url(search, rows, start)
-    return bcb_get_search_results(url)
+    url = build_search_url(*strings, rows=rows, start=start)
+    return search_results.bcb_get_search_results(url)
 
 
 def build_search_url(*strings, rows=10, start=1):
@@ -76,7 +106,7 @@ def build_search_url(*strings, rows=10, start=1):
 
     other_params = ""
     if others:
-        joined_params = "+".join(others)
+        joined_params = "+".join([str(s) for s in others])
         other_params = f"&fq={joined_params}"
 
     return f"{url}{params}{other_params}"
@@ -107,7 +137,7 @@ def get_metadata(code):
     vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
     url = build_metadata_url(code)
-    return bcb_metadata_to_df(url)
+    return metadata.bcb_metadata_to_df(url)
 
 
 def build_metadata_url(code):

@@ -2,26 +2,27 @@ import pandas as pd
 from .request import get_json
 
 
-def bcb_json_to_df(url, code, name):
-    """
-    Parse a timeseries returned by BCB API
-    into a DataFrame.
-    """
+def bcb_json_to_df(url, code, label):
+    """Convert a BCB timeseries in JSON format into a DataFrame"""
+
     json = get_json(url)
     df = pd.DataFrame(json)
+
+    # this columns should be float
     df["valor"] = df["valor"].astype("float64")
+
+    # properly set a datetime index
     df = df.set_index("data")
     df = df.rename_axis("Date")
     df.index = pd.to_datetime(df.index, format="%d/%m/%Y")
-    df.columns = [name if name else code]
+
+    df.columns = [label if label else code]
     return df
 
 
-def ipea_json_to_df(url, code, name):
-    """
-    Parse a timeseries returned by IPEA API
-    into a DataFrame.
-    """
+def ipea_json_to_df(url, code, label):
+    """Convert a IPEA timeseries in JSON format into a DataFrame"""
+
     json = get_json(url)["value"]
     df = pd.DataFrame(json)
 
@@ -33,7 +34,7 @@ def ipea_json_to_df(url, code, name):
         df.index = pd.to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
         # casting numerical values
         df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
-        df.columns = [name if name else code]
+        df.columns = [label if label else code]
     except KeyError:
         return
 
@@ -41,13 +42,13 @@ def ipea_json_to_df(url, code, name):
 
 
 def ibge_json_to_df(url, freq="mensal"):
-    """
-    Parse a IBGE table/aggregate in JSON format
-    into a DataFrame.
-    """
+    """Convert a BCB timeseries in JSON format into a DataFrame"""
+
     json = get_json(url)
-    # ignore first element as it as no real data
+    # first element contains only metadata
+    # let's ignore it
     df = pd.DataFrame(json[1:])
+
     # getting columns names
     df.columns = json[0].values()
 
@@ -61,21 +62,27 @@ def ibge_json_to_df(url, freq="mensal"):
     # handling numerical values
     df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
 
-    # getting location code name column
+    # getting the specific location column name
     location_key = json[0]["D1C"]
 
-    # dropping less useful columns
-    # i.e., any columns which represents code,
-    # except for the location and variable code,
-    # and a bunch of other columns
-    df = df.drop(
+    # drop these columns
+    to_drop = ["Mês", "Unidade de Medida", "Brasil", "Nível Territorial"]
+
+    # also every columns that is a code
+    is_code = lambda column: column.endswith("(Código)")  # noqa: E731
+
+    # except for the location and variable code
+    is_location_code = lambda column: column == location_key  # noqa: E731
+    is_variable_code = lambda column: column == "Variável (Código)"  # noqa: E731
+
+    to_drop.extend(
         [
             c
             for c in df.columns
-            if c.endswith("(Código)") and c not in [location_key, "Variável (Código)"]
+            if is_code(c) and not (is_location_code(c) or is_variable_code(c))
         ]
-        + ["Mês", "Unidade de Medida", "Brasil", "Nível Territorial"],
-        axis="columns",
-        errors="ignore",
     )
+
+    df = df.drop(to_drop, axis="columns", errors="ignore")
+
     return df

@@ -5,10 +5,7 @@ metadata_list = ["codigo_sgs", "title", "periodicidade", "unidade_medida"]
 
 
 def bcb_get_search_results(url):
-    """
-    Request a BCB search result (CKAN API) and parse it into
-    a DataFrame. Get only the columns in `metadata_list`.
-    """
+    """Search BCB database through CKAN API"""
     json = get_json(url)
     search_results = json["result"]["results"]
     assert search_results, "Nothing was found."
@@ -16,10 +13,7 @@ def bcb_get_search_results(url):
 
 
 def ipea_get_search_results(url):
-    """
-    Request a IPEA search result and parse it into a
-    DataFrame.
-    """
+    """Search IPEA database"""
     json = get_json(url)
     search_results = json["value"]
     assert search_results, "Nothing was found."

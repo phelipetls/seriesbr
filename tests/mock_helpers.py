@@ -1,7 +1,7 @@
 import json
+import datetime
 
 from pathlib import Path
-from unittest.mock import patch
 
 
 def get_sample_json(filename):
@@ -10,5 +10,5 @@ def get_sample_json(filename):
         return json.load(f)
 
 
-def mock_json(path, json):
-    return patch(path, return_value=json)
+def mocked_get_today_date():
+    return datetime.datetime(2019, 12, 2)

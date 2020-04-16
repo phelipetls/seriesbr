@@ -8,7 +8,7 @@ slash_formats = year_format + month_year_format + day_month_year_format
 dash_formats = [fmt.replace("/", "-") for fmt in slash_formats]
 blank_formats = [fmt.replace("/", "") for fmt in slash_formats]
 
-allowed_fmts = slash_formats + dash_formats + blank_formats
+fmts = slash_formats + dash_formats + blank_formats
 
 
 def parse_date(date_str, api, start=True):
@@ -55,7 +55,8 @@ def parse_date(date_str, api, start=True):
     '201701'
     """
     assert isinstance(date_str, str), "You didn't give a string as a date."
-    for fmt in allowed_fmts:
+
+    for fmt in fmts:
         try:
             date = datetime.datetime.strptime(date_str, fmt)
             if not start:
@@ -67,9 +68,10 @@ def parse_date(date_str, api, start=True):
                     month=12 if fmt in year_format else date.month,
                     day=last_day_of_month(date) if fmt.find("%d") == -1 else date.day,
                 )
-            return api_date_format_of(date, api)
+            return date_format(date, api)
         except ValueError:
             continue
+
     raise ValueError("Not a valid date format.")
 
 
@@ -85,15 +87,15 @@ def parse_dates(start, end, api):
     if start:
         start = parse_date(start, api, start=True)
     else:
-        start = api_date_format_of(very_old_date(), api)
+        start = date_format(get_old_date(), api)
     if end:
         end = parse_date(end, api, start=False)
     else:
-        end = api_date_format_of(today_date(), api)
+        end = date_format(get_today_date(), api)
     return start, end
 
 
-def api_date_format_of(date, api):
+def date_format(date, api):
     """
     Auxiliary function to convert datetime.datetime
     object to string compatible with a given API.
@@ -117,26 +119,11 @@ def last_day_of_month(date):
     return (next_month - datetime.timedelta(days=next_month.day)).day
 
 
-def very_old_date():
-    """
-    Returns very old date (01/01/1900).
-
-    Returns
-    -------
-    datetime.datetime
-    """
+def get_old_date():
     return datetime.datetime(1900, 1, 1)
 
 
-def today_date():
-    """
-    Returns today's date.
-
-    Returns
-    -------
-    datetime.datetime
-        Today's date.
-    """
+def get_today_date():
     return datetime.datetime.today()
 
 
@@ -145,36 +132,15 @@ def month_to_quarter(date, fmt=None):
     Convert month to quarter, i.e.,
     12 -> 4, 6 -> 2, 7 -> 3 etc.
 
-    Parameters
-    ----------
-    date : datetime.datetime
-
-    Returns
-    -------
-    datetime.datetime
-
     Examples
     --------
-        >>> dates.month_to_quarter(datetime.datetime(2019, 12, 1))
-        datetime.datetime(2019, 4, 1, 0, 0)
+    >>> dates.month_to_quarter(datetime.datetime(2019, 12, 1))
+    datetime.datetime(2019, 4, 1, 0, 0)
     """
     if isinstance(date, str) and fmt:
         date = datetime.datetime.strptime(date, fmt)
-    quarter = divmod(date.month, 3)[0] + bool(divmod(date.month, 3)[1])
+
+    floor_division, remainder = divmod(date.month, 3)
+    quarter = floor_division + bool(remainder)
+
     return date.replace(month=quarter)
-
-
-def check_if_quarter(dates):
-    """
-    Check if month of a datetime
-    object is less than 4, i.e., if
-    it is a quarter.
-    """
-    for date in dates:
-        date_obj = datetime.datetime.strptime(date, "%Y%m")
-        if date_obj.month > 4:
-            error_msg = f"This is a quarterly time series."
-            error_msg += (
-                f" {date_obj.month} is not a quarter, choose a number between 1 and 4."
-            )
-            raise ValueError(error_msg)

@@ -1,120 +1,87 @@
-import os
-import sys
 import unittest
-import datetime
 
-from unittest.mock import patch
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from seriesbr import ipea  # noqa: E402
+from seriesbr.helpers import api
 
 
-def mocked_json_to_df(url, code, name):
-    return url
+class TestIpeaSelect(unittest.TestCase):
+    default = "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
+
+    def test_empty(self):
+        test = api.ipea_select()
+        self.assertEqual(test, self.default)
+
+    def test_included(self):
+        """Should have no effect since it's already there"""
+        test = api.ipea_select(["SERCODIGO", "SERNOME"])
+        self.assertEqual(test, self.default)
+
+    def test_not_included(self):
+        test = api.ipea_select(["FNTNOME"])
+        expected = ",FNTNOME"
+        self.assertEqual(test, self.default + expected)
 
 
-def mocked_today_date():
-    return datetime.datetime(2019, 12, 2)
-
-
-BASEURL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='BM12_CRLIN12')?$select=VALDATA,VALVALOR"
-
-
-@patch("seriesbr.ipea.ipea_json_to_df", mocked_json_to_df)
-@patch("seriesbr.helpers.dates.today_date", mocked_today_date)
-class IPEAtest(unittest.TestCase):
-
-    maxDiff = None
-
-    def test_url_no_dates(self):
-        test = ipea.get_serie("BM12_CRLIN12")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 1900-01-01T00:00:00-00:00 and VALDATA le 2019-12-02T00:00:00-00:00"  # noqa: W503
-        )
+class TestIpeaFilter(unittest.TestCase):
+    def test_filter_name(self):
+        test = api.ipea_filter("selic")
+        expected = "&$filter=contains(SERNOME,'selic')"
         self.assertEqual(test, expected)
 
-    # Test only with start dates
-
-    def test_url_start_dates_complete_dates(self):
-        test = ipea.get_serie("BM12_CRLIN12", start="01-02-2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 2019-02-01T00:00:00-00:00 and VALDATA le 2019-12-02T00:00:00-00:00"  # noqa: W503
-        )
+    def test_filter_multiple_names(self):
+        test = api.ipea_filter(["selic", "pib"])
+        expected = "&$filter=(contains(SERNOME,'selic') and contains(SERNOME,'pib'))"
         self.assertEqual(test, expected)
 
-    def test_url_start_dates_month_year(self):
-        test = ipea.get_serie("BM12_CRLIN12", start="02/2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 2019-02-01T00:00:00-00:00 and VALDATA le 2019-12-02T00:00:00-00:00"  # noqa: W503
-        )
+    def test_name_and_metadata(self):
+        test = api.ipea_filter("selic", {"FNTNOME": "fonte"})
+        expected = "&$filter=contains(SERNOME,'selic') and contains(FNTNOME,'fonte')"
         self.assertEqual(test, expected)
 
-    def test_url_start_dates_year_only(self):
-        test = ipea.get_serie("BM12_CRLIN12", start="2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-12-02T00:00:00-00:00"  # noqa: W503
-        )
+    def test_string_metadata(self):
+        test = api.ipea_filter(metadata={"SERSTATUS": "A"})
+        expected = "&$filter=SERSTATUS eq 'A'"
         self.assertEqual(test, expected)
 
-    # Test only with end dates
-
-    def test_url_end_dates_complete_dates(self):
-        test = ipea.get_serie("BM12_CRLIN12", end="01022019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 1900-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00"  # noqa: W503
-        )
+    def test_numeric_metadata(self):
+        test = api.ipea_filter(metadata={"SERNUMERICA": 10})
+        expected = "&$filter=SERNUMERICA eq 10"
         self.assertEqual(test, expected)
 
-    def test_url_end_dates_month_year(self):
-        test = ipea.get_serie("BM12_CRLIN12", end="02-2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 1900-01-01T00:00:00-00:00 and VALDATA le 2019-02-28T00:00:00-00:00"  # noqa: W503
-        )
+    def test_name_and_multiple_metadata(self):
+        test = api.ipea_filter("selic", {"PERNOME": ["mensal", "trimestral"]})
+        expected = "&$filter=contains(SERNOME,'selic') and (contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
         self.assertEqual(test, expected)
 
-    def test_url_end_dates_year_only(self):
-        test = ipea.get_serie("BM12_CRLIN12", end="2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 1900-01-01T00:00:00-00:00 and VALDATA le 2019-12-31T00:00:00-00:00"  # noqa: W503
-        )
+    def test_multiple_metadata(self):
+        test = api.ipea_filter(metadata={"PERNOME": ["mensal", "trimestral"]})
+        expected = "&$filter=(contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
         self.assertEqual(test, expected)
 
-    # Test with both start and end dates
+    def test_raises_if_invalid_field(self):
+        with self.assertRaises(ValueError):
+            api.ipea_filter("", {"INVALID_FILTER": "INVALID"})
 
-    def test_url_start_and_end_dates_complete_dates(self):
-        test = ipea.get_serie("BM12_CRLIN12", start="04-05-2016", end="01-02-2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 2016-05-04T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00"  # noqa: W503
-        )
+
+class TestIpeaDates(unittest.TestCase):
+    def test_start(self):
+        test = api.ipea_date(start="2019-01-01T00:00:00-00:00")
+        expected = "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00"
         self.assertEqual(test, expected)
 
-    def test_url_start_and_end_dates_month_year(self):
-        test = ipea.get_serie("BM12_CRLIN12", start="052016", end="022019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 2016-05-01T00:00:00-00:00 and VALDATA le 2019-02-28T00:00:00-00:00"  # noqa: W503
-        )
+    def test_end(self):
+        test = api.ipea_date(end="2019-01-01T00:00:00-00:00")
+        expected = "&$filter=VALDATA le 2019-01-01T00:00:00-00:00"
         self.assertEqual(test, expected)
 
-    def test_url_start_and_end_dates_year_only(self):
-        test = ipea.get_serie("BM12_CRLIN12", start="2016", end="2019")
-        expected = (
-            BASEURL
-            + "&$filter=VALDATA ge 2016-01-01T00:00:00-00:00 and VALDATA le 2019-12-31T00:00:00-00:00"  # noqa: W503
+    def test_start_and_end(self):
+        test = api.ipea_date(
+            start="2019-01-01T00:00:00-00:00", end="2019-01-01T00:00:00-00:00"
         )
+        expected = "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-01-01T00:00:00-00:00"
         self.assertEqual(test, expected)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(failfast=True)
 
 # vi: nowrap
