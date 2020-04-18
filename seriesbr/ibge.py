@@ -79,11 +79,12 @@ def get_series(
 
 
 def get_frequency(table):
-    """Get a timeseries time frequency."""
+    """Get a table time frequency (periodicity)."""
     return list_periods(table).loc["frequencia", :].values
 
 
 def build_url(table=""):
+    """Return the url for a IBGE table."""
     return f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
 
 

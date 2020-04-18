@@ -37,7 +37,7 @@ def get_series(*args, start=None, end=None, **kwargs):
 
 
 def get_timeseries(code, label=None, start=None, end=None):
-    """Return a single IPEA timeseries"""
+    """Return a single IPEA timeseries."""
     assert isinstance(code, str), "Not a valid code format."
 
     url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"

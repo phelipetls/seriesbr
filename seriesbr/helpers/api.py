@@ -123,7 +123,7 @@ def ipea_filter(names=None, metadata={}):
 
 
 def raise_if_invalid_metadata(metadata):
-    """Friendly error message in case of an invalid metadata"""
+    """Friendly error message in case of an invalid metadata."""
     invalid_metadata = []
     for m in metadata:
         if m not in ipea_metadata_list:

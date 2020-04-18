@@ -4,7 +4,7 @@ from .utils import clean_json, search_list
 
 
 def list_region(region, search, searches):
-    """Help list IBGE metadata about a geographic region"""
+    """Help list IBGE metadata about a geographic region."""
 
     url = f"https://servicodados.ibge.gov.br/api/v1/localidades/{region}"
 
@@ -15,7 +15,7 @@ def list_region(region, search, searches):
 
 
 def list_metadata(resource_path):
-    """Helper function to list IPEA database information"""
+    """Helper function to list IPEA database information."""
 
     url = "http://www.ipeadata.gov.br/api/odata4/"
     url += f"{resource_path}"
