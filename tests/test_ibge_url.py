@@ -107,7 +107,6 @@ class TestIbgeLocations(unittest.TestCase):
         expected = "&localidades=N3[2,3,4]|N6[1,2]"
         self.assertEqual(test, expected)
 
-    @unittest.skipIf(sys.version_info.minor < 7, "Unpredictable order of dictionaries")
     def test_multiple_args_mixed_types(self):
         test = ibge_locations(states=True, mesoregions=4, municipalities=[1, 2])
         expected = "&localidades=N3|N7[4]|N6[1,2]"
