@@ -1,8 +1,8 @@
 import sys
 import unittest
-import mock_helpers
 
 from unittest.mock import patch
+from mock_helpers import mocked_get_today_date
 from seriesbr.helpers.api import (
     ibge_dates,
     ibge_classifications,
@@ -11,7 +11,7 @@ from seriesbr.helpers.api import (
 )
 
 
-@patch("seriesbr.helpers.dates.get_today_date", mock_helpers.mocked_get_today_date)
+@patch("seriesbr.helpers.dates.get_today_date", mocked_get_today_date)
 class TestIbgeDates(unittest.TestCase):
     def test_last_n(self):
         test = ibge_dates(last_n=5)

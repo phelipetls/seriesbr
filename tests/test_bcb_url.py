@@ -1,14 +1,14 @@
 import unittest
-import mock_helpers
 
 from seriesbr import bcb
 from unittest.mock import patch
+from mock_helpers import mocked_get_today_date
 
 
 URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?format=json"
 
 
-@patch("seriesbr.helpers.dates.get_today_date", mock_helpers.mocked_get_today_date)
+@patch("seriesbr.helpers.dates.get_today_date", mocked_get_today_date)
 class TestBcbUrl(unittest.TestCase):
     """Test Bcb url builder to get a time series"""
 

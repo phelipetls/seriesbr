@@ -1,12 +1,12 @@
 import unittest
-import mock_helpers
 import pandas as pd
 
 from seriesbr import ipea
 from unittest.mock import patch
 from seriesbr.helpers import api
+from mock_helpers import get_sample_json
 
-settings = {"return_value": mock_helpers.get_sample_json("ipea_json.json")}
+settings = {"return_value": get_sample_json("ipea_json.json")}
 
 
 @patch("seriesbr.helpers.timeseries.get_json", **settings)
@@ -24,7 +24,7 @@ class TestIpeaJsonParser(unittest.TestCase):
         self.assertListEqual(df.columns.tolist(), ["Selic"])
 
 
-settings = {"return_value": mock_helpers.get_sample_json("ipea_metadata.json")}
+settings = {"return_value": get_sample_json("ipea_metadata.json")}
 
 
 class TestIpeaGetMetadata(unittest.TestCase):
@@ -43,7 +43,7 @@ class TestIpeaGetMetadata(unittest.TestCase):
         self.assertFalse(df.empty)
 
 
-settings = {"return_value": mock_helpers.get_sample_json("ipea_search_results.json")}
+settings = {"return_value": get_sample_json("ipea_search_results.json")}
 
 
 class TestIpeaSearch(unittest.TestCase):
@@ -97,7 +97,7 @@ class TestIpeaListFunctions(unittest.TestCase):
     """Test Ipea list functions dataframe converters"""
 
     def test_list_themes(self, m):
-        m.return_value = mock_helpers.get_sample_json("ipea_temas.json")
+        m.return_value = get_sample_json("ipea_temas.json")
 
         columns = ipea.list_themes().columns.tolist()
         expected_columns = ["TEMCODIGO", "TEMCODIGO_PAI", "TEMNOME"]
@@ -105,7 +105,7 @@ class TestIpeaListFunctions(unittest.TestCase):
         self.assertListEqual(columns, expected_columns)
 
     def test_list_countries(self, m):
-        m.return_value = mock_helpers.get_sample_json("ipea_paises.json")
+        m.return_value = get_sample_json("ipea_paises.json")
 
         columns = ipea.list_countries().columns.tolist()
         expected_columns = ["PAICODIGO", "PAINOME"]

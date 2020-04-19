@@ -1,11 +1,11 @@
 import unittest
 import pandas as pd
-import mock_helpers
 
 from seriesbr import bcb
 from unittest.mock import patch
+from mock_helpers import get_sample_json
 
-settings = {"return_value": mock_helpers.get_sample_json("bcb_json.json")}
+settings = {"return_value": get_sample_json("bcb_json.json")}
 
 
 @patch("seriesbr.helpers.timeseries.get_json", **settings)
@@ -21,7 +21,7 @@ class TestBcbJsonParser(unittest.TestCase):
         self.assertListEqual(df.columns.tolist(), ["Selic"])
 
 
-settings = {"return_value": mock_helpers.get_sample_json("bcb_metadata.json")}
+settings = {"return_value": get_sample_json("bcb_metadata.json")}
 
 
 class TestBcbGetMetadata(unittest.TestCase):
@@ -44,7 +44,7 @@ class TestBcbGetMetadata(unittest.TestCase):
         self.assertFalse(df.empty)
 
 
-settings = {"return_value": mock_helpers.get_sample_json("bcb_search_results.json")}
+settings = {"return_value": get_sample_json("bcb_search_results.json")}
 
 
 class TestBCBSearch(unittest.TestCase):
