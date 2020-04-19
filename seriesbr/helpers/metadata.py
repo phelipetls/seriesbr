@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from .request import get_json
+from seriesbr.helpers.request import get_json
 
 
 def bcb_metadata_to_df(url):

@@ -1,9 +1,9 @@
 import re
 
-from ..helpers.utils import cat, is_iterable
-from ..helpers.odata import equal, contains
-from ..helpers.dates import month_to_quarter, parse_dates
-from ..helpers.metadata import ipea_metadata_list
+from seriesbr.helpers.utils import cat, is_iterable
+from seriesbr.helpers.odata import equal, contains
+from seriesbr.helpers.dates import month_to_quarter, parse_dates
+from seriesbr.helpers.metadata import ipea_metadata_list
 
 
 def ipea_date(start=None, end=None):

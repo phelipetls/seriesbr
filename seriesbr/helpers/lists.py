@@ -1,6 +1,6 @@
 from pandas import DataFrame
-from .request import get_json
-from .utils import clean_json, search_list
+from seriesbr.helpers.request import get_json
+from seriesbr.helpers.utils import clean_json, search_list
 
 
 def list_region(region, search, searches):

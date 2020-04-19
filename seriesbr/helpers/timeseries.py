@@ -1,5 +1,5 @@
 import pandas as pd
-from .request import get_json
+from seriesbr.helpers.request import get_json
 
 
 def bcb_json_to_df(url, code, label):
