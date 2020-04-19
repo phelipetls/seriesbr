@@ -70,7 +70,12 @@ def get_series(
     dates = api.ibge_dates(start, end, last_n, frequency)
     variables = api.ibge_variables(variables)
     locations = api.ibge_locations(
-        municipalities, states, macroregions, microregions, mesoregions, brazil
+        municipalities=municipalities,
+        states=states,
+        macroregions=macroregions,
+        microregions=microregions,
+        mesoregions=mesoregions,
+        brazil=brazil,
     )
     classifications = api.ibge_classifications(classifications)
 

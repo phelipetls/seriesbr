@@ -284,26 +284,22 @@ locations_names_to_codes = {
 }
 
 
-def ibge_locations(
-    municipalities=None,
-    states=None,
-    macroregions=None,
-    microregions=None,
-    mesoregions=None,
-    brazil=None,
-):
+def ibge_locations(**kwargs):
     """
-    Auxiliary function to filter an IBGE's
-    aggregate by variables.
+    Help filter IBGE table by location.
 
     Parameters
     ----------
-    municipalities
-    states
-    macroregions
-    microregions
-    mesoregions
-    brazil
+    **kwargs
+        Keyword arguments, where keys must be one
+        of these:
+            - municipalities
+            - states
+            - macroregions
+            - mesoregions
+            - microregions
+            - brazil
+        And values should an int or a list of ints.
 
     Returns
     -------
@@ -323,16 +319,13 @@ def ibge_locations(
     """
     # NOTE: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
 
-    # gather all local arguments
-    locations = locals()
     prefix = "&localidades="
 
-    # if every location is None
-    if all([code is None for code in locations.values()]):
+    if not kwargs or all([v is None for v in kwargs.values()]):
         return prefix + "BR"
 
     query = []
-    for name, code in locations.items():
+    for name, code in kwargs.items():
         location_name = locations_names_to_codes.get(name)
 
         if name == "brazil" and code:

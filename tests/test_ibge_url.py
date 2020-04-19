@@ -72,6 +72,11 @@ class TestIbgeLocations(unittest.TestCase):
         expected = "&localidades=BR"
         self.assertEqual(test, expected)
 
+    def test_dict_with_nones(self):
+        test = ibge_locations(cities=None, municipalities=None)
+        expected = "&localidades=BR"
+        self.assertEqual(test, expected)
+
     def test_brazil_non_false(self):
         test = ibge_locations(brazil="yes")
         expected = "&localidades=BR"
@@ -105,7 +110,7 @@ class TestIbgeLocations(unittest.TestCase):
     @unittest.skipIf(sys.version_info.minor < 7, "Unpredictable order of dictionaries")
     def test_multiple_args_mixed_types(self):
         test = ibge_locations(states=True, mesoregions=4, municipalities=[1, 2])
-        expected = "&localidades=N3[2,3,4]|N7[4]|N6[1,2]"
+        expected = "&localidades=N3|N7[4]|N6[1,2]"
         self.assertEqual(test, expected)
 
 
