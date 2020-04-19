@@ -13,15 +13,14 @@ fmts = slash_formats + dash_formats + blank_formats
 
 def parse_date(date_str, api, start=True):
     """
-    Auxiliary function to convert different dates strings
-    to the format required by an API.
+    Convert different dates strings to the format required by an API.
 
     Also, when it is an end date, if day is unspecificed,
     the day will be the last day of the month.
     Similarly, if month is not specified, the month must be 12.
 
     Note that the date string is assumed to start with day
-    or month. Otherwise, unexpected results can arise.
+    or month, to avoid ambiguity.
 
     Parameters
     ----------
@@ -77,7 +76,7 @@ def parse_date(date_str, api, start=True):
 
 def parse_dates(start, end, api):
     """
-    Auxiliary function to call dates functions.
+    Call date parsers.
 
     Returns
     -------
@@ -88,17 +87,19 @@ def parse_dates(start, end, api):
         start = parse_date(start, api, start=True)
     else:
         start = date_format(get_old_date(), api)
+
     if end:
         end = parse_date(end, api, start=False)
     else:
         end = date_format(get_today_date(), api)
+
     return start, end
 
 
 def date_format(date, api):
     """
-    Auxiliary function to convert datetime.datetime
-    object to string compatible with a given API.
+    Convert datetime.datetime object to string
+    compatible with a given API.
     """
     if api == "ipea":
         return date.strftime("%Y-%m-%dT00:00:00") + "-00:00"
@@ -110,8 +111,7 @@ def date_format(date, api):
 
 def last_day_of_month(date):
     """
-    Auxiliary function that returns the last day of the month,
-    if no day is specified.
+    Return the last day of the month.
 
     See: https://stackoverflow.com/questions/42950/get-last-day-of-the-month
     """
@@ -120,10 +120,12 @@ def last_day_of_month(date):
 
 
 def get_old_date():
+    """Return an arbitrary old date 01/01/1900."""
     return datetime.datetime(1900, 1, 1)
 
 
 def get_today_date():
+    """Return today's date."""
     return datetime.datetime.today()
 
 

@@ -127,12 +127,14 @@ def search_df(df, name, others=[]):
 
 
 def search_list(df, search, searches):
+    """Just search if a search parameter was provided."""
     if search or searches:
         return search_df(df, search, searches).reset_index(drop=True)
     return df
 
 
 def build_regex(strings):
+    """Build a regex to use with DataFrame query method."""
     # (?iu) sets unicode and ignore case flags
     flags = r"(?iu)"
 
