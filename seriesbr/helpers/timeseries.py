@@ -3,7 +3,7 @@ from .request import get_json
 
 
 def bcb_json_to_df(url, code, label):
-    """Convert a BCB timeseries in JSON format into a DataFrame."""
+    """Convert a BCB time series in JSON format into a DataFrame."""
 
     json = get_json(url)
     df = pd.DataFrame(json)
@@ -21,7 +21,7 @@ def bcb_json_to_df(url, code, label):
 
 
 def ipea_json_to_df(url, code, label):
-    """Convert a IPEA timeseries in JSON format into a DataFrame."""
+    """Convert a IPEA time series in JSON format into a DataFrame."""
 
     json = get_json(url)["value"]
     df = pd.DataFrame(json)
@@ -42,7 +42,7 @@ def ipea_json_to_df(url, code, label):
 
 
 def ibge_json_to_df(url, freq="mensal"):
-    """Convert a BCB timeseries in JSON format into a DataFrame."""
+    """Convert a BCB time series in JSON format into a DataFrame."""
 
     json = get_json(url)
     # first element contains only metadata

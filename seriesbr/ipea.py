@@ -5,13 +5,13 @@ from seriesbr.helpers import api, utils, dates, timeseries, metadata, lists, sea
 
 def get_series(*args, start=None, end=None, **kwargs):
     """
-    Get multiple IPEA timeseries.
+    Get multiple IPEA time series.
 
     Parameters
     ----------
 
     *args : int, dict
-        Arbitrary number of timeseries codes.
+        Arbitrary number of time series codes.
 
     start : str, optional
         Initial date.
@@ -40,7 +40,7 @@ def get_series(*args, start=None, end=None, **kwargs):
 
 
 def get_timeseries(code, label=None, start=None, end=None):
-    """Return a single IPEA timeseries."""
+    """Return a single IPEA time series."""
     assert isinstance(code, str), "Not a valid code format."
 
     url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
@@ -60,7 +60,7 @@ def search(*SERNOME, **metadata):
     Parameters
     ----------
     *SERNOME
-        Strings to search for in a timeseries name.
+        Strings to search for in a time series name.
 
     **metadata
         Strings to search for in metadata.
@@ -89,7 +89,7 @@ def search(*SERNOME, **metadata):
 
 def get_metadata(code):
     """
-    Get metadata of a timeseries.
+    Get metadata of an IPEA time series.
 
     Parameters
     ----------

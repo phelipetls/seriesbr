@@ -21,7 +21,7 @@ def json_normalize(*args, **kwargs):
 def collect(*args):
     """
     Collect arguments into a dictionary.
-    Used to help label timeseries.
+    Used to help label time series.
 
     Returns
     -------

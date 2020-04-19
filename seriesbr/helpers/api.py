@@ -8,8 +8,7 @@ from ..helpers.metadata import ipea_metadata_list
 
 def ipea_date(start=None, end=None):
     """
-    Auxiliary function to return the right
-    string for filtering dates via IPEA api.
+    Help filter an IPEA time series by date.
 
     Parameters
     ----------
@@ -43,12 +42,12 @@ def ipea_date(start=None, end=None):
 
 def ipea_select(metadata=[]):
     """
-    Build OData select field.
+    Help select additional IPEA time series
+    metadata, if not already selected by default.
 
     Parameters
     ----------
-    metadata : dict
-        metadata to search for.
+    metadata : list
 
     Examples
     --------
@@ -70,22 +69,20 @@ def ipea_select(metadata=[]):
 
 def ipea_filter(names=None, metadata={}):
     """
-    Build OData filter query.
+    Help filter IPEA time series metadata.
 
     Parameters
     ----------
     names : list of str
-        Strings to filter by name.
+        Strings to search for in time series name.
 
     metadata : dict
-        Dictionary whose keys are metadata
-        and values strings (or list of strings)
-        to look up for.
+        Dictionary to search strings in specific
+        metadata, e.g. { "metadata": ["str"] }.
 
     Raises
     ------
     ValueError
-        If not a valid metadata.
 
     Examples
     --------
@@ -138,8 +135,8 @@ def raise_if_invalid_metadata(metadata):
 
 def ibge_classifications(classifications=None):
     """
-    Auxiliary function to filter IBGE tables
-    by classifications and categories.
+    Help filter IBGE tables by classifications
+    and categories.
 
     Parameters
     ----------
@@ -189,8 +186,7 @@ def ibge_classifications(classifications=None):
 
 def ibge_dates(start=None, end=None, last_n=None, freq=None):
     """
-    Auxiliary function to filter a time series'
-    periods.
+    Help filter an IBGE table by date.
 
     Parameters
     ----------
@@ -238,8 +234,7 @@ def ibge_dates(start=None, end=None, last_n=None, freq=None):
 
 def ibge_variables(variables=None):
     """
-    Auxiliary function to filter an IBGE's
-    aggregate by variables.
+    Help select specific variables of an IBGE table.
 
     Parameters
     ----------
@@ -291,20 +286,19 @@ def ibge_locations(**kwargs):
     Parameters
     ----------
     **kwargs
-        Keyword arguments, where keys must be one
-        of these:
+        Keys must be one of these:
             - municipalities
             - states
             - macroregions
             - mesoregions
             - microregions
             - brazil
-        And values should an int or a list of ints.
+        And values should be an int or a
+        list of ints.
 
     Returns
     -------
     str
-        A string to filter locations in IBGE's API.
 
     Examples
     --------
@@ -318,7 +312,6 @@ def ibge_locations(**kwargs):
     '&localidades=N6[2,3,4]'
     """
     # NOTE: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
-
     prefix = "&localidades="
 
     if not kwargs or all([v is None for v in kwargs.values()]):

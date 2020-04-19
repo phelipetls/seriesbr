@@ -5,13 +5,13 @@ from seriesbr.helpers import utils, timeseries, metadata, dates, search_results
 
 def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
-    Get multiple BCB timeseries.
+    Get multiple BCB time series.
 
     Parameters
     ----------
 
     *args : int, dict
-        Arbitrary number of timeseries codes.
+        Arbitrary number of time series codes.
 
     start : str, optional
         Initial date.
@@ -43,14 +43,14 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
 
 
 def get_timeseries(code, name=None, start=None, end=None, last_n=None):
-    """Return a single BCB timeseries in a DataFrame."""
+    """Return a single BCB time series in a DataFrame."""
     url = build_url(code, start, end, last_n)
 
     return timeseries.bcb_json_to_df(url, code, name)
 
 
 def build_url(code, start=None, end=None, last_n=None):
-    """Return the url for a BCB timeseries."""
+    """Return the url for a BCB time series."""
     assert isinstance(code, (str, int)), "Not a valid code format."
 
     url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
@@ -70,7 +70,7 @@ def build_url(code, start=None, end=None, last_n=None):
 
 def search(*strings, rows=10, start=1):
     """
-    Search for a name in the SGS database.
+    Search for a name in the BCB database.
 
     Parameters
     ----------
@@ -103,7 +103,7 @@ def search(*strings, rows=10, start=1):
 
 
 def build_search_url(*strings, rows=10, start=1):
-    """Return a URL to search in BCB database."""
+    """Return a URL to search in the BCB database."""
     url = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
 
     first, others = strings[0], strings[1:]
@@ -119,7 +119,7 @@ def build_search_url(*strings, rows=10, start=1):
 
 def get_metadata(code):
     """
-    Get BCB's time series metadata.
+    Get a BCB time series metadata.
 
     Parameters
     ----------
@@ -146,7 +146,7 @@ def get_metadata(code):
 
 
 def build_metadata_url(code):
-    """Return a URL to search for a BCB timeseries metadata."""
+    """Return a URL to search for a BCB time series metadata."""
     baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
     params = f"fq=codigo_sgs:{code}"
     return f"{baseurl}{params}"

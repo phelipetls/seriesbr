@@ -8,16 +8,22 @@ s = requests.Session()
 @functools.lru_cache(maxsize=16)
 def get_json(url, **kwargs):
     """
-    Auxiliary function to make get requests
-    within a HTTP Session.
+    Wrapper around requests.Session.get().
 
     Parameters
     ----------
     url : str
-        Url to be requested.
 
     **kwargs
-        Passed to Session().get()
+        Passed to requests.Session().get()
+
+    Raises
+    ------
+    HTTPError
+        In case of a HTTPError.
+
+    ValueError
+        If no JSON was returned.
 
     Returns
     -------
