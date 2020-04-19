@@ -1,11 +1,6 @@
 seriesbr package
 ================
 
-.. automodule:: seriesbr
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Subpackages
 -----------
 
@@ -48,3 +43,11 @@ seriesbr.seriesbr module
    :undoc-members:
    :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: seriesbr
+   :members:
+   :undoc-members:
+   :show-inheritance:

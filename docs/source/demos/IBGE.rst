@@ -1,22 +1,19 @@
 Instituto Brasileiro de Geografia e Estatística
 ===============================================
 
-IBGE has a complex database. It is composed of several researches
-responsible for measuring a set of aggregates which has several
-variables, locations and classifications associated with it.
+This module will help you explore IBGE tables.
 
-An aggregate is also commonly referred to as a IBGE table.
+You will be able to find out which research, variables, locations,
+classifications and categories are associated with it, so you can drill it down
+to exactly what you need.
 
-Some aggregates may be filtered by locations such as cities, states,
-mesoregions, microregions and macroregions, as well by classifications
-and categories.
+For instance, table #7060 is the IPCA table, the brazilian inflation rate, is a
+table from the research "Índice Nacional de Preços ao Consumidor Amplo", with
+variables such as the monthly variation and cumulative variation over the year
+(see :py:func:`seriesbr.ibge.list_variables`). It also has values for specific
+municipalities and mesoregions (see :py:func:`seriesbr.ibge.list_locations`).
 
-For example, IPCA, the inflation rate, is an aggregate of the research
-"Índice Nacional de Preços ao Consumidor Amplo", with variables such as
-monthly and cumulative variation. It has values for every Brazil's
-location and for various kinds of products.
-
-To show how to use the package, we will try to replicate `these
+To learn more about this module, we will now try to replicate `these
 visualizations <https://sidra.ibge.gov.br/home/ipca/brasil>`__
 on the most recent IPCA.
 
@@ -46,60 +43,66 @@ You could also search for a specific research (or any other column) in this way:
 In fact, you can search in a similar way within any column. Also notice
 that the string is a regex.
 
-We want the aggregate that goes by the code 7060. So now let's take a
-look at the available variables with :py:func:`seriesbr.ibge.list_variables`.
+To get the most recent IPCA, we want table 7060. Table 1419 goes from jan/2012
+to dec/2019.
+
+Let's take a look at the available variables with
+:py:func:`seriesbr.ibge.list_variables`.
 
 .. ipython:: python
 
    ibge.list_variables(7060)
 
 
-We will use all of them eventually, but it is good to know them if you
-want a specific one.
+We will use all of them eventually.
 
-Now we need the codes of the same classifications used by IBGE in its
-visualizations. We need :py:func:`seriesbr.ibge.list_classifications`
-to search for that.
-
-Because all ``list_*`` functions take an arbitrary number of regexes as
-arguments to search in column ``nome``, by default, we will search for
-those which have a single number followed by a dot, letters or spaces.
-This means they're products' major groups, not subgroups etc.
+We will also need the codes of the classifications used by IBGE in its
+visualizations. We can use :py:func:`seriesbr.ibge.list_classifications` for
+that.
 
 .. ipython:: python
 
-   categories = ibge.list_classifications(
-       7060,
-       "Índice geral",
-       "^\d\.[A-z ]+",
-   )
+    categories = ibge.list_classifications(7060)
 
-   categories
+    categories
 
-Apart from those, there are also :py:func:`list_periods <seriesbr.ibge.list_periods>`
-and :py:func:`list_locations <seriesbr.ibge.list_locations>`.
+
+This let us see the classification id (315) and 457 different categories for
+all kinds of products.
+
+We're not interested in much detailed products, so we
+will filter for only those whose "level" is 1 or lower.
+
+.. ipython:: python
+
+    products = categories.loc[categories.nivel <= 1]
+
+    products
+
+
+Apart from those, there are also :py:func:`list_periods
+<seriesbr.ibge.list_periods>` and :py:func:`list_locations
+<seriesbr.ibge.list_locations>`.
 
 
 Getting time series
 -------------------
 
-Now let's use all this information we've gathered and get the actual values
-with :py:func:`seriesbr.ibge.get_series`.
+Now let's use the information we've gathered to get the actual values with the
+function :py:func:`seriesbr.ibge.get_series`.
 
-The aggregate is 7060, we will use every variable so no need to filter
-that.
+The table is 7060, we will use every variable so no need to filter those.
 
-Since we have the codes for classifications and categories, we can just
-pass a dictionary like this: ``{ classification: [ categories ] }``.
+Since we have the codes for classifications and categories, we can just pass a
+dictionary like this: ``{ classification: [ categories ] }``.
 
-But if you wanted data for all values of a classification, you don't
-need to give a list of all categories' codes, just pass the
-classification code alone as an int / str, or a list of them, and you'll
-get all of its categories.
+But if you wanted data for a classification with all of its categories, you
+could just pass the classification code alone as an int / str, or a list of
+them.
 
 .. ipython:: python
 
-   ipca = ibge.get_series(7060, last_n=1, classifications={315: categories.id.to_list()})
+   ipca = ibge.get_series(7060, last_n=1, classifications={315: products.id.to_list()})
 
    ipca
 
@@ -107,6 +110,9 @@ get all of its categories.
 Now let's visualize the inflation rate by product / service.
 
 .. ipython:: python
+
+   # get which month is it
+   date = ipca.index.unique().strftime("%b/%Y").values[0].title()
 
    import matplotlib
    import matplotlib.pyplot as plt
@@ -117,7 +123,7 @@ Now let's visualize the inflation rate by product / service.
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada no ano"
    ).plot(
-       kind="barh", title="IPCA por Produto / Serviço", figsize=(10, 8)
+       kind="barh", title="IPCA por Produto / Serviço - " + date, figsize=(10, 8)
    ).legend(
        bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
@@ -132,11 +138,10 @@ To see the weight of each product in the inflation rate:
 
 .. ipython:: python
 
-
    ipca.pivot_table(
        index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
    ).loc[:, ["IPCA - Peso mensal"]].sort_values("IPCA - Peso mensal").plot(
-       kind="barh", title="Weight of each product in IPCA"
+       kind="barh", title="Weight of each product in IPCA - " + date
    )
 
    plt.ylabel("");
@@ -152,15 +157,18 @@ But apart from mesoregions, there are also macroregions (Sul, Sudeste),
 microregions (Baixadas, Norte Fluminense etc. in Rio de Janeiro), municipalities
 and states, see the :py:func:`documentation <seriesbr.ibge.get_series>` for details.
 
-.. note::
-
-   Since v0.1.3 arguments for locations are in plural, i.e., macroregions,
-   municipalities, microregions, mesoregions and states.
-
-If a given location is available for an aggregate, you can assign "all" 
+If a given location is available for a table, you can assign "all" 
 (actually anything that would be evaluated as ``True`` in Python) and it
 will return data for every instance of that location, but you could also
 pass a list or a single code to select specific locations.
+
+To discover a location code, call the appropriate ``list_*`` function, e.g., to
+see which is the code for the state of Rio de Janeiro:
+
+.. ipython:: python
+
+    ibge.list_states(nome="Rio de Janeiro")
+
 
 By default, it will get data for the whole country. If you want data for
 other regions and also for Brazil as a whole, you can do the following:
@@ -179,7 +187,7 @@ other regions and also for Brazil as a whole, you can do the following:
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada no ano"
    ).plot.barh(
-       title="IPCA por Área Metropolitana", figsize=(10, 8)
+       title="IPCA por Área Metropolitana - " + date, figsize=(10, 8)
    ).legend(
        bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
@@ -198,7 +206,7 @@ Truck Drivers' strike in 2018.
 
    ibge.get_series(
        1419,
-       classifications={315: categories.id.to_list()},
+       classifications={315: products.id.to_list()},
        start="jun-2018",
        end="jun-2018",
    ).pivot_table(
@@ -208,7 +216,7 @@ Truck Drivers' strike in 2018.
    ).sort_values(
        "IPCA - Variação acumulada em 12 meses"
    ).plot.barh(
-       title="IPCA após greve dos caminhoneiros (junho/2018)", figsize=(10, 10)
+       title="IPCA após greve dos caminhoneiros - Jun/2018", figsize=(10, 10)
    ).legend(
        bbox_to_anchor=(1, .5), loc="center left", frameon=False
    )
@@ -217,11 +225,6 @@ Truck Drivers' strike in 2018.
    plt.tight_layout()
    @savefig ipca_truckers_strike.png
    plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
-
-.. note::
-
-    Notice that the appropriate aggregate no longer is 7060, but 1419.
-    This is because, for some reason, the aggregate 1419 ended in 2019.
 
 
 Getting metadata
