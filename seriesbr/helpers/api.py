@@ -1,7 +1,7 @@
 import re
 
 from ..helpers.utils import cat, is_iterable
-from ..helpers.odata import equal_operator, contains_operator
+from ..helpers.odata import equal, contains
 from ..helpers.dates import month_to_quarter, parse_dates
 from ..helpers.metadata import ipea_metadata_list
 
@@ -98,7 +98,7 @@ def ipea_filter(names=None, metadata={}):
     prefix = "&$filter="
 
     # filter by name
-    filter_name = contains_operator("SERNOME", names, " and ") if names else ""
+    filter_name = contains("SERNOME", names, " and ") if names else ""
 
     # start building string to filter by additional metadata
     filter_metadata = ""
@@ -107,10 +107,10 @@ def ipea_filter(names=None, metadata={}):
 
         for metadata, value in metadata.items():
             if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
-                s = equal_operator(metadata, value)
+                s = equal(metadata, value)
                 metadata_filters.append(s)
             else:
-                s = contains_operator(metadata, value)
+                s = contains(metadata, value)
                 metadata_filters.append(s)
 
         filter_metadata = " and " if filter_name else ""

@@ -1,13 +1,13 @@
 from seriesbr.helpers.utils import quote_if_str
 
 
-def contains_operator(metadata, values, logical_operator=" or "):
+def contains(metadata, values, logical_operator=" or "):
     """
-    Build contains operator for OData API query
+    Build contains operator for OData API query.
 
     Examples
     --------
-    >>> url.contains_operator("FNTNOME", ["A", "B"])
+    >>> url.contains("FNTNOME", ["A", "B"])
     "(contains('FNTNOME','A') or contains('FNTNOME','B'))"
     """
 
@@ -19,13 +19,13 @@ def contains_operator(metadata, values, logical_operator=" or "):
     return f"contains({metadata},'{values}')"
 
 
-def equal_operator(metadata, values, logical_operator=" or "):
+def equal(metadata, values, logical_operator=" or "):
     """
-    Build equal operator for OData API query
+    Build equal operator for OData API query.
 
     Examples
     --------
-    >>> url.equal_operator("SERNUMERICA", [1, "A"])
+    >>> url.equal("SERNUMERICA", [1, "A"])
     "('SERNUMERICA' eq 1 or 'SERNUMERICA', eq 'A')"
     """
 
