@@ -1,6 +1,7 @@
 div.body {
-    min-width: auto;
-    max-width: auto;
+  min-width: auto;
+  max-width: auto;
+}
 
 pre, tt, code {
   font-size: 0.8em;
