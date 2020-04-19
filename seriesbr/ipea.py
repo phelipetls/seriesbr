@@ -7,6 +7,9 @@ def get_series(*args, start=None, end=None, **kwargs):
     """
     Get multiple IPEA timeseries.
 
+    Parameters
+    ----------
+
     *args : int, dict
         Arbitrary number of timeseries codes.
 

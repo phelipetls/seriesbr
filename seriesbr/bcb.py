@@ -7,6 +7,9 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
     Get multiple BCB timeseries.
 
+    Parameters
+    ----------
+
     *args : int, dict
         Arbitrary number of timeseries codes.
 
