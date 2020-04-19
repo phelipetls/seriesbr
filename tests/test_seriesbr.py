@@ -26,21 +26,25 @@ class TestSeriesBr(unittest.TestCase):
         )
 
     def test_if_data_frame_is_empty(self):
-        self.assertFalse(self.df.empty)
+        test = self.df.empty
+
+        self.assertFalse(test)
 
     def test_data_frame_columns(self):
-        test = self.df.columns.tolist()
-        expected = ["Inadimplência", "Spread"]
-        self.assertListEqual(test, expected)
+        columns = self.df.columns.tolist()
+        expected_columns = ["Inadimplência", "Spread"]
+
+        self.assertListEqual(columns, expected_columns)
 
     def test_data_frame_columns_dtypes(self):
-        test = [pd.api.types.is_float(dtype) for dtype in self.df.dtypes]
-        expected = [True, True]
-        self.assertLessEqual(test, expected)
+        test = pd.api.types.is_numeric_dtype(self.df.values)
+
+        self.assertTrue(test)
 
     def test_data_frame_index_dtype(self):
-        test = self.df.index
-        self.assertTrue(pd.api.types.is_datetime64_any_dtype(test))
+        test = pd.api.types.is_datetime64_any_dtype(self.df.index)
+
+        self.assertTrue(test)
 
 
 if __name__ == "__main__":
