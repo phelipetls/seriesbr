@@ -1,26 +1,21 @@
 seriesbr.helpers package
 ========================
 
-.. automodule:: seriesbr.helpers
+Submodules
+----------
+
+seriesbr.helpers.api module
+---------------------------
+
+.. automodule:: seriesbr.helpers.api
    :members:
    :undoc-members:
    :show-inheritance:
-
-Submodules
-----------
 
 seriesbr.helpers.dates module
 -----------------------------
 
 .. automodule:: seriesbr.helpers.dates
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-seriesbr.helpers.ipea\_metadata\_list module
---------------------------------------------
-
-.. automodule:: seriesbr.helpers.ipea_metadata_list
    :members:
    :undoc-members:
    :show-inheritance:
@@ -41,6 +36,14 @@ seriesbr.helpers.metadata module
    :undoc-members:
    :show-inheritance:
 
+seriesbr.helpers.odata module
+-----------------------------
+
+.. automodule:: seriesbr.helpers.odata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 seriesbr.helpers.request module
 -------------------------------
 
@@ -49,26 +52,18 @@ seriesbr.helpers.request module
    :undoc-members:
    :show-inheritance:
 
-seriesbr.helpers.response module
---------------------------------
+seriesbr.helpers.search\_results module
+---------------------------------------
 
-.. automodule:: seriesbr.helpers.response
+.. automodule:: seriesbr.helpers.search_results
    :members:
    :undoc-members:
    :show-inheritance:
 
-seriesbr.helpers.searching module
----------------------------------
+seriesbr.helpers.timeseries module
+----------------------------------
 
-.. automodule:: seriesbr.helpers.searching
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-seriesbr.helpers.url module
----------------------------
-
-.. automodule:: seriesbr.helpers.url
+.. automodule:: seriesbr.helpers.timeseries
    :members:
    :undoc-members:
    :show-inheritance:
@@ -81,3 +76,11 @@ seriesbr.helpers.utils module
    :undoc-members:
    :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: seriesbr.helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
