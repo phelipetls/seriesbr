@@ -48,7 +48,7 @@ def get_timeseries(code, label=None, start=None, end=None):
     url += "?$select=VALDATA,VALVALOR"
 
     start, end = dates.parse_dates(start, end, api="ipea")
-    url += api.ipea_date(start, end)
+    url += api.ipea_filter_by_date(start, end)
 
     return timeseries.ipea_json_to_df(url, code, label)
 

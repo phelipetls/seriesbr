@@ -2,19 +2,17 @@ import pytest
 
 from seriesbr.helpers import api
 
-default = "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
-
 
 def test_select_default():
-    assert api.ipea_select() == default
+    assert api.ipea_select() == "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
 
 
 def test_select_included_in_default():
-    assert api.ipea_select(["SERCODIGO", "SERNOME"]) == default
+    assert api.ipea_select(["SERCODIGO", "SERNOME"]) == "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
 
 
 def test_select_not_included_in_default():
-    assert api.ipea_select(["FNTNOME"]) == default + ",FNTNOME"
+    assert api.ipea_select(["FNTNOME"]) == "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME"
 
 
 def test_filter_name():
@@ -55,26 +53,26 @@ def test_multiple_metadata():
     )
 
 
-def test_raises_if_invalid_field():
+def test_if_invalid_field_raises_error():
     with pytest.raises(ValueError):
         api.ipea_filter("", {"INVALID_FILTER": "INVALID"})
 
 
 def test_start():
-    assert api.ipea_date(start="2019-01-01T00:00:00-00:00") == (
-        "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00"
+    assert api.ipea_filter_by_date(start="2019-01-01") == (
+        "&$filter=VALDATA ge 2019-01-01"
     )
 
 
 def test_end():
-    assert api.ipea_date(end="2019-01-30T00:00:00-00:00") == (
-        "&$filter=VALDATA le 2019-01-30T00:00:00-00:00"
+    assert api.ipea_filter_by_date(end="2019-01-30") == (
+        "&$filter=VALDATA le 2019-01-30"
     )
 
 
 def test_start_and_end():
-    assert api.ipea_date(
-        start="2019-01-01T00:00:00-00:00", end="2019-01-30T00:00:00-00:00"
+    assert api.ipea_filter_by_date(
+        start="2019-01-01", end="2019-01-30"
     ) == (
-        "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-01-30T00:00:00-00:00"
+        "&$filter=VALDATA ge 2019-01-01 and VALDATA le 2019-01-30"
     )

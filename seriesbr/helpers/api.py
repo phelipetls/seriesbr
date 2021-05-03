@@ -6,7 +6,7 @@ from seriesbr.helpers.dates import month_to_quarter, parse_dates
 from seriesbr.helpers.metadata import ipea_metadata_list
 
 
-def ipea_date(start=None, end=None):
+def ipea_filter_by_date(start=None, end=None):
     """
     Help filter an IPEA time series by date.
 
