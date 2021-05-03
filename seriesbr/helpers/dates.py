@@ -8,7 +8,7 @@ LAST_DAY_OF_YEAR = datetime(year=datetime.today().year, month=12, day=31)
 
 DATE_FORMATS = {
     "bcb": "%d/%m/%Y",
-    "ipea": "%Y-%m-%dT00:00:00",
+    "ipea": "%Y-%m-%dT00:00:00Z",
     "ibge": "%Y%m",
 }
 
