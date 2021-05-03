@@ -60,12 +60,8 @@ def build_url(code, start=None, end=None, last_n=None):
         url += "?format=json"
         return url
 
-    url += "?format=json"
-
     start, end = dates.parse_dates(start, end, api="bcb")
-    url += f"&dataInicial={start}&dataFinal={end}"
-
-    return url
+    return f"{url}?format=json&dataInicial={start}&dataFinal={end}"
 
 
 def search(*strings, rows=10, start=1):
