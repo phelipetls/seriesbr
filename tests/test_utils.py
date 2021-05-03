@@ -50,9 +50,9 @@ def test_searching_non_existent_column():
         utils.search_df(df, "nome", {"non_existent_column": "string"})
 
 
-def test_collect_codes_and_names_dict():
-    assert utils.collect({"A": 1, "B": 2}, 100) == {"A": 1, "B": 2, 100: 100}
+def test_parse_arguments():
+    assert utils.parse_arguments({"A": 1, "B": 2}, 100) == {"A": 1, "B": 2, 100: 100}
 
 
-def test_collect_codes_and_names_no_dict():
-    assert utils.collect(11) == {11: 11}
+def test_parse_arguments_without_dictionary():
+    assert utils.parse_arguments(11) == {11: 11}

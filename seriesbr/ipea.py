@@ -26,12 +26,12 @@ def get_series(*args, start=None, end=None, **kwargs):
     -------
     pandas.DataFrame
     """
-    codes_and_labels = utils.collect(*args)
+    parsed_args = utils.parse_arguments(*args)
 
     return pd.concat(
         (
             get_timeseries(code, label, start=start, end=end)
-            for label, code in codes_and_labels.items()
+            for label, code in parsed_args.items()
         ),
         axis="columns",
         sort=True,

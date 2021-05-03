@@ -18,9 +18,9 @@ def json_normalize(*args, **kwargs):
     )
 
 
-def collect(*args):
+def parse_arguments(*args):
     """
-    Collect arguments into a dictionary.
+    Parse arguments into a dictionary.
     Used to help label time series.
 
     Returns

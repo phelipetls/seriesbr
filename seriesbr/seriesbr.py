@@ -48,10 +48,10 @@ def get_series(*args, start=None, end=None, **kwargs):
     2015-11-01          5.22  33.31
     2015-12-01          5.28  31.64
     """
-    codes_and_labels = utils.collect(*args)
+    parsed_args = utils.parse_arguments(*args)
     series = []
 
-    for label, code in codes_and_labels.items():
+    for label, code in parsed_args.items():
         if str(code).isnumeric():
             df = bcb.get_timeseries(code, label, start, end)
         else:
