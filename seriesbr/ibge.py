@@ -99,10 +99,10 @@ def build_series_url(
 ):
     url = build_url(table)
 
-    url += api.ibge_dates(start, end, last_n, frequency)
-    url += api.ibge_variables(variables)
+    url += api.ibge_filter_by_date(start, end, last_n, frequency)
+    url += api.ibge_filter_by_variable(variables)
     url += "?"
-    url += api.ibge_locations(
+    url += api.ibge_filter_by_location(
         municipalities=municipalities,
         states=states,
         macroregions=macroregions,
@@ -110,7 +110,7 @@ def build_series_url(
         mesoregions=mesoregions,
         brazil=brazil,
     )
-    url += api.ibge_classifications(classifications)
+    url += api.ibge_filter_by_classification(classifications)
     url += "&view=flat"
 
     return url

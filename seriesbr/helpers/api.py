@@ -133,7 +133,7 @@ def raise_if_invalid_metadata(metadata):
         raise ValueError(error_msg)
 
 
-def ibge_classifications(classifications=None):
+def ibge_filter_by_classification(classifications=None):
     """
     Help filter IBGE tables by classifications
     and categories.
@@ -184,7 +184,7 @@ def ibge_classifications(classifications=None):
     return ""
 
 
-def ibge_dates(start=None, end=None, last_n=None, freq=None):
+def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     """
     Help filter an IBGE table by date.
 
@@ -209,13 +209,13 @@ def ibge_dates(start=None, end=None, last_n=None, freq=None):
 
     Examples
     --------
-    >>> url.ibge_dates(last_n=5)
+    >>> url.ibge_filter_by_date(last_n=5)
     '/periodos/-5'
-    >>> url.ibge_dates(start="012017")
+    >>> url.ibge_filter_by_date(start="012017")
     '/periodos/201701-201912'
-    >>> url.ibge_dates(end="072017")
+    >>> url.ibge_filter_by_date(end="072017")
     '/periodos/190001-201707'
-    >>> url.ibge_dates(start="052015", end="072017")
+    >>> url.ibge_filter_by_date(start="052015", end="072017")
     '/periodos/201505-201707'
     """
     start, end = parse_dates(start, end, "ibge")
@@ -232,7 +232,7 @@ def ibge_dates(start=None, end=None, last_n=None, freq=None):
     return f"/periodos/{start}-{end}"
 
 
-def ibge_variables(variables=None):
+def ibge_filter_by_variable(variables=None):
     """
     Help select specific variables of an IBGE table.
 
@@ -248,11 +248,11 @@ def ibge_variables(variables=None):
 
     Examples
     --------
-    >>> url.ibge_variables(100)
+    >>> url.ibge_filter_by_variable(100)
     '/variaveis/100'
-    >>> url.ibge_variables([1, 2, 3])
+    >>> url.ibge_filter_by_variable([1, 2, 3])
     '/variaveis/1|2|3'
-    >>> url.ibge_variables()
+    >>> url.ibge_filter_by_variable()
     '/variaveis'
     """
     if is_iterable(variables):
@@ -279,7 +279,7 @@ locations_names_to_codes = {
 }
 
 
-def ibge_locations(**kwargs):
+def ibge_filter_by_location(**kwargs):
     """
     Help filter IBGE table by location.
 
