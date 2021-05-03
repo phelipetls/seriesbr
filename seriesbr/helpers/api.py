@@ -162,6 +162,8 @@ def ibge_filter_by_classification(classifications=None):
     >>> url.ibge_classification(3)
     'classificacao=3[all]'
     """
+    prefix = "&classificacao="
+
     if isinstance(classifications, dict):
         s = []
         for classification, categories in classifications.items():
@@ -170,16 +172,16 @@ def ibge_filter_by_classification(classifications=None):
             else:
                 joined_categories = cat(categories, ",")
                 s.append(f"{classification}[{joined_categories}]")
-        return "classificacao=" + "|".join(s)
+        return prefix + "|".join(s)
 
     elif isinstance(classifications, (int, str)):
-        return f"classificacao={classifications}[all]"
+        return prefix + f"{classifications}[all]"
 
     elif isinstance(classifications, list):
         joined_classifications = "|".join(
             [f"{classification}[all]" for classification in classifications]
         )
-        return f"classificacao={joined_classifications}"
+        return prefix + f"{joined_classifications}"
 
     return ""
 

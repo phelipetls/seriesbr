@@ -17,6 +17,12 @@ class TestUrlBuilder:
             "periodos/197001-201912/variaveis?&localidades=BR&view=flat"
         )
 
+    def test_with_location_and_classification(self):
+        assert build_series_url(1419, brazil=True, classifications=2) == (
+            "https://servicodados.ibge.gov.br/api/v3/agregados/1419/"
+            "periodos/197001-201912/variaveis?&localidades=BR&classificacao=2[all]&view=flat"
+        )
+
 
 @freeze_time("2019-12-02")
 class TestIbgeDates:
@@ -97,25 +103,25 @@ class TestIbgeClassifications:
         assert ibge_filter_by_classification(self) == ""
 
     def test_str(self):
-        assert ibge_filter_by_classification("3") == "classificacao=3[all]"
+        assert ibge_filter_by_classification("3") == "&classificacao=3[all]"
 
     def test_int(self):
-        assert ibge_filter_by_classification(3) == "classificacao=3[all]"
+        assert ibge_filter_by_classification(3) == "&classificacao=3[all]"
 
     def test_list(self):
-        assert ibge_filter_by_classification([1, 2]) == "classificacao=1[all]|2[all]"
+        assert ibge_filter_by_classification([1, 2]) == "&classificacao=1[all]|2[all]"
 
     def test_dict(self):
-        assert ibge_filter_by_classification({1: [2, 3]}) == "classificacao=1[2,3]"
+        assert ibge_filter_by_classification({1: [2, 3]}) == "&classificacao=1[2,3]"
 
     def test_dict_multiple_keys(self):
         assert (
             ibge_filter_by_classification({1: [2, 3], 4: [5, 6]})
-            == "classificacao=1[2,3]|4[5,6]"
+            == "&classificacao=1[2,3]|4[5,6]"
         )
 
     def test_empty_dict(self):
-        assert ibge_filter_by_classification({1: []}) == "classificacao=1[all]"
+        assert ibge_filter_by_classification({1: []}) == "&classificacao=1[all]"
 
 
 # vi: nowrap
