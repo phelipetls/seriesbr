@@ -1,87 +1,80 @@
-import unittest
+import pytest
 
 from seriesbr.helpers import api
 
-
-class TestIpeaSelect(unittest.TestCase):
-    default = "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
-
-    def test_empty(self):
-        test = api.ipea_select()
-        self.assertEqual(test, self.default)
-
-    def test_included(self):
-        """Should have no effect since it's already there"""
-        test = api.ipea_select(["SERCODIGO", "SERNOME"])
-        self.assertEqual(test, self.default)
-
-    def test_not_included(self):
-        test = api.ipea_select(["FNTNOME"])
-        expected = ",FNTNOME"
-        self.assertEqual(test, self.default + expected)
+default = "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
 
 
-class TestIpeaFilter(unittest.TestCase):
-    def test_filter_name(self):
-        test = api.ipea_filter("selic")
-        expected = "&$filter=contains(SERNOME,'selic')"
-        self.assertEqual(test, expected)
-
-    def test_filter_multiple_names(self):
-        test = api.ipea_filter(["selic", "pib"])
-        expected = "&$filter=(contains(SERNOME,'selic') and contains(SERNOME,'pib'))"
-        self.assertEqual(test, expected)
-
-    def test_name_and_metadata(self):
-        test = api.ipea_filter("selic", {"FNTNOME": "fonte"})
-        expected = "&$filter=contains(SERNOME,'selic') and contains(FNTNOME,'fonte')"
-        self.assertEqual(test, expected)
-
-    def test_string_metadata(self):
-        test = api.ipea_filter(metadata={"SERSTATUS": "A"})
-        expected = "&$filter=SERSTATUS eq 'A'"
-        self.assertEqual(test, expected)
-
-    def test_numeric_metadata(self):
-        test = api.ipea_filter(metadata={"SERNUMERICA": 10})
-        expected = "&$filter=SERNUMERICA eq 10"
-        self.assertEqual(test, expected)
-
-    def test_name_and_multiple_metadata(self):
-        test = api.ipea_filter("selic", {"PERNOME": ["mensal", "trimestral"]})
-        expected = "&$filter=contains(SERNOME,'selic') and (contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
-        self.assertEqual(test, expected)
-
-    def test_multiple_metadata(self):
-        test = api.ipea_filter(metadata={"PERNOME": ["mensal", "trimestral"]})
-        expected = "&$filter=(contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
-        self.assertEqual(test, expected)
-
-    def test_raises_if_invalid_field(self):
-        with self.assertRaises(ValueError):
-            api.ipea_filter("", {"INVALID_FILTER": "INVALID"})
+def test_select_default():
+    assert api.ipea_select() == default
 
 
-class TestIpeaDates(unittest.TestCase):
-    def test_start(self):
-        test = api.ipea_date(start="2019-01-01T00:00:00-00:00")
-        expected = "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00"
-        self.assertEqual(test, expected)
-
-    def test_end(self):
-        test = api.ipea_date(end="2019-01-01T00:00:00-00:00")
-        expected = "&$filter=VALDATA le 2019-01-01T00:00:00-00:00"
-        self.assertEqual(test, expected)
-
-    def test_start_and_end(self):
-        test = api.ipea_date(
-            start="2019-01-01T00:00:00-00:00", end="2019-01-01T00:00:00-00:00"
-        )
-        expected = "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-01-01T00:00:00-00:00"
-        self.assertEqual(test, expected)
+def test_select_included_in_default():
+    assert api.ipea_select(["SERCODIGO", "SERNOME"]) == default
 
 
-if __name__ == "__main__":
-    unittest.main(failfast=True)
+def test_select_not_included_in_default():
+    assert api.ipea_select(["FNTNOME"]) == default + ",FNTNOME"
 
-# vi: nowrap
+
+def test_filter_name():
+    assert api.ipea_filter("selic") == "&$filter=contains(SERNOME,'selic')"
+
+
+def test_filter_multiple_names():
+    assert api.ipea_filter(["selic", "pib"]) == (
+        "&$filter=(contains(SERNOME,'selic') and contains(SERNOME,'pib'))"
+    )
+
+
+def test_name_and_metadata():
+    assert api.ipea_filter("selic", {"FNTNOME": "fonte"}) == (
+        "&$filter=contains(SERNOME,'selic') and contains(FNTNOME,'fonte')"
+    )
+
+
+def test_string_metadata():
+    assert api.ipea_filter(metadata={"SERSTATUS": "A"}) == "&$filter=SERSTATUS eq 'A'"
+
+
+def test_numeric_metadata():
+    assert api.ipea_filter(metadata={"SERNUMERICA": 10}) == "&$filter=SERNUMERICA eq 10"
+
+
+def test_name_and_multiple_metadata():
+    assert api.ipea_filter("selic", {"PERNOME": ["mensal", "trimestral"]}) == (
+        "&$filter=contains(SERNOME,'selic')"
+        " and (contains(PERNOME,'mensal')"
+        " or contains(PERNOME,'trimestral'))"
+    )
+
+
+def test_multiple_metadata():
+    assert api.ipea_filter(metadata={"PERNOME": ["mensal", "trimestral"]}) == (
+        "&$filter=(contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
+    )
+
+
+def test_raises_if_invalid_field():
+    with pytest.raises(ValueError):
+        api.ipea_filter("", {"INVALID_FILTER": "INVALID"})
+
+
+def test_start():
+    assert api.ipea_date(start="2019-01-01T00:00:00-00:00") == (
+        "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00"
+    )
+
+
+def test_end():
+    assert api.ipea_date(end="2019-01-30T00:00:00-00:00") == (
+        "&$filter=VALDATA le 2019-01-30T00:00:00-00:00"
+    )
+
+
+def test_start_and_end():
+    assert api.ipea_date(
+        start="2019-01-01T00:00:00-00:00", end="2019-01-30T00:00:00-00:00"
+    ) == (
+        "&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-01-30T00:00:00-00:00"
+    )

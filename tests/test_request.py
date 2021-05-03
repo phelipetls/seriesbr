@@ -1,29 +1,18 @@
 import requests
-import unittest
-import requests_mock
+import pytest
 
-from unittest.mock import patch
 from seriesbr.helpers import request
 
 
-class TestRequest(unittest.TestCase):
-    """Test function to handle API requests."""
+def test_get_json_raising_JSON_error(requests_mock):
+    requests_mock.get("https://google.com", text="{invalid: json")
 
-    @requests_mock.Mocker()
-    def test_get_json_raising_JSON_error(self, m):
-        m.get("https://google.com", text="{invalid: json")
-
-        with self.assertRaises(ValueError):
-            request.get_json("https://google.com")
-
-    def test_get_json_raising_HTTP_error(self):
-        response = requests.Response()
-        response.status_code = 404
-
-        with patch.object(request.s, "get", return_value=response):
-            with self.assertRaises(requests.HTTPError):
-                request.get_json("https://google.com")
+    with pytest.raises(ValueError):
+        request.get_json("https://google.com")
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_get_json_raising_HTTP_error(requests_mock):
+    requests_mock.get("https://google.com", status_code=400)
+
+    with pytest.raises(requests.HTTPError):
+        request.get_json("https://google.com")

@@ -1,8 +1,6 @@
-import sys
-import unittest
+from freezegun import freeze_time
 
-from unittest.mock import patch
-from mock_helpers import mocked_get_today_date
+from seriesbr.ibge import build_series_url
 from seriesbr.helpers.api import (
     ibge_dates,
     ibge_classifications,
@@ -11,146 +9,113 @@ from seriesbr.helpers.api import (
 )
 
 
-@patch("seriesbr.helpers.dates.get_today_date", mocked_get_today_date)
-class TestIbgeDates(unittest.TestCase):
+@freeze_time("2019-12-02")
+class TestUrlBuilder:
+    def test_with_series_code(self):
+        assert build_series_url(1419) == (
+            "https://servicodados.ibge.gov.br/api/v3/agregados/1419/"
+            "periodos/197001-201912/variaveis?&localidades=BR&view=flat"
+        )
+
+
+@freeze_time("2019-12-02")
+class TestIbgeDates:
     def test_last_n(self):
-        test = ibge_dates(last_n=5)
-        expected = "/periodos/-5"
-        self.assertEqual(test, expected)
+        assert ibge_dates(last_n=5) == "/periodos/-5"
 
     def test_start(self):
-        test = ibge_dates(start="01/2017")
-        expected = "/periodos/201701-201912"
-        self.assertEqual(test, expected)
+        assert ibge_dates(start="01/2017") == "/periodos/201701-201912"
 
     def test_end(self):
-        test = ibge_dates(end="07/2017")
-        expected = "/periodos/190001-201707"
-        self.assertEqual(test, expected)
+        assert ibge_dates(end="07/2017") == "/periodos/197001-201707"
 
     def test_start_and_end(self):
-        test = ibge_dates(start="05-2015", end="07-2017")
-        expected = "/periodos/201505-201707"
-        self.assertEqual(test, expected)
+        assert ibge_dates(start="05-2015", end="07-2017") == "/periodos/201505-201707"
 
     def test_start_and_end_yearly(self):
-        test = ibge_dates(start="05-2015", end="07-2017", freq="anual")
-        expected = "/periodos/2015-2017"
-        self.assertEqual(test, expected)
+        assert ibge_dates(start="05-2015", end="07-2017", freq="anual") == (
+            "/periodos/2015-2017"
+        )
 
     def test_start_and_end_quarterly(self):
-        test = ibge_dates(start="05-2015", end="07-2017", freq="trimestral")
-        expected = "/periodos/201502-201703"
-        self.assertEqual(test, expected)
+        assert ibge_dates(start="05-2015", end="07-2017", freq="trimestral") == (
+            "/periodos/201502-201703"
+        )
 
 
-class TestIbgeVariables(unittest.TestCase):
+class TestIbgeVariables:
     def test_empty(self):
-        test = ibge_variables()
-        expected = "/variaveis"
-        self.assertEqual(test, expected)
+        assert ibge_variables() == "/variaveis"
 
     def test_int(self):
-        test = ibge_variables(100)
-        expected = "/variaveis/100"
-        self.assertEqual(test, expected)
+        assert ibge_variables(100) == "/variaveis/100"
 
     def test_str(self):
-        test = ibge_variables("100")
-        expected = "/variaveis/100"
-        self.assertEqual(test, expected)
+        assert ibge_variables("100") == "/variaveis/100"
 
     def test_list(self):
-        test = ibge_variables([1, 2, 3])
-        expected = "/variaveis/1|2|3"
-        self.assertEqual(test, expected)
+        assert ibge_variables([1, 2, 3]) == "/variaveis/1|2|3"
 
 
-class TestIbgeLocations(unittest.TestCase):
+class TestIbgeLocations:
     def test_empty(self):
-        test = ibge_locations()
-        expected = "&localidades=BR"
-        self.assertEqual(test, expected)
+        assert ibge_locations() == "&localidades=BR"
 
     def test_dict_with_nones(self):
-        test = ibge_locations(cities=None, municipalities=None)
-        expected = "&localidades=BR"
-        self.assertEqual(test, expected)
+        assert ibge_locations(cities=None, municipalities=None) == "&localidades=BR"
 
     def test_brazil_non_false(self):
-        test = ibge_locations(brazil="yes")
-        expected = "&localidades=BR"
-        self.assertEqual(test, expected)
+        assert ibge_locations(brazil="yes") == "&localidades=BR"
 
     def test_bool(self):
-        test = ibge_locations(states=True)
-        expected = "&localidades=N3"
-        self.assertEqual(test, expected)
+        assert ibge_locations(states=True) == "&localidades=N3"
 
     def test_truthy(self):
-        test = ibge_locations(states="all")
-        expected = "&localidades=N3"
-        self.assertEqual(test, expected)
+        assert ibge_locations(states="all") == "&localidades=N3"
 
     def test_int(self):
-        test = ibge_locations(states=2)
-        expected = "&localidades=N3[2]"
-        self.assertEqual(test, expected)
+        assert ibge_locations(states=2) == "&localidades=N3[2]"
 
     def test_list(self):
-        test = ibge_locations(states=[2, 3, 4])
-        expected = "&localidades=N3[2,3,4]"
-        self.assertEqual(test, expected)
+        assert ibge_locations(states=[2, 3, 4]) == "&localidades=N3[2,3,4]"
 
     def test_multiple_args(self):
-        test = ibge_locations(states=[2, 3, 4], municipalities=[1, 2])
-        expected = "&localidades=N3[2,3,4]|N6[1,2]"
-        self.assertEqual(test, expected)
+        assert (
+            ibge_locations(states=[2, 3, 4], municipalities=[1, 2])
+            == "&localidades=N3[2,3,4]|N6[1,2]"
+        )
 
     def test_multiple_args_mixed_types(self):
-        test = ibge_locations(states=True, mesoregions=4, municipalities=[1, 2])
-        expected = "&localidades=N3|N7[4]|N6[1,2]"
-        self.assertEqual(test, expected)
+        assert (
+            ibge_locations(states=True, mesoregions=4, municipalities=[1, 2])
+            == "&localidades=N3|N7[4]|N6[1,2]"
+        )
 
 
-class TestIbgeClassifications(unittest.TestCase):
+class TestIbgeClassifications:
     def test_none(self):
-        test = ibge_classifications()
-        expected = ""
-        self.assertEqual(test, expected)
+        assert ibge_classifications(self) == ""
 
     def test_str(self):
-        test = ibge_classifications("3")
-        expected = "classificacao=3[all]"
-        self.assertEqual(test, expected)
+        assert ibge_classifications("3") == "classificacao=3[all]"
 
     def test_int(self):
-        test = ibge_classifications(3)
-        expected = "classificacao=3[all]"
-        self.assertEqual(test, expected)
+        assert ibge_classifications(3) == "classificacao=3[all]"
 
     def test_list(self):
-        test = ibge_classifications([1, 2])
-        expected = "classificacao=1[all]|2[all]"
-        self.assertEqual(test, expected)
+        assert ibge_classifications([1, 2]) == "classificacao=1[all]|2[all]"
 
     def test_dict(self):
-        test = ibge_classifications({1: [2, 3]})
-        expected = "classificacao=1[2,3]"
-        self.assertEqual(test, expected)
+        assert ibge_classifications({1: [2, 3]}) == "classificacao=1[2,3]"
 
     def test_dict_multiple_keys(self):
-        test = ibge_classifications({1: [2, 3], 4: [5, 6]})
-        expected = "classificacao=1[2,3]|4[5,6]"
-        self.assertEqual(test, expected)
+        assert (
+            ibge_classifications({1: [2, 3], 4: [5, 6]})
+            == "classificacao=1[2,3]|4[5,6]"
+        )
 
     def test_empty_dict(self):
-        test = ibge_classifications({1: []})
-        expected = "classificacao=1[all]"
-        self.assertEqual(test, expected)
+        assert ibge_classifications({1: []}) == "classificacao=1[all]"
 
-
-if __name__ == "__main__":
-    unittest.main(failfast=True)
 
 # vi: nowrap

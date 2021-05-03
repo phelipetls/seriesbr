@@ -2,10 +2,9 @@ SHELL=/bin/bash
 
 PACKAGE = seriesbr
 TEST_DIR = tests
-UNITTEST = unittest discover -vfs
 
 test:
-	python3 -m $(UNITTEST) $(TEST_DIR)
+	pytest
 
 clean:
 	rm -rf build dist .egg $(PACKAGE).egg-info
@@ -24,15 +23,17 @@ publish-test:
 lint:
 	flake8 $(PACKAGE)
 
-COVERAGE = coverage run --source $(PACKAGE)/ -m $(UNITTEST) $(TEST_DIR)
+COVERAGE = pytest --cov=$(PACKAGE) tests
+CLEAR_COVERAGE = coverage erase
 
 cov:
 	$(COVERAGE)
-	coverage report
+	$(CLEAR_COVERAGE)
 
 htmlcov:
 	$(COVERAGE)
 	coverage html
+	$(CLEAR_COVERAGE)
 	firefox htmlcov/index.html
 
 fix:

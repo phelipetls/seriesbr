@@ -1,32 +1,31 @@
-import unittest
+import pytest
 import pandas as pd
 
+from fixture_utils import read_json
+
 from seriesbr import ibge
-from unittest.mock import patch
-from mock_helpers import get_sample_json
+
+JSON = read_json("ibge_json.json")
+METADATA = read_json("ibge_metadata.json")
+SEARCH_RESULTS = read_json("ibge_search_results.json")
 
 
-settings = {"return_value": get_sample_json("ibge_json.json")}
+@pytest.fixture
+def setup(mock_timeseries, mock_metadata, mock_search_results, mocker):
+    mock_metadata(METADATA)
+    mocker.patch("seriesbr.ibge.get_frequency", return_value="mensal")
 
 
-@patch("seriesbr.helpers.timeseries.get_json", **settings)
-class TestIbgeJsonParser(unittest.TestCase):
-    """Test conversion of IBGE timeseries JSON into DataFrame and related functions"""
+@pytest.fixture
+def mock_get_json(mocker):
+    return mocker.patch("seriesbr.helpers.timeseries.get_json", return_value=JSON)
 
-    # don't make a request to get frequency
-    @patch("seriesbr.ibge.get_frequency", return_value="mensal")
-    def test_timeseries_json_to_dataframe(self, _, f):
-        df = ibge.get_series(1419, start="02-2017", end="04-2019")
 
-        self.assertIsInstance(df, pd.DataFrame)
-        self.assertTrue(pd.api.types.is_datetime64_dtype(df.index))
+def test_timeseries_json_to_dataframe(setup, mock_get_json):
+    df = ibge.get_series(1419, start="02-2017", end="04-2019")
 
-        f.assert_called_with(
-            "https://servicodados.ibge.gov.br/api/v3/"
-            "agregados/1419/"
-            "periodos/201702-201904/"
-            "variaveis?&localidades=BR&view=flat"
-        )
+    assert isinstance(df, pd.DataFrame)
+    assert pd.api.types.is_datetime64_dtype(df.index)
 
 
 periods = pd.DataFrame(
@@ -34,171 +33,91 @@ periods = pd.DataFrame(
 )
 
 
-class TestIbgeGetFrequency(unittest.TestCase):
-    """Test if get_frequency returns the right thing"""
+def test_get_frequency(mocker):
+    mocker.patch("seriesbr.ibge.list_periods", return_value=periods)
 
-    @patch("seriesbr.ibge.list_periods")
-    def test_get_frequency(self, f):
-        f.return_value = periods
-
-        test = ibge.get_frequency(1419)
-        expected = "mensal"
-        self.assertEqual(test, expected)
+    assert ibge.get_frequency(1419) == "mensal"
 
 
-settings = {"return_value": get_sample_json("ibge_metadata.json")}
+expected_indices = [
+    "id",
+    "nome",
+    "URL",
+    "pesquisa",
+    "assunto",
+    "periodicidade",
+    "nivelTerritorial",
+    "variaveis",
+    "classificacoes",
+]
 
 
-@patch("seriesbr.helpers.metadata.get_json", **settings)
-class TestIbgeGetMetadata(unittest.TestCase):
-    """Test conversion of IBGE metadata JSON into DataFrame"""
+def test_metadata_json_to_dataframe(setup, mocker):
+    df = ibge.get_metadata(1419)
 
-    expected_indices = [
-        "id",
-        "nome",
-        "URL",
-        "pesquisa",
-        "assunto",
-        "periodicidade",
-        "nivelTerritorial",
-        "variaveis",
-        "classificacoes",
-    ]
-
-    def test_metadata_json_to_dataframe(self, _):
-        df = ibge.get_metadata(1419)
-        self.assertListEqual(df.index.tolist(), self.expected_indices)
-
-    def test_url(self, f):
-        expected_url = (
-            "https://servicodados.ibge.gov.br/api/v3/agregados/1419/metadados"
-        )
-
-        ibge.get_metadata(1419)
-        f.assert_called_with(expected_url)
+    assert all([a == b for a, b in zip(df.index.tolist(), expected_indices)])
 
 
-settings = {"return_value": get_sample_json("ibge_search_results.json")}
+def test_build_metadata_url():
+    url = ibge.build_metadata_url(1419)
+
+    assert url == "https://servicodados.ibge.gov.br/api/v3/agregados/1419/metadados"
 
 
-@patch("seriesbr.ibge.request.get_json", **settings)
-class TestIbgeSearch(unittest.TestCase):
-    """Test if IBGE parses IBGE's API JSON response correctly"""
+def test_search_json_parser(mocker):
+    mocker.patch("seriesbr.helpers.request.get_json", return_value=SEARCH_RESULTS)
 
-    def test_search_json_parser(self, _):
-        df = ibge.search()
-        self.assertIsInstance(df, pd.DataFrame)
+    df = ibge.search()
 
-    def test_if_dataframe_is_not_empty(self, _):
-        df = ibge.search()
-        self.assertFalse(df.empty)
+    assert isinstance(df, pd.DataFrame)
+    assert not df.empty
 
 
-settings = {"return_value": get_sample_json("ibge_variables.json")}
+def test_list_variables(mocker):
+    m = mocker.patch(
+        "seriesbr.ibge.request.get_json", return_value=read_json("ibge_variables.json")
+    )
+    df = ibge.list_variables(1419)
+
+    assert not df.empty
+    m.assert_called_with(
+        "https://servicodados.ibge.gov.br/api/v3/"
+        "agregados/1419/variaveis/all?localidades=BR"
+    )
 
 
-@patch("seriesbr.ibge.request.get_json", **settings)
-class TestIbgeListVariables(unittest.TestCase):
-    """Test IBGE list variables function"""
-
-    def test_list_variables(self, _):
-        df = ibge.list_variables(1419)
-
-        self.assertFalse(df.empty)
-
-    def test_url(self, f):
-        ibge.list_variables(1419)
-
-        f.assert_called_with(
-            "https://servicodados.ibge.gov.br/api/v3/"
-            "agregados/1419/variaveis/all?localidades=BR"
-        )
+expected_locations = [
+    "brazil",
+    "macroregions",
+    "microregions",
+    "municipalities",
+    "mesoregions",
+    "states",
+]
 
 
-settings = {"return_value": get_sample_json("ibge_metadata.json")}
+def test_list_locations(mocker):
+    m = mocker.patch(
+        "seriesbr.ibge.request.get_json", return_value=read_json("ibge_metadata.json")
+    )
+
+    df = ibge.list_locations(1419)
+
+    assert df.locations.tolist() == expected_locations
+
+    m.assert_called_with(
+        "https://servicodados.ibge.gov.br/api/v3" "/agregados/1419/metadados"
+    )
 
 
-@patch("seriesbr.ibge.request.get_json", **settings)
-class TestIbgeListLocations(unittest.TestCase):
-    """Test IBGE list locations function"""
-
-    expected_locations = [
-        "brazil",
-        "macroregions",
-        "microregions",
-        "municipalities",
-        "mesoregions",
-        "states",
-    ]
-
-    def test_list(self, _):
-        df = ibge.list_locations(1419)
-
-        locations = df.locations.tolist()
-        self.assertEqual(locations, self.expected_locations)
-
-    def test_url(self, f):
-        ibge.list_locations(1419)
-        f.assert_called_with(
-            "https://servicodados.ibge.gov.br/api/v3" "/agregados/1419/metadados"
-        )
+expected_periods = ["frequencia", "inicio", "fim"]
 
 
-@patch("seriesbr.helpers.metadata.get_json", **settings)
-class TestIbgeListPeriods(unittest.TestCase):
-    """Test IBGE list periods function"""
+def test_list_periods(mocker):
+    mocker.patch(
+        "seriesbr.helpers.metadata.get_json",
+        return_value=read_json("ibge_metadata.json"),
+    )
+    df = ibge.list_periods(1419)
 
-    expected_indices = ["frequencia", "inicio", "fim"]
-
-    def test_list(self, _):
-        df = ibge.list_periods(1419)
-
-        indices = df.index.tolist()
-        self.assertListEqual(indices, self.expected_indices)
-
-
-@patch("seriesbr.helpers.metadata.get_json", **settings)
-class TestIbgeListClassifications(unittest.TestCase):
-    """Test IBGE list classifications function"""
-
-    expected_columns = [
-        "id",
-        "nome",
-        "unidade",
-        "nivel",
-        "classificacao_id",
-        "classificacao_nome",
-    ]
-
-    def test_list(self, _):
-        df = ibge.list_classifications(1419)
-
-        columns = df.columns.tolist()
-        self.assertEqual(columns, self.expected_columns)
-
-
-regions = {
-    "list_macroregions": "ibge_macrorregioes.json",
-    "list_microregions": "ibge_microrregioes.json",
-    "list_mesoregions": "ibge_mesorregioes.json",
-    "list_municipalities": "ibge_municipios.json",
-    "list_states": "ibge_estados.json",
-}
-
-
-@patch("seriesbr.helpers.lists.get_json")
-class TestListRegionsFunctions(unittest.TestCase):
-    """Test list regions functions"""
-
-    def test_list_regions(self, m):
-        for region in regions:
-            with self.subTest(region=region):
-                m.return_value = get_sample_json(regions[region])
-                function = getattr(ibge, region)
-
-                df = function()
-                self.assertFalse(df.empty)
-
-
-if __name__ == "__main__":
-    unittest.main(failfast=True)
+    assert df.index.tolist() == expected_periods

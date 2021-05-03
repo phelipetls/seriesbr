@@ -1,5 +1,8 @@
-seriesbr
+--editable .
 requests-mock
 coverage
 pytest
+pytest-mock
+pytest-cov
 codecov
+freezegun
