@@ -1,4 +1,5 @@
 import pandas as pd
+
 from seriesbr.helpers.request import get_json
 
 
@@ -45,6 +46,7 @@ def ibge_json_to_df(url, freq="mensal"):
     """Convert a BCB time series in JSON format into a DataFrame."""
 
     json = get_json(url)
+
     # first element contains only metadata
     # let's ignore it
     df = pd.DataFrame(json[1:])

@@ -2,9 +2,11 @@ import pandas as pd
 
 from seriesbr.helpers import metadata, request, utils, timeseries, lists, api
 
+BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
+
 
 def get_series(
-    code,
+    table,
     variables=None,
     start=None,
     end=None,
@@ -22,7 +24,7 @@ def get_series(
 
     Parameters
     ----------
-    code : int
+    table : int
         Table code.
 
     variables : int or list of ints, optional
@@ -64,22 +66,9 @@ def get_series(
     2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses   Índice geral                              3.27
     2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
     """
-    baseurl = f"https://servicodados.ibge.gov.br/api/v3/agregados/{code}"
+    frequency = get_frequency(table)
+    url = build_series_url(**locals())
 
-    frequency = get_frequency(code)
-    dates = api.ibge_dates(start, end, last_n, frequency)
-    variables = api.ibge_variables(variables)
-    locations = api.ibge_locations(
-        municipalities=municipalities,
-        states=states,
-        macroregions=macroregions,
-        microregions=microregions,
-        mesoregions=mesoregions,
-        brazil=brazil,
-    )
-    classifications = api.ibge_classifications(classifications)
-
-    url = f"{baseurl}{dates}{variables}?{classifications}{locations}&view=flat"
     return timeseries.ibge_json_to_df(url, frequency)
 
 
@@ -91,6 +80,44 @@ def get_frequency(table):
 def build_url(table=""):
     """Return the url for a IBGE table."""
     return f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
+
+
+def build_series_url(
+    table,
+    variables=None,
+    start=None,
+    end=None,
+    last_n=None,
+    municipalities=None,
+    states=None,
+    macroregions=None,
+    microregions=None,
+    mesoregions=None,
+    brazil=None,
+    classifications=None,
+    frequency=None
+):
+    url = build_url(table)
+
+    url += api.ibge_dates(start, end, last_n, frequency)
+    url += api.ibge_variables(variables)
+    url += "?"
+    url += api.ibge_locations(
+        municipalities=municipalities,
+        states=states,
+        macroregions=macroregions,
+        microregions=microregions,
+        mesoregions=mesoregions,
+        brazil=brazil,
+    )
+    url += api.ibge_classifications(classifications)
+    url += "&view=flat"
+
+    return url
+
+
+def build_metadata_url(table):
+    return build_url(table) + "/metadados"
 
 
 def get_metadata(table):
@@ -111,7 +138,7 @@ def get_metadata(table):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    url = build_url(table) + "/metadados"
+    url = build_metadata_url(table)
     return metadata.ibge_metadata_to_df(url)
 
 
@@ -149,7 +176,7 @@ def search(*search, **searches):
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
 
-    return utils.search_list(df, search, searches)
+    return df
 
 
 def list_variables(table, *search, **searches):

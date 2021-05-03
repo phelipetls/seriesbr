@@ -90,7 +90,7 @@ def is_iterable(something):
     return True and not isinstance(something, str)
 
 
-def search_df(df, name, others=[]):
+def search_df(df, name, cols=[]):
     """
     Wrapper around query method of a DataFrame.
 
@@ -100,30 +100,34 @@ def search_df(df, name, others=[]):
         If the user tries to search in a
         non-existent column.
     """
-    df_cols = df.columns.tolist()
+    columns = df.columns.tolist()
 
     # check if additional searched columns exist
-    for col in others:
-        if col not in df_cols:
+    for col in cols:
+        if col not in columns:
             raise ValueError(f"{col} is not an existing column.")
 
+    query = build_query(name, cols)
+
+    return df.query(query, engine="python")
+
+
+def build_query(name, cols=None):
     # build regex string to search variable name
     regex = build_regex(name)
     name_search = f"nome.str.contains('{regex}')"
 
-    # build regexes to search additional fields, if any
-    if others:
-        other_searches = []
+    other_searches = ""
+    if cols:
+        queries = []
 
-        for field, search in others.items():
-            regex = build_regex(search)
-            other_searches.append(f"{field}.str.contains('{regex}')")
+        for colname, value in cols.items():
+            regex = build_regex(value)
+            queries.append(f"{colname}.str.contains('{regex}')")
 
-        other_searches = " and " + " and ".join(other_searches)
+        other_searches = " and " + " and ".join(queries)
 
-        return df.query(name_search + other_searches, engine="python")
-
-    return df.query(name_search, engine="python")
+    return name_search + other_searches
 
 
 def search_list(df, search, searches):
