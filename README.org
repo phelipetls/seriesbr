@@ -4,8 +4,6 @@
   :END:
 
 [[https://pypi.org/project/seriesbr/][file:https://img.shields.io/pypi/v/seriesbr.svg]]
-[[https://travis-ci.org/phelipetls/seriesbr][file:https://travis-ci.org/phelipetls/seriesbr.svg?branch=master]]
-[[https://codecov.io/gh/phelipetls/seriesbr][file:https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg]]
 
 *SeriesBR* is a Python package to interact with brazilian time series databases such as:
 
