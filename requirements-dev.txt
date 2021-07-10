@@ -1,4 +1,5 @@
 --editable .
+flake8
 requests-mock
 coverage
 pytest
