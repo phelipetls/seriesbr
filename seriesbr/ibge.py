@@ -176,7 +176,7 @@ def search(*search, **searches):
         json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
     )
 
-    return df
+    return utils.search_list(df, search, searches)
 
 
 def list_variables(table, *search, **searches):
