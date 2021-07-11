@@ -147,16 +147,3 @@ def build_regex(strings):
         return f"{flags}{joined_strings}"
 
     return f"{flags}{strings}"
-
-
-def clean_json(json):
-    """
-    Helper function to turn IBGE API JSON responses
-    into DataFrames and clean its column names.
-    """
-    df = json_normalize(json, sep="_")
-    df = df.rename(lambda x: "_".join(re.split(r"_", x)[-2:]), axis="columns")
-    return df
-
-
-# vi: nowrap

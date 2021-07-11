@@ -1,6 +1,6 @@
 import pandas as pd
 
-from seriesbr.helpers import metadata, request, utils, timeseries, lists, api
+from seriesbr.helpers import metadata, request, utils, timeseries, api
 
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
@@ -179,55 +179,6 @@ def search(*search, **searches):
     return utils.search_list(df, search, searches)
 
 
-def list_variables(table, *search, **searches):
-    """
-    List all variables in a table.
-
-    Returns
-    -------
-    pandas.DataFrame
-
-    Examples
-    --------
-    >>> ibge.list_variables(1419)
-         id                               variavel unidade
-    0    63                 IPCA - Variação mensal       %
-    1    69       IPCA - Variação acumulada no ano       %
-    2  2265  IPCA - Variação acumulada em 12 meses       %
-    3    66                     IPCA - Peso mensal       %
-    """
-    url = build_url(table)
-    url += "/variaveis/all?localidades=BR"
-    json = request.get_json(url)
-
-    df = utils.json_normalize(json).iloc[:, :3]
-
-    return utils.search_list(df, search, searches)
-
-
-def list_locations(table):
-    """
-    List all locations available in a table.
-
-    Examples
-    --------
-    >>> ibge.list_locations(1419)
-      codes   locations
-    0    N1      brazil
-    1    N6        city
-    2    N7  mesoregion
-    """
-    url = build_url(table) + "/metadados"
-    metadata = request.get_json(url)
-
-    codes = metadata["nivelTerritorial"]["Administrativo"]
-
-    df = pd.DataFrame({"codes": codes})
-    df["locations"] = df.codes.map(api.locations_codes_to_names)
-
-    return df.loc[df.locations.notnull(), :]
-
-
 def list_periods(table):
     """
     List a time series periodicity.
@@ -244,111 +195,6 @@ def list_periods(table):
     periods = metadata.loc["periodicidade"][0]
 
     return pd.DataFrame(periods.values(), index=periods.keys(), columns=["valores"])
-
-
-def list_classifications(table, *search, **searches):
-    """
-    List all classifications and categories in a table.
-
-    Examples
-    --------
-    >>> ibge.list_classifications(1419).head()
-         id                                     nome unidade  nivel classificacao_id                      classificacao_nome
-    0  7169                             Índice geral    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    1  7170                  1.Alimentação e bebidas    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    2  7171              11.Alimentação no domicílio    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    3  7172  1101.Cereais, leguminosas e oleaginosas    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    4  7173                            1101002.Arroz    None     -1              315  Geral, grupo, subgrupo, item e subitem
-    """
-    classifications = get_metadata(table).loc["classificacoes"][0]
-
-    df = utils.json_normalize(
-        classifications, "categorias", meta=["id", "nome"], meta_prefix="classificacao_"
-    )
-
-    return utils.search_list(df, search, searches)
-
-
-def list_states(*search, **searches):
-    """
-    List all states
-
-    Examples
-    --------
-    >>> ibge.list_states().head()
-       id sigla      nome  regiao_id regiao_sigla regiao_nome
-    0  11    RO  Rondônia          1            N       Norte
-    1  12    AC      Acre          1            N       Norte
-    2  13    AM  Amazonas          1            N       Norte
-    3  14    RR   Roraima          1            N       Norte
-    4  15    PA      Pará          1            N       Norte
-    """
-    return lists.list_region("estados", search, searches)
-
-
-def list_macroregions(*search, **searches):
-    """
-    List all macroregions
-
-    Examples
-    --------
-    >>> ibge.list_macroregions()
-       id sigla          nome
-    0   1     N         Norte
-    1   2    NE      Nordeste
-    2   3    SE       Sudeste
-    3   4     S           Sul
-    4   5    CO  Centro-Oeste
-    """
-    return lists.list_region("regioes", search, searches)
-
-
-def list_municipalities(*search, **searches):
-    """
-    List all municipalities
-
-    Examples
-    --------
-    >>> ibge.list_cities(UF_nome="Rio de Janeiro").head()
-               id                nome  microrregiao_id       microrregiao_nome  mesorregiao_id     mesorregiao_nome  UF_id UF_sigla         UF_nome  regiao_id regiao_sigla regiao_nome
-    3175  3300100      Angra dos Reis            33013     Baía da Ilha Grande            3305       Sul Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
-    3176  3300159             Aperibé            33002  Santo Antônio de Pádua            3301  Noroeste Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
-    3177  3300209            Araruama            33010                   Lagos            3304             Baixadas     33       RJ  Rio de Janeiro          3           SE     Sudeste
-    3178  3300225               Areal            33005               Três Rios            3303    Centro Fluminense     33       RJ  Rio de Janeiro          3           SE     Sudeste
-    3179  3300233  Armação dos Búzios            33010                   Lagos            3304             Baixadas     33       RJ  Rio de Janeiro          3           SE     Sudeste
-    """
-    return lists.list_region("municipios", search, searches)
-
-
-def list_microregions(*search, **searches):
-    """
-    List all microregions
-
-    Examples
-    --------
-    >>> ibge.list_microregions("Rio", mesorregiao_nome="Rio")
-            id                   nome  mesorregiao_id                 mesorregiao_nome  UF_id UF_sigla         UF_nome  regiao_id regiao_sigla regiao_nome
-    348  33018         Rio de Janeiro            3306  Metropolitana do Rio de Janeiro     33       RJ  Rio de Janeiro          3           SE     Sudeste
-    352  35004  São José do Rio Preto            3501            São José do Rio Preto     35       SP       São Paulo          3           SE     Sudeste
-    """
-    return lists.list_region("microrregioes", search, searches)
-
-
-def list_mesoregions(*search, **searches):
-    """
-    List all mesoregions.
-
-    Examples
-    --------
-    >>> ibge.list_mesoregions().head()
-         id               nome  UF_id UF_sigla   UF_nome  regiao_id regiao_sigla regiao_nome
-    0  1101    Madeira-Guaporé     11       RO  Rondônia          1            N       Norte
-    1  1102  Leste Rondoniense     11       RO  Rondônia          1            N       Norte
-    2  1201      Vale do Juruá     12       AC      Acre          1            N       Norte
-    3  1202       Vale do Acre     12       AC      Acre          1            N       Norte
-    4  1301   Norte Amazonense     13       AM  Amazonas          1            N       Norte
-    """
-    return lists.list_region("mesorregioes", search, searches)
 
 
 # vi: nowrap

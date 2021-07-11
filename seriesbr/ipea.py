@@ -1,6 +1,6 @@
 import pandas as pd
 
-from seriesbr.helpers import api, utils, dates, timeseries, metadata, lists, search_results
+from seriesbr.helpers import api, utils, dates, timeseries, metadata, search_results
 
 
 def get_series(*args, start=None, end=None, **kwargs):
@@ -115,75 +115,6 @@ def get_metadata(code):
 
 def build_metadata_url(code):
     return f"http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{code}')"
-
-
-def list_themes():
-    """
-    Function to list all themes available
-    in the database.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with all available themes
-        in IPEA's database.
-
-    Examples
-    --------
-    >>> ipea.list_themes().head()
-        TEMCODIGO  TEMCODIGO_PAI                  TEMNOME
-    0          28            NaN             Agropecuária
-    1          23            NaN       Assistência social
-    2          10            NaN    Balanço de pagamentos
-    3           7            NaN                   Câmbio
-    4           5            NaN        Comércio exterior
-    """
-    return lists.list_metadata("Temas")
-
-
-def list_countries():
-    """
-    Function to list all countries available
-    in the database.
-
-    Returns
-    -------
-    pandas.DataFrame
-
-    Examples
-    --------
-    >>> ipea.list_countries().head()
-      PAICODIGO         PAINOME
-    0       ZAF   África do Sul
-    1       DEU        Alemanha
-    2      LATI  América Latina
-    3       AGO          Angola
-    4       SAU  Arábia Saudita
-    """
-    return lists.list_metadata("Paises")
-
-
-def list_metadata():
-    """
-    Function to list all valid metadatas and their description.
-
-    Returns
-    -------
-    pandas.DataFrame
-
-    Examples
-    --------
-    >>> ipea.list_metadata().head()
-                       Description
-    SERNOME                   Name
-    SERCODIGO                 Code
-    PERNOME              Frequency
-    UNINOME    Unit of measurement
-    BASNOME           Basis's name
-    """
-    return pd.DataFrame.from_dict(
-        metadata.ipea_metadata_list, orient="index", columns=["Description"]
-    )
 
 
 # vi: nowrap
