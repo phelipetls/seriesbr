@@ -122,6 +122,3 @@ class TestIbgeClassifications:
 
     def test_empty_dict(self):
         assert ibge_filter_by_classification({1: []}) == "&classificacao=1[all]"
-
-
-# vi: nowrap

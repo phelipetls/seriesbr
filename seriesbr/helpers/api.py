@@ -334,6 +334,3 @@ def ibge_filter_by_location(**kwargs):
             query.append(f"{location_name}")
 
     return prefix + "|".join(query)
-
-
-# vi: nowrap

@@ -195,6 +195,3 @@ def list_periods(table):
     periods = metadata.loc["periodicidade"][0]
 
     return pd.DataFrame(periods.values(), index=periods.keys(), columns=["valores"])
-
-
-# vi: nowrap
