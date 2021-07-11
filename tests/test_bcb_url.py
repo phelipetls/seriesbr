@@ -8,7 +8,7 @@ URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados?format=json"
 
 
 @freeze_time("2019-12-02")
-class TestBcbUrl():
+class TestBcbSeriesUrl:
     """Test Bcb url builder to get a time series"""
 
     def test_defaults(self):
@@ -59,7 +59,10 @@ class TestBcbUrl():
     def test_last_n(self):
         url = bcb.build_url(11, last_n=30)
 
-        assert url == "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/30?format=json"
+        assert (
+            url
+            == "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados/ultimos/30?format=json"
+        )
 
     def test_invalid_type(self):
         with pytest.raises(AssertionError):
@@ -68,3 +71,31 @@ class TestBcbUrl():
     def test_crazy_date(self):
         with pytest.raises(ValueError):
             bcb.build_url(11, "not a date")
+
+
+class TestBcbMetadataUrl:
+    def test_metadata_url(self):
+        assert bcb.build_metadata_url(20786) == (
+            "https://dadosabertos.bcb.gov.br/api/3/action/"
+            "package_search?fq=codigo_sgs:20786"
+        )
+
+
+class TestBcbSearchUrl:
+    def test_search_bcb(self):
+        assert bcb.build_search_url("spread") == (
+            "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+            "q=spread&rows=10&start=1&sort=score desc"
+        )
+
+    def test_search_multiple_strings(self):
+        assert bcb.build_search_url("spread", "mensal", "livre") == (
+            "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+            "q=spread&rows=10&start=1&sort=score desc&fq=mensal+livre"
+        )
+
+    def test_search_with_pagination(self):
+        assert bcb.build_search_url("spread", "mensal", "livre", rows=30, start=5) == (
+            "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
+            "q=spread&rows=30&start=5&sort=score desc&fq=mensal+livre"
+        )

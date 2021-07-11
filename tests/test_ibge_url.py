@@ -10,7 +10,7 @@ from seriesbr.helpers.api import (
 
 
 @freeze_time("2019-12-02")
-class TestUrlBuilder:
+class TestIbgeSeriesUrl:
     def test_with_series_code(self):
         assert build_series_url(1419) == (
             "https://servicodados.ibge.gov.br/api/v3/agregados/1419/"
