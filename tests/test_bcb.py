@@ -4,11 +4,6 @@ import responses
 import pandas as pd
 
 from seriesbr import bcb
-from fixture_utils import read_json
-
-SERIES_JSON = read_json("bcb_json.json")
-METADATA = read_json("bcb_metadata.json")
-SEARCH_RESULTS = read_json("bcb_search_results.json")
 
 
 @responses.activate
@@ -16,16 +11,16 @@ def test_get_series():
     responses.add(
         responses.GET,
         "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados",
-        json=SERIES_JSON,
+        json=[{"data": "01/01/2019", "valor": "100"}],
         status=200,
     )
 
     df = bcb.get_series({"Selic": 11})
+    expected_df = pd.DataFrame(
+        data={"Selic": [100.0]}, index=pd.DatetimeIndex(["01/01/2019"], name="Date")
+    )
 
-    assert isinstance(df, pd.DataFrame)
-    assert df.columns.tolist() == ["Selic"]
-    assert pd.api.types.is_datetime64_dtype(df.index)
-    assert pd.api.types.is_float_dtype(df.values)
+    pd.testing.assert_frame_equal(df, expected_df)
 
 
 @responses.activate
@@ -33,13 +28,18 @@ def test_get_metadata():
     responses.add(
         responses.GET,
         "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs:20786",
-        json=METADATA,
+        json={
+            "result": {
+                "results": [{"code": "20786"}],
+            },
+        },
         status=200,
     )
 
     df = bcb.get_metadata(20786)
+    expected_df = pd.DataFrame({"values": ["20786"]}, index=pd.Series(["code"]))
 
-    assert not df.empty
+    pd.testing.assert_frame_equal(df, expected_df)
 
 
 @responses.activate
@@ -47,15 +47,29 @@ def test_search():
     responses.add(
         responses.GET,
         "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=Selic&rows=10&start=1&sort=score desc",
-        json=SEARCH_RESULTS,
+        json={
+            "result": {
+                "results": [
+                    {
+                        "codigo_sgs": "20786",
+                        "title": "Selic",
+                        "periodicidade": "20786",
+                        "unidade_medida": "Pontos percentuais",
+                    }
+                ],
+            },
+        },
         status=200,
     )
 
     df = bcb.search("Selic")
+    expected_df = pd.DataFrame(
+        {
+            "codigo_sgs": ["20786"],
+            "title": ["Selic"],
+            "periodicidade": ["20786"],
+            "unidade_medida": ["Pontos percentuais"],
+        }
+    )
 
-    assert df.columns.tolist() == [
-        "codigo_sgs",
-        "title",
-        "periodicidade",
-        "unidade_medida",
-    ]
+    pd.testing.assert_frame_equal(df, expected_df)
