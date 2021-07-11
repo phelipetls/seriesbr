@@ -1,23 +1,25 @@
 import pytest
+import responses
 import pandas as pd
 
 from seriesbr import ipea
 
 from fixture_utils import read_json
 
-JSON = read_json("ipea_json.json")
+SERIES_JSON = read_json("ipea_json.json")
 METADATA = read_json("ipea_metadata.json")
 SEARCH_RESULTS = read_json("ipea_search_results.json")
 
 
-@pytest.fixture
-def setup(mock_timeseries, mock_metadata, mock_search_results):
-    mock_timeseries(JSON)
-    mock_metadata(METADATA)
-    mock_search_results(METADATA)
+@responses.activate
+def test_timeseries_json_to_dataframe():
+    responses.add(
+        responses.GET,
+        "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='BM12_CRLIN12')",
+        json=SERIES_JSON,
+        status=200,
+    )
 
-
-def test_timeseries_json_to_dataframe(setup):
     df = ipea.get_series({"Selic": "BM12_CRLIN12"})
 
     assert isinstance(df, pd.DataFrame)
@@ -26,19 +28,27 @@ def test_timeseries_json_to_dataframe(setup):
     assert df.columns.tolist() == ["Selic"]
 
 
-def test_url(setup):
-    url = ipea.build_metadata_url("BM12_CRLIN12")
-    expected_url = (
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_CRLIN12')"
+@responses.activate
+def test_dataframe():
+    responses.add(
+        responses.GET,
+        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_CRLIN12')",
+        json=METADATA,
+        status=200,
     )
-    assert url == expected_url
+
+    assert not ipea.get_metadata("BM12_CRLIN12").empty
 
 
-def test_dataframe(setup):
-    assert not ipea.get_metadata(21789).empty
+@responses.activate
+def test_search_results_dataframe():
+    responses.add(
+        responses.GET,
+        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados?$select=SERCODIGO,SERNOME,PERNOME,UNINOME&$filter=(contains(SERNOME,'Selic'))",
+        json=SEARCH_RESULTS,
+        status=200,
+    )
 
-
-def test_search_results_dataframe(setup):
     df = ipea.search("Selic")
     assert not df.empty
 
