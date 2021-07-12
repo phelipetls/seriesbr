@@ -5,45 +5,45 @@ from seriesbr.ipea.url_builders.series import ipea_filter_by_date
 
 class TestIpeaSelect:
     def test_select_default(self):
-        assert ipea_select() == "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
+        assert ipea_select() == "SERCODIGO,SERNOME,PERNOME,UNINOME"
 
 
     def test_select_included_in_default(self):
-        assert ipea_select(["SERCODIGO", "SERNOME"]) == "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME"
+        assert ipea_select(["SERCODIGO", "SERNOME"]) == "SERCODIGO,SERNOME,PERNOME,UNINOME"
 
 
     def test_select_not_included_in_default(self):
-        assert ipea_select(["FNTNOME"]) == "?$select=SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME"
+        assert ipea_select(["FNTNOME"]) == "SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME"
 
 
 class TestIpeaFilter:
     def test_filter_name(self):
-        assert ipea_filter("selic") == "&$filter=contains(SERNOME,'selic')"
+        assert ipea_filter("selic") == "contains(SERNOME,'selic')"
 
 
     def test_filter_multiple_names(self):
         assert ipea_filter(["selic", "pib"]) == (
-            "&$filter=(contains(SERNOME,'selic') and contains(SERNOME,'pib'))"
+            "(contains(SERNOME,'selic') and contains(SERNOME,'pib'))"
         )
 
 
     def test_name_and_metadata(self):
         assert ipea_filter("selic", {"FNTNOME": "fonte"}) == (
-            "&$filter=contains(SERNOME,'selic') and contains(FNTNOME,'fonte')"
+            "contains(SERNOME,'selic') and contains(FNTNOME,'fonte')"
         )
 
 
     def test_string_metadata(self):
-        assert ipea_filter(metadata={"SERSTATUS": "A"}) == "&$filter=SERSTATUS eq 'A'"
+        assert ipea_filter(metadata={"SERSTATUS": "A"}) == "SERSTATUS eq 'A'"
 
 
     def test_numeric_metadata(self):
-        assert ipea_filter(metadata={"SERNUMERICA": 10}) == "&$filter=SERNUMERICA eq 10"
+        assert ipea_filter(metadata={"SERNUMERICA": 10}) == "SERNUMERICA eq 10"
 
 
     def test_name_and_multiple_metadata(self):
         assert ipea_filter("selic", {"PERNOME": ["mensal", "trimestral"]}) == (
-            "&$filter=contains(SERNOME,'selic')"
+            "contains(SERNOME,'selic')"
             " and (contains(PERNOME,'mensal')"
             " or contains(PERNOME,'trimestral'))"
         )
@@ -51,7 +51,7 @@ class TestIpeaFilter:
 
     def test_multiple_metadata(self):
         assert ipea_filter(metadata={"PERNOME": ["mensal", "trimestral"]}) == (
-            "&$filter=(contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
+            "(contains(PERNOME,'mensal') or contains(PERNOME,'trimestral'))"
         )
 
 
@@ -63,13 +63,13 @@ class TestIpeaFilter:
 class TestIpeaFilterByDate:
     def test_start(self):
         assert ipea_filter_by_date(start="2019-01-01") == (
-            "&$filter=VALDATA ge 2019-01-01"
+            "VALDATA ge 2019-01-01"
         )
 
 
     def test_end(self):
         assert ipea_filter_by_date(end="2019-01-30") == (
-            "&$filter=VALDATA le 2019-01-30"
+            "VALDATA le 2019-01-30"
         )
 
 
@@ -77,5 +77,5 @@ class TestIpeaFilterByDate:
         assert ipea_filter_by_date(
             start="2019-01-01", end="2019-01-30"
         ) == (
-            "&$filter=VALDATA ge 2019-01-01 and VALDATA le 2019-01-30"
+            "VALDATA ge 2019-01-01 and VALDATA le 2019-01-30"
         )

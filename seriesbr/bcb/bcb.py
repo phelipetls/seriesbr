@@ -32,8 +32,8 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     parsed_args = misc.parse_arguments(*args)
 
     def get_timeseries(code, name=None, start=None, end=None, last_n=None):
-        url = url_builders.series.build_url(code, start, end, last_n)
-        json = requests.get_json(url)
+        url, params = url_builders.series.build_url(code, start, end, last_n)
+        json = requests.get_json(url, params=params)
         return json_to_df.series.build_df(json, code, name)
 
     return pd.concat(
@@ -77,8 +77,8 @@ def search(*strings, rows=10, start=1):
     3      22041  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     """
-    url = url_builders.search.build_url(*strings, rows=rows, start=start)
-    json = requests.get_json(url)
+    url, params = url_builders.search.build_url(*strings, rows=rows, start=start)
+    json = requests.get_json(url, params=params)
     df = json_to_df.search.build_df(json)
     return df
 
@@ -107,7 +107,7 @@ def get_metadata(code):
     relationships_as_object                                                 []
     vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
-    url = url_builders.metadata.build_url(code)
-    json = requests.get_json(url)
+    url, params = url_builders.metadata.build_url(code)
+    json = requests.get_json(url, params=params)
     df = json_to_df.metadata.build_df(json)
     return df

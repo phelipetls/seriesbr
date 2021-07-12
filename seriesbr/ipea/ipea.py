@@ -29,8 +29,8 @@ def get_series(*args, start=None, end=None, **kwargs):
     parsed_args = misc.parse_arguments(*args)
 
     def get_timeseries(code, label=None, start=None, end=None):
-        url = url_builders.series.build_url(code, start, end)
-        json = requests.get_json(url)
+        url, params = url_builders.series.build_url(code, start, end)
+        json = requests.get_json(url, params=params)
         df = json_to_df.series.build_df(json, code, label)
         return df
 
@@ -71,8 +71,8 @@ def search(*code, **metadata):
     3    BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     4  BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     """
-    url = url_builders.search.build_url(*code, **metadata)
-    json = requests.get_json(url)
+    url, params = url_builders.search.build_url(*code, **metadata)
+    json = requests.get_json(url, params=params)
     df = json_to_df.search.build_df(json)
     return df
 
@@ -99,7 +99,7 @@ def get_metadata(code):
     SERATUALIZACAO                      2019-12-17T05:06:00.793-02:00
     BASNOME                                            Macroeconômico
     """
-    url = url_builders.metadata.build_url(code)
-    json = requests.get_json(url)
+    url, params = url_builders.metadata.build_url(code)
+    json = requests.get_json(url, params=params)
     df = json_to_df.metadata.build_df(json)
     return df

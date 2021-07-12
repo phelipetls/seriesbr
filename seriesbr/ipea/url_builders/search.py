@@ -3,12 +3,9 @@ from seriesbr import utils
 
 
 def build_url(*code, **metadata):
-    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    url += "Metadados"
-    url += ipea_select(metadata)
-    # breakpoint()
-    url += ipea_filter(*code, metadata)
-    return url
+    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados"
+    params = {"$select": ipea_select(metadata), "$filter": ipea_filter(*code, metadata)}
+    return url, params
 
 
 def ipea_select(metadata=[]):
@@ -23,19 +20,18 @@ def ipea_select(metadata=[]):
     Examples
     --------
     >>> url.ipea_select()
-    '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME'
+    'SERCODIGO,SERNOME,PERNOME,UNINOME'
     >>> url.ipea_select(["FNTNOME"])
-    '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME'
+    'SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME'
     >>> url.ipea_select(["PERNOME"])
-    '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME'
+    'SERCODIGO,SERNOME,PERNOME,UNINOME'
     """
     defaults = ["SERCODIGO", "SERNOME", "PERNOME", "UNINOME"]
 
     additional = [m for m in metadata if m not in defaults]
     columns = defaults + additional
 
-    joined_columns = ",".join(columns)
-    return f"?$select={joined_columns}"
+    return ",".join(columns)
 
 
 def ipea_filter(names=None, metadata={}):
@@ -66,8 +62,6 @@ def ipea_filter(names=None, metadata={}):
     """
     raise_if_invalid_metadata(metadata)
 
-    prefix = "&$filter="
-
     # filter by name
     filter_name = contains("SERNOME", names, " and ") if names else ""
 
@@ -87,7 +81,7 @@ def ipea_filter(names=None, metadata={}):
         filter_metadata = " and " if filter_name else ""
         filter_metadata += " and ".join(metadata_filters)
 
-    return f"{prefix}{filter_name}{filter_metadata}"
+    return f"{filter_name}{filter_metadata}"
 
 
 ipea_metadata_list = {
