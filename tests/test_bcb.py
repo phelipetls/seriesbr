@@ -1,5 +1,3 @@
-import re
-import pytest
 import responses
 import pandas as pd
 

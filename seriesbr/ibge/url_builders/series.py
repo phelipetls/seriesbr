@@ -1,136 +1,38 @@
-import re
-
-from seriesbr.helpers.utils import cat, is_iterable
-from seriesbr.helpers.odata import equal, contains
-from seriesbr.helpers.dates import month_to_quarter, parse_dates
-from seriesbr.helpers.metadata import ipea_metadata_list
+from seriesbr.utils import misc, dates
 
 
-def ipea_filter_by_date(start=None, end=None):
-    """
-    Help filter an IPEA time series by date.
+def build_url(
+    table,
+    variables=None,
+    start=None,
+    end=None,
+    last_n=None,
+    municipalities=None,
+    states=None,
+    macroregions=None,
+    microregions=None,
+    mesoregions=None,
+    brazil=None,
+    classifications=None,
+    frequency=None,
+):
+    url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
 
-    Parameters
-    ----------
-    start : str
-        Start date string.
+    url += ibge_filter_by_date(start, end, last_n, frequency)
+    url += ibge_filter_by_variable(variables)
+    url += "?"
+    url += ibge_filter_by_location(
+        municipalities=municipalities,
+        states=states,
+        macroregions=macroregions,
+        microregions=microregions,
+        mesoregions=mesoregions,
+        brazil=brazil,
+    )
+    url += ibge_filter_by_classification(classifications)
+    url += "&view=flat"
 
-    End : str
-        End date string.
-
-    Returns
-    -------
-    str
-        A string to filter by dates.
-
-    Examples
-    --------
-    >>> url.ipea_make_dates_query("2019-01-01T00:00:00-00:00", "2019-02-01T00:00:00-00:00")
-    '&$filter=VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00'
-    """
-    dates = ""
-
-    if start and end:
-        dates = f"&$filter=VALDATA ge {start} and VALDATA le {end}"
-    elif start:
-        dates = f"&$filter=VALDATA ge {start}"
-    elif end:
-        dates = f"&$filter=VALDATA le {end}"
-
-    return dates
-
-
-def ipea_select(metadata=[]):
-    """
-    Help select additional IPEA time series
-    metadata, if not already selected by default.
-
-    Parameters
-    ----------
-    metadata : list
-
-    Examples
-    --------
-    >>> url.ipea_select()
-    '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME'
-    >>> url.ipea_select(["FNTNOME"])
-    '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME,FNTNOME'
-    >>> url.ipea_select(["PERNOME"])
-    '?$select=SERCODIGO,SERNOME,PERNOME,UNINOME'
-    """
-    defaults = ["SERCODIGO", "SERNOME", "PERNOME", "UNINOME"]
-
-    additional = [m for m in metadata if m not in defaults]
-    columns = defaults + additional
-
-    joined_columns = ",".join(columns)
-    return f"?$select={joined_columns}"
-
-
-def ipea_filter(names=None, metadata={}):
-    """
-    Help filter IPEA time series metadata.
-
-    Parameters
-    ----------
-    names : list of str
-        Strings to search for in time series name.
-
-    metadata : dict
-        Dictionary to search strings in specific
-        metadata, e.g. { "metadata": ["str"] }.
-
-    Raises
-    ------
-    ValueError
-
-    Examples
-    --------
-    >>> url.ipea_filter("SELIC")
-    "&$filter=contains(SERNOME,'SELIC')"
-    >>> url.ipea_filter("SELIC", {"PERNOME": ["mensal", "trimestral"], "FNTNOME": "IBGE"})
-    "&$filter=contains(SERNOME,'SELIC') and (contains(PERNOME,'mensal') or contains(PERNOME,'trimestral')) and contains(FNTNOME,'IBGE')"
-    >>> url.ipea_filter("SELIC", {"SERSTATUS": "A", "SERNUMERICA": 1})
-    "&$filter=contains(SERNOME,'SELIC') and SERSTATUS eq 'A' and SERNUMERICA eq 1"
-    """
-    raise_if_invalid_metadata(metadata)
-
-    prefix = "&$filter="
-
-    # filter by name
-    filter_name = contains("SERNOME", names, " and ") if names else ""
-
-    # start building string to filter by additional metadata
-    filter_metadata = ""
-    if metadata:
-        metadata_filters = []
-
-        for metadata, value in metadata.items():
-            if re.search("(CODIGO|NUMERICA|STATUS)$", metadata):
-                s = equal(metadata, value)
-                metadata_filters.append(s)
-            else:
-                s = contains(metadata, value)
-                metadata_filters.append(s)
-
-        filter_metadata = " and " if filter_name else ""
-        filter_metadata += " and ".join(metadata_filters)
-
-    return f"{prefix}{filter_name}{filter_metadata}"
-
-
-def raise_if_invalid_metadata(metadata):
-    """Friendly error message in case of an invalid metadata."""
-    invalid_metadata = []
-    for m in metadata:
-        if m not in ipea_metadata_list:
-            invalid_metadata.append(m)
-
-    if invalid_metadata:
-        joined_invalid_metadata = ", ".join(invalid_metadata)
-        error_msg = f"{joined_invalid_metadata}: non-valid metadata."
-        error_msg += "\nCall ipea.list_metadata() if you need help."
-        raise ValueError(error_msg)
+    return url
 
 
 def ibge_filter_by_classification(classifications=None):
@@ -170,7 +72,7 @@ def ibge_filter_by_classification(classifications=None):
             if not categories or categories == "all":
                 s.append(f"{classification}[all]")
             else:
-                joined_categories = cat(categories, ",")
+                joined_categories = misc.cat(categories, ",")
                 s.append(f"{classification}[{joined_categories}]")
         return prefix + "|".join(s)
 
@@ -220,13 +122,13 @@ def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     >>> url.ibge_filter_by_date(start="052015", end="072017")
     '/periodos/201505-201707'
     """
-    start, end = parse_dates(start, end, "ibge")
+    start, end = dates.parse_dates(start, end, "ibge")
     if last_n:
         return f"/periodos/-{last_n}"
 
     if freq == "trimestral":
-        start = month_to_quarter(start, "%Y%m").strftime("%Y%m")
-        end = month_to_quarter(end, "%Y%m").strftime("%Y%m")
+        start = dates.month_to_quarter(start, "%Y%m").strftime("%Y%m")
+        end = dates.month_to_quarter(end, "%Y%m").strftime("%Y%m")
 
     elif freq == "anual":
         start, end = start[:-2], end[:-2]
@@ -257,8 +159,8 @@ def ibge_filter_by_variable(variables=None):
     >>> url.ibge_filter_by_variable()
     '/variaveis'
     """
-    if is_iterable(variables):
-        joined_variables = cat(variables, "|")
+    if misc.is_iterable(variables):
+        joined_variables = misc.cat(variables, "|")
         return f"/variaveis/{joined_variables}"
     elif variables:
         return f"/variaveis/{variables}"
@@ -326,7 +228,7 @@ def ibge_filter_by_location(**kwargs):
         if name == "brazil" and code:
             query.append("BR")
         elif isinstance(code, list):
-            joined_codes = cat(code, ",")
+            joined_codes = misc.cat(code, ",")
             query.append(f"{location_name}[{joined_codes}]")
         elif type(code) == int:
             query.append(f"{location_name}[{code}]")

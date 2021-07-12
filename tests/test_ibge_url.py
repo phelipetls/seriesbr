@@ -1,7 +1,7 @@
 from freezegun import freeze_time
 
-from seriesbr.ibge import build_series_url
-from seriesbr.helpers.api import (
+from seriesbr.ibge import url_builders
+from seriesbr.ibge.url_builders.series import (
     ibge_filter_by_date,
     ibge_filter_by_classification,
     ibge_filter_by_location,
@@ -12,13 +12,13 @@ from seriesbr.helpers.api import (
 @freeze_time("2019-12-02")
 class TestIbgeSeriesUrl:
     def test_with_series_code(self):
-        assert build_series_url(1419) == (
+        assert url_builders.series.build_url(1419) == (
             "https://servicodados.ibge.gov.br/api/v3/agregados/1419/"
             "periodos/197001-201912/variaveis?&localidades=BR&view=flat"
         )
 
     def test_with_location_and_classification(self):
-        assert build_series_url(1419, brazil=True, classifications=2) == (
+        assert url_builders.series.build_url(1419, brazil=True, classifications=2) == (
             "https://servicodados.ibge.gov.br/api/v3/agregados/1419/"
             "periodos/197001-201912/variaveis?&localidades=BR&classificacao=2[all]&view=flat"
         )
@@ -36,7 +36,10 @@ class TestIbgeDates:
         assert ibge_filter_by_date(end="07/2017") == "/periodos/197001-201707"
 
     def test_start_and_end(self):
-        assert ibge_filter_by_date(start="05-2015", end="07-2017") == "/periodos/201505-201707"
+        assert (
+            ibge_filter_by_date(start="05-2015", end="07-2017")
+            == "/periodos/201505-201707"
+        )
 
     def test_start_and_end_yearly(self):
         assert ibge_filter_by_date(start="05-2015", end="07-2017", freq="anual") == (
@@ -44,9 +47,9 @@ class TestIbgeDates:
         )
 
     def test_start_and_end_quarterly(self):
-        assert ibge_filter_by_date(start="05-2015", end="07-2017", freq="trimestral") == (
-            "/periodos/201502-201703"
-        )
+        assert ibge_filter_by_date(
+            start="05-2015", end="07-2017", freq="trimestral"
+        ) == ("/periodos/201502-201703")
 
 
 class TestIbgeVariables:
@@ -68,7 +71,10 @@ class TestIbgeLocations:
         assert ibge_filter_by_location() == "&localidades=BR"
 
     def test_dict_with_nones(self):
-        assert ibge_filter_by_location(cities=None, municipalities=None) == "&localidades=BR"
+        assert (
+            ibge_filter_by_location(cities=None, municipalities=None)
+            == "&localidades=BR"
+        )
 
     def test_brazil_non_false(self):
         assert ibge_filter_by_location(brazil="yes") == "&localidades=BR"

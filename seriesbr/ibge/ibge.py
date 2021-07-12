@@ -1,6 +1,6 @@
 import pandas as pd
-
-from seriesbr.helpers import metadata, request, utils, timeseries, api
+from seriesbr.utils import requests
+from . import url_builders, json_to_df
 
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
@@ -66,58 +66,16 @@ def get_series(
     2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses   Índice geral                              3.27
     2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
     """
+    url = url_builders.series.build_url(**locals())
+    json = requests.get_json(url)
     frequency = get_frequency(table)
-    url = build_series_url(**locals())
-
-    return timeseries.ibge_json_to_df(url, frequency)
+    df = json_to_df.series.build_df(json, frequency)
+    return df
 
 
 def get_frequency(table):
     """Get a table time frequency (periodicity)."""
     return list_periods(table).loc["frequencia", :].values
-
-
-def build_url(table=""):
-    """Return the url for a IBGE table."""
-    return f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
-
-
-def build_series_url(
-    table,
-    variables=None,
-    start=None,
-    end=None,
-    last_n=None,
-    municipalities=None,
-    states=None,
-    macroregions=None,
-    microregions=None,
-    mesoregions=None,
-    brazil=None,
-    classifications=None,
-    frequency=None
-):
-    url = build_url(table)
-
-    url += api.ibge_filter_by_date(start, end, last_n, frequency)
-    url += api.ibge_filter_by_variable(variables)
-    url += "?"
-    url += api.ibge_filter_by_location(
-        municipalities=municipalities,
-        states=states,
-        macroregions=macroregions,
-        microregions=microregions,
-        mesoregions=mesoregions,
-        brazil=brazil,
-    )
-    url += api.ibge_filter_by_classification(classifications)
-    url += "&view=flat"
-
-    return url
-
-
-def build_metadata_url(table):
-    return build_url(table) + "/metadados"
 
 
 def get_metadata(table):
@@ -138,8 +96,10 @@ def get_metadata(table):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    url = build_metadata_url(table)
-    return metadata.ibge_metadata_to_df(url)
+    url = url_builders.metadata.build_url(table)
+    json = requests.get_json(url)
+    df = json_to_df.metadata.build_df(json)
+    return df
 
 
 def search(*search, **searches):
@@ -169,14 +129,10 @@ def search(*search, **searches):
     3102    49  Folha de pagamento nominal por tipo de índice ...          DG  Pesquisa Industrial Mensal - Dados Gerais
     3103    52  Folha de pagamento nominal por trabalhador por...          DG  Pesquisa Industrial Mensal - Dados Gerais
     """
-    url = build_url()
-    json = request.get_json(url)
-
-    df = utils.json_normalize(
-        json, record_path="agregados", meta=["id", "nome"], meta_prefix="pesquisa_"
-    )
-
-    return utils.search_list(df, search, searches)
+    url = url_builders.search.build_url()
+    json = requests.get_json(url)
+    df = json_to_df.search.build_df(json, search, searches)
+    return df
 
 
 def list_periods(table):

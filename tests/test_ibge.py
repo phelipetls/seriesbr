@@ -1,8 +1,9 @@
+import pytest
 import responses
 import pandas as pd
 from freezegun import freeze_time
-
 from seriesbr import ibge
+from seriesbr.ibge.json_to_df.search import build_query, search_df
 
 
 @freeze_time("2019-01-01")
@@ -127,7 +128,7 @@ def test_get_metadata():
 def test_search():
     responses.add(
         responses.GET,
-        "https://servicodados.ibge.gov.br/api/v3/agregados/",
+        "https://servicodados.ibge.gov.br/api/v3/agregados",
         json=[
             {
                 "id": "1",
@@ -146,3 +147,29 @@ def test_search():
     df = ibge.search("Selic")
 
     assert all("Selic" in value for value in df.values)
+
+
+def test_build_query():
+    assert build_query(1) == "nome.str.contains('(?iu)1')"
+    assert build_query("oi") == "nome.str.contains('(?iu)oi')"
+    assert build_query([1, 2, 3]) == "nome.str.contains('(?iu)1|2|3')"
+    assert build_query("nome", {"pesquisa_nome": "pesquisa"}) == (
+        "nome.str.contains('(?iu)nome')"
+        " and pesquisa_nome.str.contains('(?iu)pesquisa')"
+    )
+    assert build_query(["nome", "outro"], {"pesquisa_nome": ["pesquisa", "outra"]}) == (
+        "nome.str.contains('(?iu)nome|outro')"
+        " and pesquisa_nome.str.contains('(?iu)pesquisa|outra')"
+    )
+    build_query(
+        ["oi", "tudo"], {"pesquisa_nome": ["DD", "DI"], "pesquisa_id": "AA"}
+    ) == (
+        "nome.str.contains('(?iu)oi|tudo')"
+        " and pesquisa_nome.str.contains('(?iu)DD|DI')"
+        " and pesquisa_id.str.contains('(?iu)AA')"
+    )
+
+
+def test_searching_non_existent_column():
+    with pytest.raises(ValueError):
+        search_df(pd.DataFrame([1, 2, 3], columns=["column"]), "nome", {"non_existent_column": "string"})

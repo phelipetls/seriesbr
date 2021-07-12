@@ -1,51 +1,8 @@
 import pandas as pd
 
-from seriesbr.helpers.request import get_json
 
-
-def bcb_json_to_df(url, code, label):
+def build_df(json, freq="mensal"):
     """Convert a BCB time series in JSON format into a DataFrame."""
-
-    json = get_json(url)
-    df = pd.DataFrame(json)
-
-    # this columns should be float
-    df["valor"] = df["valor"].astype("float64")
-
-    # properly set a datetime index
-    df = df.set_index("data")
-    df = df.rename_axis("Date")
-    df.index = pd.to_datetime(df.index, format="%d/%m/%Y")
-
-    df.columns = [label if label else code]
-    return df
-
-
-def ipea_json_to_df(url, code, label):
-    """Convert a IPEA time series in JSON format into a DataFrame."""
-
-    json = get_json(url)["value"]
-    df = pd.DataFrame(json)
-
-    # removing utc component from date string
-    try:
-        df["VALDATA"] = df["VALDATA"].str[:-6]
-        df = df.set_index("VALDATA")
-        df = df.rename_axis("Date")
-        df.index = pd.to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
-        # casting numerical values
-        df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
-        df.columns = [label if label else code]
-    except KeyError:
-        return
-
-    return df
-
-
-def ibge_json_to_df(url, freq="mensal"):
-    """Convert a BCB time series in JSON format into a DataFrame."""
-
-    json = get_json(url)
 
     # first element contains only metadata
     # let's ignore it

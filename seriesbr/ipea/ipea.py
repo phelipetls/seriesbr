@@ -1,6 +1,6 @@
 import pandas as pd
-
-from seriesbr.helpers import api, utils, dates, timeseries, metadata, search_results
+from seriesbr.utils import requests, misc
+from . import url_builders, json_to_df
 
 
 def get_series(*args, start=None, end=None, **kwargs):
@@ -26,7 +26,13 @@ def get_series(*args, start=None, end=None, **kwargs):
     -------
     pandas.DataFrame
     """
-    parsed_args = utils.parse_arguments(*args)
+    parsed_args = misc.parse_arguments(*args)
+
+    def get_timeseries(code, label=None, start=None, end=None):
+        url = url_builders.series.build_url(code, start, end)
+        json = requests.get_json(url)
+        df = json_to_df.series.build_df(json, code, label)
+        return df
 
     return pd.concat(
         (
@@ -39,21 +45,7 @@ def get_series(*args, start=None, end=None, **kwargs):
     )
 
 
-def get_timeseries(code, label=None, start=None, end=None):
-    """Return a single IPEA time series."""
-    assert isinstance(code, str), "Not a valid code format."
-
-    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    url += f"ValoresSerie(SERCODIGO='{code}')"
-    url += "?$select=VALDATA,VALVALOR"
-
-    start, end = dates.parse_dates(start, end, api="ipea")
-    url += api.ipea_filter_by_date(start, end)
-
-    return timeseries.ipea_json_to_df(url, code, label)
-
-
-def search(*SERNOME, **metadata):
+def search(*code, **metadata):
     """
     Search IPEA database.
 
@@ -79,12 +71,10 @@ def search(*SERNOME, **metadata):
     3    BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     4  BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
     """
-    url = "http://ipeadata2-homologa.ipea.gov.br/api/v1/"
-    url += "Metadados"
-    url += api.ipea_select(metadata)
-    url += api.ipea_filter(SERNOME, metadata)
-
-    return search_results.ipea_get_search_results(url)
+    url = url_builders.search.build_url(*code, **metadata)
+    json = requests.get_json(url)
+    df = json_to_df.search.build_df(json)
+    return df
 
 
 def get_metadata(code):
@@ -109,9 +99,7 @@ def get_metadata(code):
     SERATUALIZACAO                      2019-12-17T05:06:00.793-02:00
     BASNOME                                            Macroeconômico
     """
-    url = build_metadata_url(code)
-    return metadata.ipea_metadata_to_df(url)
-
-
-def build_metadata_url(code):
-    return f"http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{code}')"
+    url = url_builders.metadata.build_url(code)
+    json = requests.get_json(url)
+    df = json_to_df.metadata.build_df(json)
+    return df

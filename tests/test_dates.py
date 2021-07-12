@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from seriesbr.helpers import dates
+from seriesbr.utils import dates
 
 
 class TestDates:

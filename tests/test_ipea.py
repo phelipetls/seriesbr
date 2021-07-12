@@ -30,7 +30,7 @@ def test_timeseries_json_to_dataframe():
 
 
 @responses.activate
-def test_dataframe():
+def test_metadata_json_to_dataframe():
     responses.add(
         responses.GET,
         "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
@@ -51,10 +51,10 @@ def test_dataframe():
 
 
 @responses.activate
-def test_search_results_dataframe():
+def test_search_results_json_to_dataframe():
     responses.add(
         responses.GET,
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados?$select=SERCODIGO,SERNOME,PERNOME,UNINOME&$filter=(contains(SERNOME,'Selic'))",
+        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados?$select=SERCODIGO,SERNOME,PERNOME,UNINOME&$filter=contains(SERNOME,'Selic')",
         json={
             "@odata.context": "http://ipeadata2-homologa.ipea.gov.br/api/v1/$metadata#Metadados(SERCODIGO,SERNOME,PERNOME,UNINOME)",
             "value": [

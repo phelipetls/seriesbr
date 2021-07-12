@@ -1,6 +1,6 @@
 import pandas as pd
-
-from seriesbr.helpers import utils, timeseries, metadata, dates, search_results
+from seriesbr.utils import requests, misc
+from . import url_builders, json_to_df
 
 
 def get_series(*args, start=None, end=None, last_n=None, **kwargs):
@@ -29,7 +29,12 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     -------
     pandas.DataFrame
     """
-    parsed_args = utils.parse_arguments(*args)
+    parsed_args = misc.parse_arguments(*args)
+
+    def get_timeseries(code, name=None, start=None, end=None, last_n=None):
+        url = url_builders.series.build_url(code, start, end, last_n)
+        json = requests.get_json(url)
+        return json_to_df.series.build_df(json, code, name)
 
     return pd.concat(
         (
@@ -40,28 +45,6 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
         sort=True,
         **kwargs,
     )
-
-
-def get_timeseries(code, name=None, start=None, end=None, last_n=None):
-    """Return a single BCB time series in a DataFrame."""
-    url = build_url(code, start, end, last_n)
-
-    return timeseries.bcb_json_to_df(url, code, name)
-
-
-def build_url(code, start=None, end=None, last_n=None):
-    """Return the url for a BCB time series."""
-    assert isinstance(code, (str, int)), "Not a valid code format."
-
-    url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
-
-    if last_n:
-        url += f"/ultimos/{last_n}"
-        url += "?format=json"
-        return url
-
-    start, end = dates.parse_dates(start, end, api="bcb")
-    return f"{url}?format=json&dataInicial={start}&dataFinal={end}"
 
 
 def search(*strings, rows=10, start=1):
@@ -94,23 +77,10 @@ def search(*strings, rows=10, start=1):
     3      22041  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
     """
-    url = build_search_url(*strings, rows=rows, start=start)
-    return search_results.bcb_get_search_results(url)
-
-
-def build_search_url(*strings, rows=10, start=1):
-    """Return a URL to search in the BCB database."""
-    url = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-
-    first, others = strings[0], strings[1:]
-    params = f"q={first}&rows={rows}&start={start}&sort=score desc"
-
-    other_params = ""
-    if others:
-        joined_params = "+".join([str(s) for s in others])
-        other_params = f"&fq={joined_params}"
-
-    return f"{url}{params}{other_params}"
+    url = url_builders.search.build_url(*strings, rows=rows, start=start)
+    json = requests.get_json(url)
+    df = json_to_df.search.build_df(json)
+    return df
 
 
 def get_metadata(code):
@@ -137,12 +107,7 @@ def get_metadata(code):
     relationships_as_object                                                 []
     vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
-    url = build_metadata_url(code)
-    return metadata.bcb_metadata_to_df(url)
-
-
-def build_metadata_url(code):
-    """Return a URL to search for a BCB time series metadata."""
-    baseurl = "https://dadosabertos.bcb.gov.br/api/3/action/package_search?"
-    params = f"fq=codigo_sgs:{code}"
-    return f"{baseurl}{params}"
+    url = url_builders.metadata.build_url(code)
+    json = requests.get_json(url)
+    df = json_to_df.metadata.build_df(json)
+    return df
