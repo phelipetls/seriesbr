@@ -1,11 +1,126 @@
+import pytest
 import responses
 import pandas as pd
 
+from freezegun import freeze_time
+from responses import matchers
 from seriesbr import bcb
 
 
+BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
+
+
+@freeze_time("2021-12-31")
 @responses.activate
-def test_get_series():
+@pytest.mark.parametrize(
+    "kwargs,expected",
+    [
+        (
+            {},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    "dataInicial": "01/01/1970",
+                    "dataFinal": "31/12/2021",
+                },
+            },
+        ),
+        (
+            {"last_n": 10},
+            {
+                "url": BASE_URL + "/ultimos/10",
+                "params": {
+                    "format": "json",
+                },
+            },
+        ),
+        (
+            {"start": "2019"},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    "dataInicial": "01/01/2019",
+                    "dataFinal": "31/12/2021",
+                },
+            },
+        ),
+        (
+            {"start": "2019-11"},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    "dataInicial": "01/11/2019",
+                    "dataFinal": "31/12/2021",
+                },
+            },
+        ),
+        (
+            {"start": "2019-11-07"},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    # TODO: fix later since this is confusing, 11 should be the month
+                    "dataInicial": "11/07/2019",
+                    "dataFinal": "31/12/2021",
+                },
+            },
+        ),
+        (
+            {"end": "2019"},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    "dataInicial": "01/01/1970",
+                    "dataFinal": "31/12/2019",
+                },
+            },
+        ),
+        (
+            {"end": "2019-11"},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    "dataInicial": "01/01/1970",
+                    "dataFinal": "30/11/2019",
+                },
+            },
+        ),
+        (
+            {"end": "2019-11-07"},
+            {
+                "url": BASE_URL,
+                "params": {
+                    "format": "json",
+                    "dataInicial": "01/01/1970",
+                    "dataFinal": "11/07/2019",
+                },
+            },
+        ),
+    ],
+)
+def test_bcb_get_series_url(kwargs, expected):
+    expected_url = expected["url"]
+    expected_params = expected["params"]
+
+    responses.add(
+        responses.GET,
+        expected_url,
+        match=[matchers.query_param_matcher(expected_params)],
+        match_querystring=False,
+        json=[{"data": "01/01/2019", "valor": "100"}],
+    )
+
+    bcb.get_series(11, **kwargs)
+
+
+@responses.activate
+def test_bcb_get_series_dataframe():
     responses.add(
         responses.GET,
         "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados",
@@ -22,7 +137,7 @@ def test_get_series():
 
 
 @responses.activate
-def test_get_metadata():
+def test_bcb_get_metadata():
     responses.add(
         responses.GET,
         "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs:20786",
