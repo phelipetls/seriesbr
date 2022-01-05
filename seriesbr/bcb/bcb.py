@@ -47,42 +47,6 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     )
 
 
-def search(*strings, rows=10, start=1):
-    """
-    Search for a name in the BCB database.
-
-    Parameters
-    ----------
-    rows : int, default 10
-        How many results to show.
-
-    start : int, default 1
-        From which row to start showing the results.
-
-    *strings
-        Arbitrary number of strings to search.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with the search results.
-
-    Examples
-    --------
-    >>> bcb.search("Atividade", "econômica", rows=5, start=2)
-      codigo_sgs                                              title periodicidade    unidade_medida
-    0      27738  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
-    1      27742  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
-    2      22039  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
-    3      22041  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
-    4      22027  Saldo das operações de crédito por atividade e...        mensal  Milhões de reais
-    """
-    url, params = url_builders.search.build_url(*strings, rows=rows, start=start)
-    json = requests.get_json(url, params=params)
-    df = json_to_df.search.build_df(json)
-    return df
-
-
 def get_metadata(code):
     """
     Get a BCB time series metadata.

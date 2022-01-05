@@ -102,39 +102,6 @@ def get_metadata(table):
     return df
 
 
-def search(*search, **searches):
-    """
-    List all IBGE tables.
-
-    Parameters
-    ----------
-    *search
-        Strings to search for in a table name.
-
-    **searches
-        Strings to search in other field name,
-        e.g. `pesquisa_nome`.
-
-    Returns
-    -------
-    pandas.DataFrame
-
-    Examples
-    --------
-    >>> ibge.search("Índice", "Preços", pesquisa_nome="Pesquisa").head()
-            id                                               nome pesquisa_id                              pesquisa_nome
-    2472  1399  Número de empresas comerciais, Unidades locais...          PB                 Pesquisa Anual de Comércio
-    2957   379  Índice de Gini - recebimento médio mensal das ...          OF          Pesquisa de Orçamentos Familiares
-    3101    50  Folha de pagamento nominal por classes de indú...          DG  Pesquisa Industrial Mensal - Dados Gerais
-    3102    49  Folha de pagamento nominal por tipo de índice ...          DG  Pesquisa Industrial Mensal - Dados Gerais
-    3103    52  Folha de pagamento nominal por trabalhador por...          DG  Pesquisa Industrial Mensal - Dados Gerais
-    """
-    url = url_builders.search.build_url()
-    json = requests.get_json(url)
-    df = json_to_df.search.build_df(json, search, searches)
-    return df
-
-
 def list_periods(table):
     """
     List a time series periodicity.

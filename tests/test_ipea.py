@@ -1,4 +1,3 @@
-import pytest
 import responses
 import pandas as pd
 
@@ -46,37 +45,5 @@ def test_metadata_json_to_dataframe():
 
     df = ipea.get_metadata("BM12_TJOVER12")
     expected_df = pd.DataFrame({"values": "BM12_TJOVER12"}, index=["SERCODIGO"])
-
-    pd.testing.assert_frame_equal(df, expected_df)
-
-
-@responses.activate
-def test_search_results_json_to_dataframe():
-    responses.add(
-        responses.GET,
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados?$select=SERCODIGO,SERNOME,PERNOME,UNINOME&$filter=contains(SERNOME,'Selic')",
-        json={
-            "@odata.context": "http://ipeadata2-homologa.ipea.gov.br/api/v1/$metadata#Metadados(SERCODIGO,SERNOME,PERNOME,UNINOME)",
-            "value": [
-                {
-                    "SERCODIGO": "BM12_TJOVER12",
-                    "SERNOME": "Selic",
-                    "PERNOME": "Mensal",
-                    "UNINOME": "R$",
-                }
-            ],
-        },
-        status=200,
-    )
-
-    df = ipea.search("Selic")
-    expected_df = pd.DataFrame(
-        {
-            "SERCODIGO": ["BM12_TJOVER12"],
-            "SERNOME": ["Selic"],
-            "PERNOME": ["Mensal"],
-            "UNINOME": ["R$"],
-        }
-    )
 
     pd.testing.assert_frame_equal(df, expected_df)

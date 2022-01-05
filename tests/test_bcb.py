@@ -38,36 +38,3 @@ def test_get_metadata():
     expected_df = pd.DataFrame({"values": ["20786"]}, index=pd.Series(["code"]))
 
     pd.testing.assert_frame_equal(df, expected_df)
-
-
-@responses.activate
-def test_search():
-    responses.add(
-        responses.GET,
-        "https://dadosabertos.bcb.gov.br/api/3/action/package_search?q=Selic&rows=10&start=1&sort=score desc",
-        json={
-            "result": {
-                "results": [
-                    {
-                        "codigo_sgs": "20786",
-                        "title": "Selic",
-                        "periodicidade": "20786",
-                        "unidade_medida": "Pontos percentuais",
-                    }
-                ],
-            },
-        },
-        status=200,
-    )
-
-    df = bcb.search("Selic")
-    expected_df = pd.DataFrame(
-        {
-            "codigo_sgs": ["20786"],
-            "title": ["Selic"],
-            "periodicidade": ["20786"],
-            "unidade_medida": ["Pontos percentuais"],
-        }
-    )
-
-    pd.testing.assert_frame_equal(df, expected_df)

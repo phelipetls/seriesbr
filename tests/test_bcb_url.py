@@ -110,31 +110,3 @@ class TestBcbMetadataUrl:
     def test_metadata_url(self):
         _, params = url_builders.metadata.build_url(20786)
         assert params == {"fq": "codigo_sgs:20786"}
-
-
-class TestBcbSearchUrl:
-    def test_search_bcb(self):
-        _, params = url_builders.search.build_url("spread")
-        assert params == {"q": "spread", "rows": 10, "start": 1, "sort": "score desc"}
-
-    def test_search_multiple_strings(self):
-        _, params = url_builders.search.build_url("spread", "mensal", "livre")
-        assert params == {
-            "q": "spread",
-            "rows": 10,
-            "start": 1,
-            "sort": "score desc",
-            "fq": "mensal+livre",
-        }
-
-    def test_search_with_pagination(self):
-        _, params = url_builders.search.build_url(
-            "spread", "mensal", "livre", rows=30, start=5
-        )
-        assert params == {
-            "q": "spread",
-            "rows": 30,
-            "start": 5,
-            "sort": "score desc",
-            "fq": "mensal+livre",
-        }

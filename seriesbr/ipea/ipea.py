@@ -45,38 +45,6 @@ def get_series(*args, start=None, end=None, **kwargs):
     )
 
 
-def search(*code, **metadata):
-    """
-    Search IPEA database.
-
-    Parameters
-    ----------
-    *SERNOME
-        Strings to search for in a time series name.
-
-    **metadata
-        Strings to search for in metadata.
-
-    Returns
-    -------
-    pandas.DataFrame
-
-    Examples
-    --------
-    >>> ipea.search("Taxa", "Juros", "Selic", "recursos livres", PERNOME="mensal", UNINOME="%").head()
-            SERCODIGO                                            SERNOME PERNOME   UNINOME
-    0    BM12_CRDTJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
-    1  BM12_CRDTJPF12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
-    2  BM12_CRDTJPJ12  Operações de crédito - recursos direcionados -...  Mensal  (% a.a.)
-    3    BM12_CRLIN12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
-    4  BM12_CRLINPF12  Operações de crédito - recursos livres - inadi...  Mensal       (%)
-    """
-    url, params = url_builders.search.build_url(*code, **metadata)
-    json = requests.get_json(url, params=params)
-    df = json_to_df.search.build_df(json)
-    return df
-
-
 def get_metadata(code):
     """
     Get metadata of an IPEA time series.
