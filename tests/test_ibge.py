@@ -11,28 +11,7 @@ def test_get_series():
         responses.GET,
         "https://servicodados.ibge.gov.br/api/v3/agregados/1419/metadados",
         json={
-            "id": 1419,
-            "nome": "IPCA",
-            "URL": "http://sidra.ibge.gov.br/tabela/1419",
-            "pesquisa": "Índice Nacional de Preços ao Consumidor Amplo",
-            "assunto": "Índices de preços",
-            "periodicidade": {"frequencia": "mensal", "inicio": 201201, "fim": 201912},
-            "nivelTerritorial": {
-                "Administrativo": ["N1", "N6", "N7"],
-            },
-            "variaveis": [{"id": 1, "nome": "IPCA - Variação mensal", "unidade": "%"}],
-            "classificacoes": [
-                {
-                    "id": 315,
-                    "nome": "Geral, grupo, subgrupo, item e subitem",
-                    "categorias": [
-                        {
-                            "id": 7169,
-                            "nome": "Índice geral",
-                        }
-                    ],
-                }
-            ],
+            "periodicidade": {"frequencia": "mensal"},
         },
         status=200,
     )

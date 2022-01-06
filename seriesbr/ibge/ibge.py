@@ -68,14 +68,16 @@ def get_series(
     """
     url = url_builders.series.build_url(**locals())
     json = requests.get_json(url)
-    frequency = get_frequency(table)
+    metadata = get_raw_metadata(table)
+    frequency = metadata["periodicidade"]["frequencia"]
     df = json_to_df.series.build_df(json, frequency)
     return df
 
 
-def get_frequency(table):
-    """Get a table time frequency (periodicity)."""
-    return list_periods(table).loc["frequencia", :].values
+def get_raw_metadata(table):
+    url = url_builders.metadata.build_url(table)
+    json = requests.get_json(url)
+    return json
 
 
 def get_metadata(table):
@@ -96,25 +98,6 @@ def get_metadata(table):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    url = url_builders.metadata.build_url(table)
-    json = requests.get_json(url)
+    json = get_raw_metadata(table)
     df = json_to_df.metadata.build_df(json)
     return df
-
-
-def list_periods(table):
-    """
-    List a time series periodicity.
-
-    Examples
-    --------
-    >>> ibge.list_periods(1419)
-               valores
-    frequencia  mensal
-    inicio      201201
-    fim         201911
-    """
-    metadata = get_metadata(table)
-    periods = metadata.loc["periodicidade"][0]
-
-    return pd.DataFrame(periods.values(), index=periods.keys(), columns=["valores"])
