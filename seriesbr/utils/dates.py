@@ -16,19 +16,3 @@ def parse_start_date(date):
 
 def parse_end_date(date):
     return parse(date, default=LAST_DAY_OF_YEAR)
-
-
-def month_to_quarter(date):
-    """
-    Convert month to quarter, i.e.,
-    12 -> 4, 6 -> 2, 7 -> 3 etc.
-
-    Examples
-    --------
-    >>> dates.month_to_quarter(datetime(2019, 12, 1))
-    datetime(2019, 4, 1, 0, 0)
-    """
-    floor_division, remainder = divmod(date.month, 3)
-    quarter = floor_division + bool(remainder)
-
-    return date.replace(month=quarter)

@@ -219,7 +219,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
         ),
     ],
 )
-def test_ibge_get_series_url(kwargs, expected):
+def test_ibge_get_monthly_series_url(kwargs, expected):
     expected_url = expected["url"]
     expected_params = expected["params"]
 
@@ -261,6 +261,202 @@ def test_ibge_get_series_url(kwargs, expected):
     )
 
     ibge.get_series(1419, **kwargs)
+
+
+@freeze_time("2021-12-31")
+@responses.activate
+@pytest.mark.parametrize(
+    "kwargs,expected",
+    [
+        (
+            {"start": "2019"},
+            {
+                "url": BASE_URL + "/periodos/201901-202104/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"start": "2019-11"},
+            {
+                "url": BASE_URL + "/periodos/201904-202104/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"start": "2019-11-07"},
+            {
+                "url": BASE_URL + "/periodos/201903-202104/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"end": "2019"},
+            {
+                "url": BASE_URL + "/periodos/197001-201904/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"end": "2019-11"},
+            {
+                "url": BASE_URL + "/periodos/197001-201904/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"end": "2019-11-07"},
+            {
+                "url": BASE_URL + "/periodos/197001-201903/variaveis",
+                "params": {},
+            },
+        ),
+    ],
+)
+def test_ibge_get_quarterly_series_url(kwargs, expected):
+    expected_url = expected["url"]
+    expected_params = expected["params"]
+
+    responses.add(
+        responses.GET,
+        BASE_URL + "/metadados",
+        json={"periodicidade": {"frequencia": "trimestral"}},
+        status=200,
+    )
+
+    responses.add(
+        responses.GET,
+        expected_url,
+        match=[
+            matchers.query_param_matcher(
+                {"localidades": "BR", "view": "flat", **expected_params}
+            )
+        ],
+        match_querystring=False,
+        json=[
+            {
+                "V": "Valor",
+                "D1C": "Brasil (Código)",
+                "D2C": "Mês (Código)",
+                "D3C": "Variável (Código)",
+                "D3N": "Variável",
+                "D4N": "Geral, grupo, subgrupo, item e subitem",
+            },
+            {
+                "V": "0.56",
+                "D1C": "1",
+                "D2C": "201201",
+                "D3C": "63",
+                "D3N": "IPCA - Variação mensal",
+                "D4N": "Índice geral",
+            },
+        ],
+        status=200,
+    )
+
+    ibge.get_series(1419, **kwargs)
+
+
+@freeze_time("2021-12-31")
+@responses.activate
+@pytest.mark.parametrize(
+    "kwargs,expected",
+    [
+        (
+            {"start": "2019"},
+            {
+                "url": BASE_URL + "/periodos/2019-2021/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"start": "2019-11"},
+            {
+                "url": BASE_URL + "/periodos/2019-2021/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"start": "2019-11-07"},
+            {
+                "url": BASE_URL + "/periodos/2019-2021/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"end": "2019"},
+            {
+                "url": BASE_URL + "/periodos/1970-2019/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"end": "2019-11"},
+            {
+                "url": BASE_URL + "/periodos/1970-2019/variaveis",
+                "params": {},
+            },
+        ),
+        (
+            {"end": "2019-11-07"},
+            {
+                "url": BASE_URL + "/periodos/1970-2019/variaveis",
+                "params": {},
+            },
+        ),
+    ],
+)
+def test_ibge_get_yearly_series_url_and_dataframe(kwargs, expected):
+    expected_url = expected["url"]
+    expected_params = expected["params"]
+
+    responses.add(
+        responses.GET,
+        BASE_URL + "/metadados",
+        json={"periodicidade": {"frequencia": "anual"}},
+        status=200,
+    )
+
+    responses.add(
+        responses.GET,
+        expected_url,
+        match=[
+            matchers.query_param_matcher(
+                {"localidades": "BR", "view": "flat", **expected_params}
+            )
+        ],
+        match_querystring=False,
+        json=[
+            {
+                "V": "Valor",
+                "D1C": "Brasil (Código)",
+                "D2C": "Ano (Código)",
+                "D3C": "Variável (Código)",
+                "D3N": "Variável",
+                "D4N": "Geral, grupo, subgrupo, item e subitem",
+            },
+            {
+                "V": "0.56",
+                "D1C": "1",
+                "D2C": "2012",
+                "D3C": "63",
+                "D3N": "IPCA - Variação mensal",
+                "D4N": "Índice geral",
+            },
+        ],
+        status=200,
+    )
+
+    df = ibge.get_series(1419, **kwargs)
+    expected_df = pd.DataFrame(
+        {
+            "Valor": [0.56],
+            "Brasil (Código)": ["1"],
+            "Variável (Código)": ["63"],
+            "Variável": ["IPCA - Variação mensal"],
+            "Geral, grupo, subgrupo, item e subitem": ["Índice geral"],
+        },
+        index=pd.DatetimeIndex(["01/01/2012"], name="Date"),
+    )
 
 
 @freeze_time("2019-01-01")
@@ -307,6 +503,82 @@ def test_get_series_dataframe():
             "Geral, grupo, subgrupo, item e subitem": ["Índice geral"],
         },
         index=pd.DatetimeIndex(["01/01/2012"], name="Date"),
+    )
+
+    pd.testing.assert_frame_equal(df, expected_df)
+
+
+@responses.activate
+@freeze_time("2021-12-31")
+def test_ibge_get_quarterly_series_dataframe():
+    responses.add(
+        responses.GET,
+        BASE_URL + "/metadados",
+        json={"periodicidade": {"frequencia": "trimestral"}},
+        status=200,
+    )
+
+    responses.add(
+        responses.GET,
+        BASE_URL + "/periodos/197001-202104/variaveis",
+        match=[matchers.query_param_matcher({"localidades": "BR", "view": "flat"})],
+        json=[
+            {
+                "V": "Valor",
+                "D1C": "Brasil (Código)",
+                "D2C": "Mês (Código)",
+                "D3C": "Variável (Código)",
+                "D3N": "Variável",
+                "D4N": "Geral, grupo, subgrupo, item e subitem",
+            },
+            {
+                "V": "0.56",
+                "D1C": "1",
+                "D2C": "201201",
+                "D3C": "63",
+                "D3N": "IPCA - Variação mensal",
+                "D4N": "Índice geral",
+            },
+            {
+                "V": "0.56",
+                "D1C": "1",
+                "D2C": "201202",
+                "D3C": "63",
+                "D3N": "IPCA - Variação mensal",
+                "D4N": "Índice geral",
+            },
+            {
+                "V": "0.56",
+                "D1C": "1",
+                "D2C": "201203",
+                "D3C": "63",
+                "D3N": "IPCA - Variação mensal",
+                "D4N": "Índice geral",
+            },
+            {
+                "V": "0.56",
+                "D1C": "1",
+                "D2C": "201204",
+                "D3C": "63",
+                "D3N": "IPCA - Variação mensal",
+                "D4N": "Índice geral",
+            },
+        ],
+        status=200,
+    )
+
+    df = ibge.get_series(1419)
+    expected_df = pd.DataFrame(
+        {
+            "Valor": [0.56] * 4,
+            "Brasil (Código)": ["1"] * 4,
+            "Variável (Código)": ["63"] * 4,
+            "Variável": ["IPCA - Variação mensal"] * 4,
+            "Geral, grupo, subgrupo, item e subitem": ["Índice geral"] * 4,
+        },
+        index=pd.DatetimeIndex(
+            ["2012-01-01", "2012-04-01", "2012-07-01", "2012-10-01"], name="Date"
+        ),
     )
 
     pd.testing.assert_frame_equal(df, expected_df)

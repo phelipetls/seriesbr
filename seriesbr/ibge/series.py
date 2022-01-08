@@ -68,12 +68,43 @@ def get_series(
     2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses   Índice geral                              3.27
     2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
     """
-    url = build_url(**locals())
-    json = requests.get_json(url)
     metadata = get_metadata(table)
     frequency = metadata["periodicidade"]["frequencia"]
+
+    url = build_url(
+        table,
+        variables,
+        start,
+        end,
+        last_n,
+        municipalities,
+        states,
+        macroregions,
+        microregions,
+        mesoregions,
+        brazil,
+        classifications,
+        frequency,
+    )
+
+    json = requests.get_json(url)
     df = build_df(json, frequency)
     return df
+
+
+def get_date_format(freq):
+    formats = {"mensal": "%Y%m", "anual": "%Y", "trimestral": "%Y0%q"}
+    return formats[freq]
+
+
+def format_date(date, frequency):
+    if frequency == "trimestral":
+        period = pd.Period(year=date.year, month=date.month, day=date.day, freq="M")
+        return period.strftime("%Y0%q")
+
+    # TODO: handle semester frequency
+
+    return date.strftime(get_date_format(frequency))
 
 
 def build_df(json, freq="mensal"):
@@ -84,10 +115,18 @@ def build_df(json, freq="mensal"):
     # getting columns names
     df.columns = json[0].values()
 
-    # handling dates
-    date_fmt = "%Y" if freq == "anual" else "%Y%m"
     date_key = json[0]["D2C"]
-    df[date_key] = pd.to_datetime(df[date_key], format=date_fmt)
+    date_fmt = get_date_format(freq)
+
+    # handling dates
+    if freq == "trimestral":
+        df[date_key] = pd.PeriodIndex(
+            df[date_key].str.replace(r"([0-9]{4}).([0-9])", r"\1-Q\2", regex=True),
+            freq="Q",
+        ).to_timestamp()
+    else:
+        df[date_key] = pd.to_datetime(df[date_key], format=date_fmt)
+
     df = df.set_index(date_key)
     df = df.rename_axis("Date")
 
@@ -246,13 +285,7 @@ def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     start = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
     end = dates.parse_end_date(end) if end else datetime.today()
 
-    if freq == "trimestral":
-        start = dates.month_to_quarter(start)
-        end = dates.month_to_quarter(end)
-
-    date_format = "%Y" if freq == "anual" else "%Y%m"
-
-    return f"/periodos/{start.strftime(date_format)}-{end.strftime(date_format)}"
+    return f"/periodos/{format_date(start, freq)}-{format_date(end, freq)}"
 
 
 def ibge_filter_by_variable(variables=None):
