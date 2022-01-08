@@ -159,19 +159,19 @@ def test_ipea_get_series_dataframe():
 
 @responses.activate
 def test_ipea_get_metadata():
-    json = {
-        "value": [
-            {
-                "SERCODIGO": "BM12_TJOVER12",
-            }
-        ]
-    }
-
     responses.add(
         responses.GET,
         "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
-        json=json,
+        json={
+            "value": [
+                {
+                    "SERCODIGO": "BM12_TJOVER12",
+                }
+            ]
+        },
         status=200,
     )
 
-    assert ipea.get_metadata("BM12_TJOVER12") == json
+    assert ipea.get_metadata("BM12_TJOVER12") == {
+        "SERCODIGO": "BM12_TJOVER12",
+    }

@@ -69,4 +69,4 @@ def get_metadata(code):
     """
     url, params = url_builders.metadata.build_url(code)
     json = requests.get_json(url, params=params)
-    return json
+    return json["value"][0]
