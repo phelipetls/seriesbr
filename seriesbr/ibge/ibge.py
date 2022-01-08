@@ -68,16 +68,10 @@ def get_series(
     """
     url = url_builders.series.build_url(**locals())
     json = requests.get_json(url)
-    metadata = get_raw_metadata(table)
+    metadata = get_metadata(table)
     frequency = metadata["periodicidade"]["frequencia"]
     df = json_to_df.series.build_df(json, frequency)
     return df
-
-
-def get_raw_metadata(table):
-    url = url_builders.metadata.build_url(table)
-    json = requests.get_json(url)
-    return json
 
 
 def get_metadata(table):
@@ -98,6 +92,6 @@ def get_metadata(table):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    json = get_raw_metadata(table)
-    df = json_to_df.metadata.build_df(json)
-    return df
+    url = url_builders.metadata.build_url(table)
+    json = requests.get_json(url)
+    return json

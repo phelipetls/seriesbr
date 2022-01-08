@@ -313,7 +313,7 @@ def test_get_series_dataframe():
 
 
 @responses.activate
-def test_get_metadata():
+def test_ibge_get_metadata():
     json = {
         "id": 1419,
         "nome": "nome",
@@ -333,12 +333,4 @@ def test_get_metadata():
         status=200,
     )
 
-    df = ibge.get_metadata(1419)
-    expected_df = pd.DataFrame(
-        {
-            "values": json.values(),
-        },
-        index=pd.Index(json.keys()),
-    )
-
-    pd.testing.assert_frame_equal(df, expected_df)
+    assert ibge.get_metadata(1419) == json

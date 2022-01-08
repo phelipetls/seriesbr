@@ -1,3 +1,3 @@
-from . import metadata, series
+from . import series
 
-__all__ = [metadata, series]
+__all__ = [series]

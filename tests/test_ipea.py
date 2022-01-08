@@ -158,21 +158,20 @@ def test_ipea_get_series_dataframe():
 
 
 @responses.activate
-def test_get_metadata():
+def test_ipea_get_metadata():
+    json = {
+        "value": [
+            {
+                "SERCODIGO": "BM12_TJOVER12",
+            }
+        ]
+    }
+
     responses.add(
         responses.GET,
         "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
-        json={
-            "value": [
-                {
-                    "SERCODIGO": "BM12_TJOVER12",
-                }
-            ]
-        },
+        json=json,
         status=200,
     )
 
-    df = ipea.get_metadata("BM12_TJOVER12")
-    expected_df = pd.DataFrame({"values": "BM12_TJOVER12"}, index=["SERCODIGO"])
-
-    pd.testing.assert_frame_equal(df, expected_df)
+    assert ipea.get_metadata("BM12_TJOVER12") == json

@@ -73,5 +73,4 @@ def get_metadata(code):
     """
     url, params = url_builders.metadata.build_url(code)
     json = requests.get_json(url, params=params)
-    df = json_to_df.metadata.build_df(json)
-    return df
+    return json
