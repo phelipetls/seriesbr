@@ -130,17 +130,15 @@ def test_bcb_get_series_dataframe():
 
 @responses.activate
 def test_bcb_get_metadata():
-    json = {
-        "result": {
-            "results": [{"code": "11"}],
-        },
-    }
-
     responses.add(
         responses.GET,
         "https://dadosabertos.bcb.gov.br/api/3/action/package_search?fq=codigo_sgs:11",
-        json=json,
+        json={
+            "result": {
+                "results": [{"code": "11"}],
+            },
+        },
         status=200,
     )
 
-    assert bcb.get_metadata(11) == json
+    assert bcb.get_metadata(11) == {"code": "11"}
