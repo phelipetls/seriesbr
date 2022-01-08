@@ -47,7 +47,7 @@ def get_series(*args, start=None, end=None, **kwargs):
 
 def get_metadata(code):
     """
-    Get metadata of an IPEA time series.
+    Get IPEA time series metadata.
 
     Parameters
     ----------

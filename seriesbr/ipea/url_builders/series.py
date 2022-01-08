@@ -14,7 +14,7 @@ def build_url(code, start, end):
 
 def ipea_filter_by_date(start=None, end=None):
     """
-    Help filter an IPEA time series by date.
+    Filter an IPEA time series by date.
 
     Parameters
     ----------
@@ -31,7 +31,7 @@ def ipea_filter_by_date(start=None, end=None):
 
     Examples
     --------
-    >>> url.ipea_make_dates_query("2019-01-01T00:00:00-00:00", "2019-02-01T00:00:00-00:00")
+    >>> url.ipea_filter_by_date("2019-01-01T00:00:00-00:00", "2019-02-01T00:00:00-00:00")
     'VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00'
     """
     dates = ""

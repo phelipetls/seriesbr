@@ -76,7 +76,7 @@ def get_series(
 
 def get_metadata(table):
     """
-    Get a IBGE table metadata.
+    Get an IBGE table metadata.
 
     Examples
     --------

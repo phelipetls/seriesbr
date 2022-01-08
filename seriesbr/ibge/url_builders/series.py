@@ -37,8 +37,7 @@ def build_url(
 
 def ibge_filter_by_classification(classifications=None):
     """
-    Help filter IBGE tables by classifications
-    and categories.
+    Filter a table by classification and categories
 
     Parameters
     ----------
@@ -55,13 +54,13 @@ def ibge_filter_by_classification(classifications=None):
 
     Examples
     --------
-    >>> url.ibge_classification({1: [2, 3]})
+    >>> url.ibge_filter_by_classification({1: [2, 3]})
     'classificacao=1[2,3]'
 
-    >>> url.ibge_classification([1, 2])
+    >>> url.ibge_filter_by_classification([1, 2])
     'classificacao=1[all]|2[all]'
 
-    >>> url.ibge_classification(3)
+    >>> url.ibge_filter_by_classification(3)
     'classificacao=3[all]'
     """
     prefix = "&classificacao="
@@ -90,7 +89,7 @@ def ibge_filter_by_classification(classifications=None):
 
 def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     """
-    Help filter an IBGE table by date.
+    Filter a table by date.
 
     Parameters
     ----------
@@ -138,7 +137,7 @@ def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
 
 def ibge_filter_by_variable(variables=None):
     """
-    Help select specific variables of an IBGE table.
+    Filter a table by variable.
 
     Parameters
     ----------
@@ -185,7 +184,7 @@ locations_names_to_codes = {
 
 def ibge_filter_by_location(**kwargs):
     """
-    Help filter IBGE table by location.
+    Filter a table by location.
 
     Parameters
     ----------
@@ -206,13 +205,13 @@ def ibge_filter_by_location(**kwargs):
 
     Examples
     --------
-    >>> url.ibge_location()
+    >>> url.ibge_filter_by_location()
     '&localidades=BR'
-    >>> url.ibge_location(cities=True)
+    >>> url.ibge_filter_by_location(cities=True)
     '&localidades=N6'
-    >>> url.ibge_location(cities=1)
+    >>> url.ibge_filter_by_location(cities=1)
     '&localidades=N6[1]'
-    >>> url.ibge_location(cities=[2, 3, 4])
+    >>> url.ibge_filter_by_location(cities=[2, 3, 4])
     '&localidades=N6[2,3,4]'
     """
     # NOTE: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
