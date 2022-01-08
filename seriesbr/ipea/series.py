@@ -70,7 +70,8 @@ def build_url(code, start, end):
         f"http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='{code}')"
     )
 
-    start, end = dates.parse_dates(start, end, api="ipea")
+    start = dates.parse_start_date(start, api="ipea")
+    end = dates.parse_end_date(end, api="ipea")
     params = {"$select": "VALDATA,VALVALOR", "$filter": ipea_filter_by_date(start, end)}
 
     return url, params

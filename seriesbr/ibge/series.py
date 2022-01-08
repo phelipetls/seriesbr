@@ -239,7 +239,9 @@ def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     >>> url.ibge_filter_by_date(start="052015", end="072017")
     '/periodos/201505-201707'
     """
-    start, end = dates.parse_dates(start, end, "ibge")
+    start = dates.parse_start_date(start, "ibge")
+    end = dates.parse_end_date(end, "ibge")
+
     if last_n:
         return f"/periodos/-{last_n}"
 

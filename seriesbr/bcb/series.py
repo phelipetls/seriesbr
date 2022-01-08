@@ -57,7 +57,8 @@ def build_url(code, start=None, end=None, last_n=None):
         url += f"/ultimos/{last_n}"
         return url, params
 
-    start, end = dates.parse_dates(start, end, api="bcb")
+    start = dates.parse_start_date(start, api="bcb")
+    end = dates.parse_end_date(end, api="bcb")
     params["dataInicial"] = start
     params["dataFinal"] = end
     return url, params

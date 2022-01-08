@@ -20,12 +20,6 @@ def format_date(date, api):
     return date.strftime(fmt)
 
 
-def parse_dates(start, end, api):
-    start = parse_start_date(start, api)
-    end = parse_end_date(end, api)
-    return start, end
-
-
 def parse_start_date(date, api):
     parsed = parse(date, default=UNIX_EPOCH) if date else UNIX_EPOCH
     return format_date(parsed, api)
