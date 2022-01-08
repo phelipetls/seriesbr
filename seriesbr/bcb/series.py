@@ -57,23 +57,21 @@ def build_url(code, start=None, end=None, last_n=None):
         url += f"/ultimos/{last_n}"
         return url, params
 
-    start = dates.parse_start_date(start, api="bcb")
-    end = dates.parse_end_date(end, api="bcb")
-    params["dataInicial"] = start
-    params["dataFinal"] = end
+    params["dataInicial"] = dates.parse_start_date(start, api="bcb")
+    params["dataFinal"] = dates.parse_end_date(end, api="bcb")
+
     return url, params
 
 
 def build_df(json, code, label):
     df = pd.DataFrame(json)
 
-    # this columns should be float
     df["valor"] = df["valor"].astype("float64")
 
-    # properly set a datetime index
     df = df.set_index("data")
     df = df.rename_axis("Date")
     df.index = pd.to_datetime(df.index, format="%d/%m/%Y")
 
-    df.columns = [label if label else code]
+    df.columns = [label or code]
+
     return df

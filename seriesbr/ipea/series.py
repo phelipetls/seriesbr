@@ -56,7 +56,7 @@ def build_df(json, code, label):
         df.index = pd.to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
         # casting numerical values
         df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
-        df.columns = [label if label else code]
+        df.columns = [label or code]
     except KeyError:
         return
 
@@ -99,13 +99,11 @@ def ipea_filter_by_date(start=None, end=None):
     >>> url.ipea_filter_by_date("2019-01-01T00:00:00-00:00", "2019-02-01T00:00:00-00:00")
     'VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00'
     """
-    dates = ""
-
     if start and end:
-        dates = f"VALDATA ge {start} and VALDATA le {end}"
+        return f"VALDATA ge {start} and VALDATA le {end}"
     elif start:
-        dates = f"VALDATA ge {start}"
+        return f"VALDATA ge {start}"
     elif end:
-        dates = f"VALDATA le {end}"
+        return f"VALDATA le {end}"
 
-    return dates
+    return ""
