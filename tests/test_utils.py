@@ -1,6 +1,3 @@
-import pytest
-import pandas as pd
-
 from seriesbr.utils import misc
 
 
