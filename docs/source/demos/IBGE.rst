@@ -63,3 +63,24 @@ janeiro/2020)") é 7060 e nós vamos querer as variáveis "IPCA - Variação men
    plt.tight_layout()
    @savefig ipca_by_product.png
    plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
+
+Obtendo metadados
+-----------------
+
+Pode ser útil obter metadados sobre uma série específica:
+
+.. ipython:: python
+
+   metadata = ibge.get_metadata(7060)
+
+   metadata.keys()
+
+Por exemplo, pode ser útil para obter os identificadores dos grupos
+da classificação "Geral, grupo, subgrupo, item e subitem" do IPCA, que foi a
+lista usada no exemplo anterior:
+
+.. ipython:: python
+
+   metadata["classificacoes"][0]["id"]
+
+   [categoria["id"] for categoria in metadata["classificacoes"][0]["categorias"] if categoria["nivel"] == 1]

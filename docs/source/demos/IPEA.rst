@@ -39,3 +39,16 @@ Filtrando por data:
        start="07-2015",
        end="07-2016",
    )
+
+
+Obtendo metadados
+-----------------
+
+Para obter os metadados de uma série:
+
+.. ipython:: python
+
+  ipea.get_metadata("BM12_TJOVER12")
+
+Para entender o que significa cada campo exatamente, consulte a `documentação
+do Ipeadata <http://www.ipeadata.gov.br/api/>`_.

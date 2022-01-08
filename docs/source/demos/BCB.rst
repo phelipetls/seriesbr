@@ -40,3 +40,12 @@ contenham dados:
 .. ipython:: python
 
    bcb.get_series(20786, 4189, join="inner")
+
+Obtendo metadados
+-----------------
+
+Para obter os metadados de uma série:
+
+.. ipython:: python
+
+   bcb.get_metadata(20786)
