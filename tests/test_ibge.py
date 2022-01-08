@@ -18,223 +18,203 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             {},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"last_n": 5},
             {
                 "url": BASE_URL + "/periodos/-5/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019"},
             {
                 "url": BASE_URL + "/periodos/201901-202112/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/201911-202112/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201907-202112/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"end": "2019"},
             {
                 "url": BASE_URL + "/periodos/197001-201912/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"end": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/197001-201911/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/197001-201907/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019", "end": "2019"},
             {
                 "url": BASE_URL + "/periodos/201901-201912/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019-11", "end": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/201911-201911/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201907-201907/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201907-201907/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201907-201907/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"variables": 100},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"variables": "100"},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"variables": [1, 2, 3]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/1|2|3",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {},
             },
         ),
         (
             {"brazil": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "BR", "view": "flat"},
+                "params": {"localidades": "BR"},
             },
         ),
         (
             {"municipalities": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N6", "view": "flat"},
+                "params": {"localidades": "N6"},
             },
         ),
         (
             {"states": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N3", "view": "flat"},
+                "params": {"localidades": "N3"},
             },
         ),
         (
             {"macroregions": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N2", "view": "flat"},
+                "params": {"localidades": "N2"},
             },
         ),
         (
             {"mesoregions": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N7", "view": "flat"},
+                "params": {"localidades": "N7"},
             },
         ),
         (
             {"microregions": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N9", "view": "flat"},
+                "params": {"localidades": "N9"},
             },
         ),
         (
             {"states": [2, 3]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N3[2,3]", "view": "flat"},
+                "params": {"localidades": "N3[2,3]"},
             },
         ),
         (
             {"states": [2, 3], "municipalities": 3},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N6[3]|N3[2,3]", "view": "flat"},
+                "params": {"localidades": "N6[3]|N3[2,3]"},
             },
         ),
         (
             {"classifications": 3},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {
-                    "localidades": "BR",
-                    "view": "flat",
-                    "classificacao": "3[all]",
-                },
+                "params": {"classificacao": "3[all]"},
             },
         ),
         (
             {"classifications": "3"},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {
-                    "localidades": "BR",
-                    "view": "flat",
-                    "classificacao": "3[all]",
-                },
+                "params": {"classificacao": "3[all]"},
             },
         ),
         (
             {"classifications": [1, 2]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {
-                    "localidades": "BR",
-                    "view": "flat",
-                    "classificacao": "1[all]|2[all]",
-                },
+                "params": {"classificacao": "1[all]|2[all]"},
             },
         ),
         (
             {"classifications": {1: [2], 3: [4, 5]}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {
-                    "localidades": "BR",
-                    "view": "flat",
-                    "classificacao": "1[2]|3[4,5]",
-                },
+                "params": {"classificacao": "1[2]|3[4,5]"},
             },
         ),
         (
             {"classifications": {1: []}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {
-                    "localidades": "BR",
-                    "view": "flat",
-                    "classificacao": "1[all]",
-                },
+                "params": {"classificacao": "1[all]"},
             },
         ),
     ],
@@ -253,7 +233,11 @@ def test_ibge_get_series_url(kwargs, expected):
     responses.add(
         responses.GET,
         expected_url,
-        match=[matchers.query_param_matcher(expected_params)],
+        match=[
+            matchers.query_param_matcher(
+                {"localidades": "BR", "view": "flat", **expected_params}
+            )
+        ],
         match_querystring=False,
         json=[
             {

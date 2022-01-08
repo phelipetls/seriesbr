@@ -20,7 +20,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     "dataInicial": "01/01/1970",
                     "dataFinal": "31/12/2021",
                 },
@@ -30,9 +29,7 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {"last_n": 10},
             {
                 "url": BASE_URL + "/ultimos/10",
-                "params": {
-                    "format": "json",
-                },
+                "params": {},
             },
         ),
         (
@@ -40,7 +37,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     "dataInicial": "01/01/2019",
                     "dataFinal": "31/12/2021",
                 },
@@ -51,7 +47,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     "dataInicial": "01/11/2019",
                     "dataFinal": "31/12/2021",
                 },
@@ -62,7 +57,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     # TODO: fix later since this is confusing, 11 should be the month
                     "dataInicial": "11/07/2019",
                     "dataFinal": "31/12/2021",
@@ -74,7 +68,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     "dataInicial": "01/01/1970",
                     "dataFinal": "31/12/2019",
                 },
@@ -85,7 +78,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     "dataInicial": "01/01/1970",
                     "dataFinal": "30/11/2019",
                 },
@@ -96,7 +88,6 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {
                 "url": BASE_URL,
                 "params": {
-                    "format": "json",
                     "dataInicial": "01/01/1970",
                     "dataFinal": "11/07/2019",
                 },
@@ -111,7 +102,7 @@ def test_bcb_get_series_url(kwargs, expected):
     responses.add(
         responses.GET,
         expected_url,
-        match=[matchers.query_param_matcher(expected_params)],
+        match=[matchers.query_param_matcher({"format": "json", **expected_params})],
         match_querystring=False,
         json=[{"data": "01/01/2019", "valor": "100"}],
     )
