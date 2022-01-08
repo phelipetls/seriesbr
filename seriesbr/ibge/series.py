@@ -2,6 +2,7 @@ import pandas as pd
 
 from seriesbr.utils import requests, dates, misc
 from .metadata import get_metadata
+from datetime import datetime
 
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
@@ -239,20 +240,19 @@ def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     >>> url.ibge_filter_by_date(start="052015", end="072017")
     '/periodos/201505-201707'
     """
-    start = dates.parse_start_date(start, "ibge")
-    end = dates.parse_end_date(end, "ibge")
-
     if last_n:
         return f"/periodos/-{last_n}"
 
+    start = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
+    end = dates.parse_end_date(end) if end else datetime.today()
+
     if freq == "trimestral":
-        start = dates.month_to_quarter(start, "%Y%m").strftime("%Y%m")
-        end = dates.month_to_quarter(end, "%Y%m").strftime("%Y%m")
+        start = dates.month_to_quarter(start)
+        end = dates.month_to_quarter(end)
 
-    elif freq == "anual":
-        start, end = start[:-2], end[:-2]
+    date_format = "%Y" if freq == "anual" else "%Y%m"
 
-    return f"/periodos/{start}-{end}"
+    return f"/periodos/{start.strftime(date_format)}-{end.strftime(date_format)}"
 
 
 def ibge_filter_by_variable(variables=None):

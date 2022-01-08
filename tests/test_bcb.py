@@ -19,10 +19,7 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {},
             {
                 "url": BASE_URL,
-                "params": {
-                    "dataInicial": "01/01/1970",
-                    "dataFinal": "31/12/2021",
-                },
+                "params": {},
             },
         ),
         (
@@ -36,61 +33,43 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {"start": "2019"},
             {
                 "url": BASE_URL,
-                "params": {
-                    "dataInicial": "01/01/2019",
-                    "dataFinal": "31/12/2021",
-                },
+                "params": {"dataInicial": "01/01/2019"},
             },
         ),
         (
             {"start": "2019-11"},
             {
                 "url": BASE_URL,
-                "params": {
-                    "dataInicial": "01/11/2019",
-                    "dataFinal": "31/12/2021",
-                },
+                "params": {"dataInicial": "01/11/2019"},
             },
         ),
         (
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL,
-                "params": {
-                    # TODO: fix later since this is confusing, 11 should be the month
-                    "dataInicial": "11/07/2019",
-                    "dataFinal": "31/12/2021",
-                },
+                # TODO: fix later since this is confusing, 11 should be the month
+                "params": {"dataInicial": "11/07/2019"},
             },
         ),
         (
             {"end": "2019"},
             {
                 "url": BASE_URL,
-                "params": {
-                    "dataInicial": "01/01/1970",
-                    "dataFinal": "31/12/2019",
-                },
+                "params": {"dataFinal": "31/12/2019"},
             },
         ),
         (
             {"end": "2019-11"},
             {
                 "url": BASE_URL,
-                "params": {
-                    "dataInicial": "01/01/1970",
-                    "dataFinal": "30/11/2019",
-                },
+                "params": {"dataFinal": "30/11/2019"},
             },
         ),
         (
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL,
-                "params": {
-                    "dataInicial": "01/01/1970",
-                    "dataFinal": "11/07/2019",
-                },
+                "params": {"dataFinal": "11/07/2019"},
             },
         ),
     ],

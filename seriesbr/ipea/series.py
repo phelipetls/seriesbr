@@ -1,6 +1,8 @@
 import pandas as pd
 from seriesbr.utils import requests, misc, dates
 
+DATE_FORMAT = "%Y-%m-%dT00:00:00Z"
+
 
 def get_series(*args, start=None, end=None, **kwargs):
     """
@@ -62,13 +64,21 @@ def build_df(json, code, label):
 def build_url(code, start, end):
     assert isinstance(code, str), "Not a valid code format."
 
+    params = {"$select": "VALDATA,VALVALOR"}
+
     url = (
         f"http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='{code}')"
     )
 
-    start = dates.parse_start_date(start, api="ipea")
-    end = dates.parse_end_date(end, api="ipea")
-    params = {"$select": "VALDATA,VALVALOR", "$filter": ipea_filter_by_date(start, end)}
+    if start:
+        start = dates.parse_start_date(start).strftime(DATE_FORMAT)
+
+    if end:
+        end = dates.parse_end_date(end).strftime(DATE_FORMAT)
+
+    date_filter = ipea_filter_by_date(start, end)
+    if date_filter:
+        params["$filter"] = date_filter
 
     return url, params
 
@@ -95,11 +105,18 @@ def ipea_filter_by_date(start=None, end=None):
     >>> url.ipea_filter_by_date("2019-01-01T00:00:00-00:00", "2019-02-01T00:00:00-00:00")
     'VALDATA ge 2019-01-01T00:00:00-00:00 and VALDATA le 2019-02-01T00:00:00-00:00'
     """
-    if start and end:
-        return f"VALDATA ge {start} and VALDATA le {end}"
-    elif start:
+
+    def filter_by_start_date(start):
         return f"VALDATA ge {start}"
+
+    def filter_by_end_date(start):
+        return f"VALDATA le {start}"
+
+    if start and end:
+        return filter_by_start_date(start) + " and " + filter_by_end_date(end)
+    elif start:
+        return filter_by_start_date(start)
     elif end:
-        return f"VALDATA le {end}"
+        return filter_by_end_date(end)
 
     return ""

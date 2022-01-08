@@ -18,9 +18,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {},
             {
                 "url": BASE_URL,
-                "params": {
-                    "$filter": "VALDATA ge 1970-01-01T00:00:00Z and VALDATA le 2021-12-31T00:00:00Z",
-                },
+                "params": {},
             },
         ),
         (
@@ -28,7 +26,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {
                 "url": BASE_URL,
                 "params": {
-                    "$filter": "VALDATA ge 2019-01-01T00:00:00Z and VALDATA le 2021-12-31T00:00:00Z",
+                    "$filter": "VALDATA ge 2019-01-01T00:00:00Z",
                 },
             },
         ),
@@ -37,7 +35,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {
                 "url": BASE_URL,
                 "params": {
-                    "$filter": "VALDATA ge 2019-11-01T00:00:00Z and VALDATA le 2021-12-31T00:00:00Z",
+                    "$filter": "VALDATA ge 2019-11-01T00:00:00Z",
                 },
             },
         ),
@@ -46,7 +44,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {
                 "url": BASE_URL,
                 "params": {
-                    "$filter": "VALDATA ge 2019-07-11T00:00:00Z and VALDATA le 2021-12-31T00:00:00Z",
+                    "$filter": "VALDATA ge 2019-07-11T00:00:00Z",
                 },
             },
         ),
@@ -55,7 +53,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {
                 "url": BASE_URL,
                 "params": {
-                    "$filter": "VALDATA ge 1970-01-01T00:00:00Z and VALDATA le 2019-12-31T00:00:00Z",
+                    "$filter": "VALDATA le 2019-12-31T00:00:00Z",
                 },
             },
         ),
@@ -64,7 +62,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {
                 "url": BASE_URL,
                 "params": {
-                    "$filter": "VALDATA ge 1970-01-01T00:00:00Z and VALDATA le 2019-11-30T00:00:00Z",
+                    "$filter": "VALDATA le 2019-11-30T00:00:00Z",
                 },
             },
         ),
@@ -73,7 +71,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
             {
                 "url": BASE_URL,
                 "params": {
-                    "$filter": "VALDATA ge 1970-01-01T00:00:00Z and VALDATA le 2019-07-11T00:00:00Z",
+                    "$filter": "VALDATA le 2019-07-11T00:00:00Z",
                 },
             },
         ),

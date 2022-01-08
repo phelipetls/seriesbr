@@ -2,6 +2,8 @@ import pandas as pd
 
 from seriesbr.utils import requests, misc, dates
 
+DATE_FORMAT = "%d/%m/%Y"
+
 
 def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
@@ -57,8 +59,11 @@ def build_url(code, start=None, end=None, last_n=None):
         url += f"/ultimos/{last_n}"
         return url, params
 
-    params["dataInicial"] = dates.parse_start_date(start, api="bcb")
-    params["dataFinal"] = dates.parse_end_date(end, api="bcb")
+    if start:
+        params["dataInicial"] = dates.parse_start_date(start).strftime(DATE_FORMAT)
+
+    if end:
+        params["dataFinal"] = dates.parse_end_date(end).strftime(DATE_FORMAT)
 
     return url, params
 
