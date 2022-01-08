@@ -31,10 +31,10 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
     parsed_args = misc.parse_arguments(*args)
 
-    def get_timeseries(code, name=None, start=None, end=None, last_n=None):
+    def get_timeseries(code, label=None, start=None, end=None, last_n=None):
         url, params = url_builders.series.build_url(code, start, end, last_n)
         json = requests.get_json(url, params=params)
-        return json_to_df.series.build_df(json, code, name)
+        return json_to_df.series.build_df(json, code, label)
 
     return pd.concat(
         (
