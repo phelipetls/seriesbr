@@ -1,13 +1,6 @@
 seriesbr package
 ================
 
-Subpackages
------------
-
-.. toctree::
-
-   seriesbr.helpers
-
 Submodules
 ----------
 
@@ -34,15 +27,6 @@ seriesbr.ipea module
    :members:
    :undoc-members:
    :show-inheritance:
-
-seriesbr.seriesbr module
-------------------------
-
-.. automodule:: seriesbr.seriesbr
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 
 Module contents
 ---------------

@@ -1,70 +1,42 @@
 Banco Central do Brasil
 =======================
 
-Searching
----------
+Obtendo séries
+--------------
 
-A simple :py:func:`search <seriesbr.bcb.search>`:
+Para consultar as séries de código 20786 (spread bancário) e 4189 (Selic), use
+a função :py:func:`seriesbr.bcb.get_series`:
 
 .. ipython:: python
-
-   import pandas as pd
-   pd.set_option('display.expand_frame_repr', False, 'display.max_rows', 10)
 
    from seriesbr import bcb
 
-   bcb.search("Selic")
+   bcb.get_series(20786, 4189)
 
-
-It's also possible to search for multiple strings:
-
-.. ipython:: python
-
-   bcb.search("Atividade", "Econômica", "Índice")
-
-
-You can also control how many results will be shown with the argument
-``rows`` (defaults to 10), and from which row it'll start showing
-them with ``start`` (defaults to 1).
+Para facilitar, é possível passar um dicionário para nomear as colunas:
 
 .. ipython:: python
 
-   bcb.search("Monetária", "mensal", "Milhares", rows=20, start=1)
+   bcb.get_series({"Spread": 20786, "Selic": 4189})
 
 
-Getting time series
--------------------
-
-Now let's get the actual values with :py:func:`seriesbr.bcb.get_series`.
+É possível filtrar por período com os argumentos ``start_date`` e ``end_date``:
 
 .. ipython:: python
 
-   bcb.get_series(
-       {"Spread": 20786, "Selic": 4189, "PIB_Mensal": 4380}, start="2011", end="07-2012"
-   )
+   bcb.get_series(20786, start="2011", end="07-2012")
 
-
-Or, if you don't mind the column names:
+Ou obter as últimas 5 observações com o argumento ``last_n``:
 
 .. ipython:: python
 
-   bcb.get_series(20786, 4189, 4380)
+   bcb.get_series(20786, last_n=5)
 
 
-Keyword arguments will be passed to ``pandas.concat``. If you pass
-"inner" to the ``join`` argument the returned ``DataFrame`` won't have
-NAs.
-
-.. ipython:: python
-
-   bcb.get_series(20786, 4189, 4380, join="inner")
-
-
-Getting metadata
-----------------
-
-And this is how you would get a time series :py:func:`metadata <seriesbr.bcb.get_metadata>`.
+Outros argumentos nomeados são passados para a função ``pandas.concat``. Por
+exemplo, caso você queira obter somente os períodos em que ambas as séries
+contenham dados:
 
 .. ipython:: python
 
-   bcb.get_metadata(11)
+   bcb.get_series(20786, 4189, join="inner")
