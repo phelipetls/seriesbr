@@ -6,6 +6,8 @@ from freezegun import freeze_time
 from responses import matchers
 from seriesbr import ibge
 
+BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
+
 
 @freeze_time("2021-12-31")
 @responses.activate
@@ -15,175 +17,175 @@ from seriesbr import ibge
         (
             {},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"last_n": 5},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/-5/variaveis",
+                "url": BASE_URL + "/periodos/-5/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201901-202112/variaveis",
+                "url": BASE_URL + "/periodos/201901-202112/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019-11"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201911-202112/variaveis",
+                "url": BASE_URL + "/periodos/201911-202112/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019-11-07"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201907-202112/variaveis",
+                "url": BASE_URL + "/periodos/201907-202112/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"end": "2019"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-201912/variaveis",
+                "url": BASE_URL + "/periodos/197001-201912/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"end": "2019-11"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-201911/variaveis",
+                "url": BASE_URL + "/periodos/197001-201911/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"end": "2019-11-07"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-201907/variaveis",
+                "url": BASE_URL + "/periodos/197001-201907/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019", "end": "2019"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201901-201912/variaveis",
+                "url": BASE_URL + "/periodos/201901-201912/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019-11", "end": "2019-11"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201911-201911/variaveis",
+                "url": BASE_URL + "/periodos/201911-201911/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201907-201907/variaveis",
+                "url": BASE_URL + "/periodos/201907-201907/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201907-201907/variaveis",
+                "url": BASE_URL + "/periodos/201907-201907/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/201907-201907/variaveis",
+                "url": BASE_URL + "/periodos/201907-201907/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"variables": 100},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis/100",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"variables": "100"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis/100",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"variables": [1, 2, 3]},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis/1|2|3",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis/1|2|3",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"brazil": True},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "BR", "view": "flat"},
             },
         ),
         (
             {"municipalities": True},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N6", "view": "flat"},
             },
         ),
         (
             {"states": True},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N3", "view": "flat"},
             },
         ),
         (
             {"macroregions": True},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N2", "view": "flat"},
             },
         ),
         (
             {"mesoregions": True},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N7", "view": "flat"},
             },
         ),
         (
             {"microregions": True},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N9", "view": "flat"},
             },
         ),
         (
             {"states": [2, 3]},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N3[2,3]", "view": "flat"},
             },
         ),
         (
             {"states": [2, 3], "municipalities": 3},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N6[3]|N3[2,3]", "view": "flat"},
             },
         ),
         (
             {"classifications": 3},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {
                     "localidades": "BR",
                     "view": "flat",
@@ -194,7 +196,7 @@ from seriesbr import ibge
         (
             {"classifications": "3"},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {
                     "localidades": "BR",
                     "view": "flat",
@@ -205,7 +207,7 @@ from seriesbr import ibge
         (
             {"classifications": [1, 2]},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {
                     "localidades": "BR",
                     "view": "flat",
@@ -216,7 +218,7 @@ from seriesbr import ibge
         (
             {"classifications": {1: [2], 3: [4, 5]}},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {
                     "localidades": "BR",
                     "view": "flat",
@@ -227,7 +229,7 @@ from seriesbr import ibge
         (
             {"classifications": {1: []}},
             {
-                "url": "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-202112/variaveis",
+                "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {
                     "localidades": "BR",
                     "view": "flat",
@@ -243,7 +245,7 @@ def test_ibge_get_series_url(kwargs, expected):
 
     responses.add(
         responses.GET,
-        "https://servicodados.ibge.gov.br/api/v3/agregados/1419/metadados",
+        BASE_URL + "/metadados",
         json={"periodicidade": {"frequencia": "mensal"}},
         status=200,
     )
@@ -282,14 +284,14 @@ def test_ibge_get_series_url(kwargs, expected):
 def test_get_series_dataframe():
     responses.add(
         responses.GET,
-        "https://servicodados.ibge.gov.br/api/v3/agregados/1419/metadados",
+        BASE_URL + "/metadados",
         json={"periodicidade": {"frequencia": "mensal"}},
         status=200,
     )
 
     responses.add(
         responses.GET,
-        "https://servicodados.ibge.gov.br/api/v3/agregados/1419/periodos/197001-201901/variaveis?localidades=BR&view=flat",
+        BASE_URL + "/periodos/197001-201901/variaveis?localidades=BR&view=flat",
         json=[
             {
                 "V": "Valor",
@@ -342,7 +344,7 @@ def test_get_metadata():
 
     responses.add(
         responses.GET,
-        "https://servicodados.ibge.gov.br/api/v3/agregados/1419/metadados",
+        BASE_URL + "/metadados",
         json=json,
         status=200,
     )
