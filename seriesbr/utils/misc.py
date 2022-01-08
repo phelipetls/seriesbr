@@ -21,12 +21,6 @@ def parse_arguments(*args):
     return d
 
 
-def quote_if_str(something):
-    if isinstance(something, str):
-        return f"'{something}'"
-    return f"{something}"
-
-
 def cat(something, sep):
     """
     Join any iterable, except strings, by
