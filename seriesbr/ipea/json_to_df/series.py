@@ -2,7 +2,6 @@ import pandas as pd
 
 
 def build_df(json, code, label):
-    """Convert a IPEA time series in JSON format into a DataFrame."""
     json = json["value"]
     df = pd.DataFrame(json)
 

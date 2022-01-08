@@ -1,7 +1,6 @@
 def parse_arguments(*args):
     """
     Parse arguments into a dictionary.
-    Used to help label time series.
 
     Returns
     -------
@@ -23,14 +22,6 @@ def parse_arguments(*args):
 
 
 def quote_if_str(something):
-    """
-    Put quote around if a string.
-
-    Parameters
-    ----------
-    something
-        Any object.
-    """
     if isinstance(something, str):
         return f"'{something}'"
     return f"{something}"

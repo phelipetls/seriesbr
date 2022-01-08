@@ -2,8 +2,6 @@ import pandas as pd
 
 
 def build_df(json, freq="mensal"):
-    """Convert a BCB time series in JSON format into a DataFrame."""
-
     # first element contains only metadata
     # let's ignore it
     df = pd.DataFrame(json[1:])

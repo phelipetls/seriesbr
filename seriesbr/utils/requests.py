@@ -5,29 +5,6 @@ s = requests.Session()
 
 
 def get_json(url, **kwargs):
-    """
-    Wrapper around requests.Session.get().
-
-    Parameters
-    ----------
-    url : str
-
-    **kwargs
-        Passed to requests.Session().get()
-
-    Raises
-    ------
-    HTTPError
-        In case of a HTTPError.
-
-    ValueError
-        If no JSON was returned.
-
-    Returns
-    -------
-    dict
-        Decoded JSON.
-    """
     response = s.get(url, timeout=60, **kwargs)
     response.raise_for_status()
     try:

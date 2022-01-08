@@ -2,7 +2,6 @@ import pandas as pd
 
 
 def build_df(json, code, label):
-    """Convert a BCB time series in JSON format into a DataFrame."""
     df = pd.DataFrame(json)
 
     # this columns should be float
