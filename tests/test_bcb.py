@@ -105,6 +105,7 @@ def test_bcb_get_series_url(kwargs, expected):
         match=[matchers.query_param_matcher({"format": "json", **expected_params})],
         match_querystring=False,
         json=[{"data": "01/01/2019", "valor": "100"}],
+        status=200,
     )
 
     bcb.get_series(11, **kwargs)

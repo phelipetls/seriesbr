@@ -127,6 +127,7 @@ def test_ipea_get_series_url(kwargs, expected):
             )
         ],
         match_querystring=False,
+        status=200,
     )
 
     ipea.get_series("BM12_TJOVER12", **kwargs)
