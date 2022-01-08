@@ -1,0 +1,35 @@
+from seriesbr.utils import requests
+
+
+def get_metadata(code):
+    """
+    Get a BCB time series metadata.
+
+    Parameters
+    ----------
+    code : str
+        Time series' code.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with metadata values.
+
+    Examples
+    --------
+    >>> bcb.get_metadata(20786).head()
+                                                                        values
+    referencias              <P><A href="http://www.bcb.gov.br/estatisticas...
+    license_title            Licença Aberta para Bases de Dados (ODbL) do O...
+    maintainer                  Banco Central do Brasil/Departamento Econômico
+    relationships_as_object                                                 []
+    vcge                     Política Econômica [http://vocab.e.gov.br/2011...
+    """
+    url, params = build_url(code)
+    json = requests.get_json(url, params=params)
+    return json["result"]["results"][0]
+
+
+def build_url(code):
+    params = {"fq": f"codigo_sgs:{code}"}
+    return "https://dadosabertos.bcb.gov.br/api/3/action/package_search", params

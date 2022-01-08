@@ -1,4 +1,122 @@
-from seriesbr.utils import misc, dates
+import pandas as pd
+
+from seriesbr.utils import requests, dates, misc
+from .metadata import get_metadata
+
+BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
+
+
+def get_series(
+    table,
+    variables=None,
+    start=None,
+    end=None,
+    last_n=None,
+    municipalities=None,
+    states=None,
+    macroregions=None,
+    microregions=None,
+    mesoregions=None,
+    brazil=None,
+    classifications=None,
+):
+    """
+    Get an IBGE table
+
+    Parameters
+    ----------
+    table : int
+        Table code.
+
+    variables : int or list of ints, optional
+        Variables codes.
+
+    start : int or str, optional
+        Initial date, month or day first.
+
+    end : int or str, optional
+        Final date, month or day first.
+
+    last_n : int or str, optional
+        Return only last n observations.
+
+    municipalities : str, int, bool a list, optional
+
+    states : str, int, bool or a list, optional
+
+    macroregions : str, int, bool or a list, optional
+
+    microregions : str, int, bool or a list, optional
+
+    mesoregions : str, int, bool or a list, optional
+
+    classifications : dict, int, str or list, optional
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with series values and metadata.
+
+    Examples
+    --------
+    >>> ibge.get_series(1419, start="11-2019", end="11-2019")
+                Nível Territorial                              Variável   Geral, grupo, subgrupo, item e subitem   Valor
+    Date
+    2019-11-01            Brasil                 IPCA - Variação mensal   Índice geral                              0.51
+    2019-11-01            Brasil       IPCA - Variação acumulada no ano   Índice geral                              3.12
+    2019-11-01            Brasil  IPCA - Variação acumulada em 12 meses   Índice geral                              3.27
+    2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
+    """
+    url = build_url(**locals())
+    json = requests.get_json(url)
+    metadata = get_metadata(table)
+    frequency = metadata["periodicidade"]["frequencia"]
+    df = build_df(json, frequency)
+    return df
+
+
+def build_df(json, freq="mensal"):
+    # first element contains only metadata
+    # let's ignore it
+    df = pd.DataFrame(json[1:])
+
+    # getting columns names
+    df.columns = json[0].values()
+
+    # handling dates
+    date_fmt = "%Y" if freq == "anual" else "%Y%m"
+    date_key = json[0]["D2C"]
+    df[date_key] = pd.to_datetime(df[date_key], format=date_fmt)
+    df = df.set_index(date_key)
+    df = df.rename_axis("Date")
+
+    # handling numerical values
+    df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
+
+    # getting the specific location column name
+    location_key = json[0]["D1C"]
+
+    # drop these columns
+    to_drop = ["Mês", "Unidade de Medida", "Brasil", "Nível Territorial"]
+
+    # also every columns that is a code
+    is_code = lambda column: column.endswith("(Código)")  # noqa: E731
+
+    # except for the location and variable code
+    is_location_code = lambda column: column == location_key  # noqa: E731
+    is_variable_code = lambda column: column == "Variável (Código)"  # noqa: E731
+
+    to_drop.extend(
+        [
+            c
+            for c in df.columns
+            if is_code(c) and not (is_location_code(c) or is_variable_code(c))
+        ]
+    )
+
+    df = df.drop(to_drop, axis="columns", errors="ignore")
+
+    return df
 
 
 def build_url(

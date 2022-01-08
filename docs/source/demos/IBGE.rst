@@ -25,11 +25,8 @@ obter os identificadores das localidades, classificações, categorias etc.
 Para ilustrar o uso do módulo, vamos reproduzir as `visualizações da variável
 IPCA no site do Sidra <https://sidra.ibge.gov.br/home/ipca/brasil>`_.
 
-O identificador da tabela do IPCA (mais especificamente "IPCA - Variação
-mensal, acumulada no ano, acumulada em 12 meses e peso mensal, para o índice
-geral, grupos, subgrupos, itens e subitens de produtos e serviços (a partir de
-janeiro/2020)") é 7060 e nós vamos querer as variáveis "IPCA - Variação mensal"
-(63) e "IPCA - Variação acumulada no ano" (69).
+O identificador da tabela do IPCA é 7060 e nós vamos querer as variáveis de
+variação mensal e acumulada no ano.
 
 .. ipython:: python
 
