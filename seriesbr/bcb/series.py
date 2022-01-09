@@ -1,6 +1,7 @@
 import pandas as pd
 
 from seriesbr.utils import requests, misc, dates
+from datetime import datetime
 
 DATE_FORMAT = "%d/%m/%Y"
 
@@ -59,11 +60,14 @@ def build_url(code, start=None, end=None, last_n=None):
         url += f"/ultimos/{last_n}"
         return url, params
 
-    if start:
-        params["dataInicial"] = dates.parse_start_date(start).strftime(DATE_FORMAT)
+    if not start and not end:
+        return url, params
 
-    if end:
-        params["dataFinal"] = dates.parse_end_date(end).strftime(DATE_FORMAT)
+    start = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
+    params["dataInicial"] = start.strftime(DATE_FORMAT)
+
+    end = dates.parse_end_date(end) if end else datetime.today()
+    params["dataFinal"] = end.strftime(DATE_FORMAT)
 
     return url, params
 

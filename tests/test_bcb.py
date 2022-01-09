@@ -33,42 +33,42 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {"start": "2019"},
             {
                 "url": BASE_URL,
-                "params": {"dataInicial": "01/01/2019"},
+                "params": {"dataInicial": "01/01/2019", "dataFinal": "31/12/2021"},
             },
         ),
         (
             {"start": "2019-11"},
             {
                 "url": BASE_URL,
-                "params": {"dataInicial": "01/11/2019"},
+                "params": {"dataInicial": "01/11/2019", "dataFinal": "31/12/2021"},
             },
         ),
         (
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL,
-                "params": {"dataInicial": "07/11/2019"},
+                "params": {"dataInicial": "07/11/2019", "dataFinal": "31/12/2021"},
             },
         ),
         (
             {"end": "2019"},
             {
                 "url": BASE_URL,
-                "params": {"dataFinal": "31/12/2019"},
+                "params": {"dataInicial": "01/01/1970", "dataFinal": "31/12/2019"},
             },
         ),
         (
             {"end": "2019-11"},
             {
                 "url": BASE_URL,
-                "params": {"dataFinal": "30/11/2019"},
+                "params": {"dataInicial": "01/01/1970", "dataFinal": "30/11/2019"},
             },
         ),
         (
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL,
-                "params": {"dataFinal": "07/11/2019"},
+                "params": {"dataInicial": "01/01/1970", "dataFinal": "07/11/2019"},
             },
         ),
     ],
