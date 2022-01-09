@@ -1,0 +1,28 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Build package
+        run: poetry build
+
+      - name: Publish to Test PyPI
+        run:
+          - poetry config repositories.test-pypi https://test.pypi.org/legacy/
+          - poetry config pypi-token.test-pypi ${{ TEST_PYPI_API_TOKEN }}
+          - poetry publish --repository test-pypi
