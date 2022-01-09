@@ -45,7 +45,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
         (
             {"start": "2019-11-07"},
             {
-                "url": BASE_URL + "/periodos/201907-202112/variaveis",
+                "url": BASE_URL + "/periodos/201911-202112/variaveis",
                 "params": {},
             },
         ),
@@ -66,7 +66,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
         (
             {"end": "2019-11-07"},
             {
-                "url": BASE_URL + "/periodos/197001-201907/variaveis",
+                "url": BASE_URL + "/periodos/197001-201911/variaveis",
                 "params": {},
             },
         ),
@@ -87,7 +87,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
         (
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
-                "url": BASE_URL + "/periodos/201907-201907/variaveis",
+                "url": BASE_URL + "/periodos/201911-201911/variaveis",
                 "params": {},
             },
         ),
@@ -271,7 +271,7 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
         (
             {"start": "2019-11-07"},
             {
-                "url": BASE_URL + "/periodos/201903-202104/variaveis",
+                "url": BASE_URL + "/periodos/201904-202104/variaveis",
                 "params": {},
             },
         ),
@@ -292,7 +292,7 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
         (
             {"end": "2019-11-07"},
             {
-                "url": BASE_URL + "/periodos/197001-201903/variaveis",
+                "url": BASE_URL + "/periodos/197001-201904/variaveis",
                 "params": {},
             },
         ),

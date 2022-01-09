@@ -47,8 +47,7 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL,
-                # TODO: fix later since this is confusing, 11 should be the month
-                "params": {"dataInicial": "11/07/2019"},
+                "params": {"dataInicial": "07/11/2019"},
             },
         ),
         (
@@ -69,7 +68,7 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL,
-                "params": {"dataFinal": "11/07/2019"},
+                "params": {"dataFinal": "07/11/2019"},
             },
         ),
     ],
