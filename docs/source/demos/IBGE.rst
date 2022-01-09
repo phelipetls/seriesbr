@@ -18,9 +18,9 @@ específico, por exemplo alimentação), além de filtrar por período.
 Por isso, a função :py:func:`seriesbr.ibge.get_series` aceita muito mais
 argumentos.
 
-É recomendado usar o `Query Builder do IBGE
-<https://servicodados.ibge.gov.br/api/docs/agregados?versao=3#api-bq>`_ para
-obter os identificadores das localidades, classificações, categorias etc.
+É recomendado usar `a seção de Acervo do site do Sidra
+<https://sidra.ibge.gov.br/acervo>`_ para obter os identificadores das tabelas,
+localidades, classificações, categorias etc.
 
 Para ilustrar o uso do módulo, vamos reproduzir as `visualizações da variável
 IPCA no site do Sidra <https://sidra.ibge.gov.br/home/ipca/brasil>`_.
