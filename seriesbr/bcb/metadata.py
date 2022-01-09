@@ -26,7 +26,8 @@ def get_metadata(code):
     vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
     url, params = build_url(code)
-    json = requests.get_json(url, params=params)
+    response = requests.get(url, params=params)
+    json = response.json()
     return json["result"]["results"][0]
 
 

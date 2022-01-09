@@ -24,7 +24,8 @@ def get_metadata(code):
     BASNOME                                            Macroeconômico
     """
     url, params = build_url(code)
-    json = requests.get_json(url, params=params)
+    response = requests.get(url, params=params)
+    json = response.json()
     return json["value"][0]
 
 

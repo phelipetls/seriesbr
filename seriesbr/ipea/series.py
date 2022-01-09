@@ -31,7 +31,8 @@ def get_series(*args, start=None, end=None, **kwargs):
 
     def get_timeseries(code, label=None, start=None, end=None):
         url, params = build_url(code, start, end)
-        json = requests.get_json(url, params=params)
+        response = requests.get(url, params=params)
+        json = response.json()
         df = build_df(json, code, label)
         return df
 

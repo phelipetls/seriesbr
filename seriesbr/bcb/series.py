@@ -36,7 +36,8 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
 
     def get_timeseries(code, label=None, start=None, end=None, last_n=None):
         url, params = build_url(code, start, end, last_n)
-        json = requests.get_json(url, params=params)
+        response = requests.get(url, params=params)
+        json = response.json()
         return build_df(json, code, label)
 
     return pd.concat(

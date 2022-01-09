@@ -87,7 +87,8 @@ def get_series(
         frequency,
     )
 
-    json = requests.get_json(url)
+    response = requests.get(url)
+    json = response.json()
     df = build_df(json, frequency)
     return df
 

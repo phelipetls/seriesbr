@@ -20,7 +20,8 @@ def get_metadata(table):
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
     url = build_url(table)
-    json = requests.get_json(url)
+    response = requests.get(url)
+    json = response.json()
     return json
 
 
