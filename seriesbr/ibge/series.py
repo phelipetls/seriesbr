@@ -1,3 +1,4 @@
+import requests
 import pandas as pd
 
 from seriesbr.utils import session, dates, misc
@@ -87,10 +88,18 @@ def get_series(
         frequency,
     )
 
-    response = session.get(url)
-    json = response.json()
-    df = build_df(json, frequency)
-    return df
+    try:
+        response = session.get(url)
+        json = response.json()
+        df = build_df(json, frequency)
+        return df
+    except requests.exceptions.HTTPError as error:
+        if error.response.status_code == 500:
+            print(
+                "A consulta pode ter retornado mais que 100.000 linhas. "
+                "Tente adicionar mais filtros."
+            )
+        raise error
 
 
 def get_date_format(freq):

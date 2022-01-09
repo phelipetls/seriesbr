@@ -1,3 +1,4 @@
+import requests
 import responses
 import pandas as pd
 import pytest
@@ -570,6 +571,32 @@ def test_ibge_get_quarterly_series_dataframe():
     )
 
     pd.testing.assert_frame_equal(df, expected_df)
+
+
+@freeze_time("2021-12-31")
+@responses.activate
+def test_ibge_get_series_internal_server_error_message(capsys):
+    responses.add(
+        responses.GET,
+        BASE_URL + "/metadados",
+        json={"periodicidade": {"frequencia": "mensal"}},
+        status=200,
+    )
+
+    responses.add(
+        responses.GET,
+        BASE_URL + "/periodos/197001-202112/variaveis",
+        match=[matchers.query_param_matcher({"localidades": "BR", "view": "flat"})],
+        status=500,
+    )
+
+    with pytest.raises(requests.exceptions.HTTPError):
+        ibge.get_series(1419)
+        captured = capsys.readouterr()
+        assert captured.out == (
+            "A consulta pode ter retornado mais que 100.000 linhas. "
+            "Tente adicionar mais filtros.\n"
+        )
 
 
 @responses.activate
