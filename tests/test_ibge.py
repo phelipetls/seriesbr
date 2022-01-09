@@ -444,6 +444,8 @@ def test_ibge_get_yearly_series_url_and_dataframe(kwargs, expected):
         index=pd.DatetimeIndex(["01/01/2012"], name="Date"),
     )
 
+    pd.testing.assert_frame_equal(df, expected_df)
+
 
 @freeze_time("2019-01-01")
 @responses.activate
