@@ -86,6 +86,7 @@ def get_series(
         brazil,
         classifications,
         frequency,
+        metadata,
     )
 
     try:
@@ -185,6 +186,7 @@ def build_url(
     brazil=None,
     classifications=None,
     frequency=None,
+    metadata=None,
 ):
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
 
@@ -198,6 +200,7 @@ def build_url(
         microregions=microregions,
         mesoregions=mesoregions,
         brazil=brazil,
+        metadata=metadata,
     )
     url += ibge_filter_by_classification(classifications)
     url += "&view=flat"
@@ -347,12 +350,15 @@ locations_names_to_codes = {
 }
 
 
-def ibge_filter_by_location(**kwargs):
+def ibge_filter_by_location(metadata=None, **kwargs):
     """
     Filter a table by location.
 
     Parameters
     ----------
+    metadata : dict
+        Dictionary with IBGE table metadata.
+
     **kwargs
         Keys must be one of these:
             - municipalities
@@ -385,9 +391,22 @@ def ibge_filter_by_location(**kwargs):
     if not kwargs or all([v is None for v in kwargs.values()]):
         return prefix + "BR"
 
+    allowed_locations_codes = metadata["nivelTerritorial"]["Administrativo"]
+    allowed_locations_names = [
+        locations_codes_to_names[code] for code in allowed_locations_codes
+    ]
+
     query = []
     for name, code in kwargs.items():
         location_code = locations_names_to_codes.get(name)
+
+        if code and location_code not in allowed_locations_codes:
+            joined_allowed_locations_names = misc.cat(allowed_locations_names, ",")
+            print(
+                f"Você está tentando filtrar a tabela pela localidade '{name}', "
+                f"mas somente as localidades '{joined_allowed_locations_names}' são permitidas."
+            )
+            raise ValueError
 
         if name == "brazil" and code:
             query.append("BR")

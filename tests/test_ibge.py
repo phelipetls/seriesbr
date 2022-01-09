@@ -213,7 +213,12 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
     responses.add(
         responses.GET,
         BASE_URL + "/metadados",
-        json={"periodicidade": {"frequencia": "mensal"}},
+        json={
+            "periodicidade": {"frequencia": "mensal"},
+            "nivelTerritorial": {
+                "Administrativo": ["N6", "N3", "N2", "N7", "N9", "N1"]
+            },
+        },
         status=200,
     )
 
@@ -596,6 +601,35 @@ def test_ibge_get_series_internal_server_error_message(capsys):
         assert captured.out == (
             "A consulta pode ter retornado mais que 100.000 linhas. "
             "Tente adicionar mais filtros.\n"
+        )
+
+
+@freeze_time("2021-12-31")
+@responses.activate
+def test_ibge_get_series_forbidden_location_filter(capsys):
+    responses.add(
+        responses.GET,
+        BASE_URL + "/metadados",
+        json={
+            "periodicidade": {"frequencia": "mensal"},
+            "nivelTerritorial": {"Administrativo": ["N1", "N3"]},
+        },
+        status=200,
+    )
+
+    responses.add(
+        responses.GET,
+        BASE_URL + "/periodos/197001-202104/variaveis",
+        match=[matchers.query_param_matcher({"localidades": "BR", "view": "flat"})],
+        status=500,
+    )
+
+    with pytest.raises(ValueError):
+        ibge.get_series(1419, municipalities=True)
+        captured = capsys.readouterr()
+        assert captured.out == (
+            "Você está tentando filtrar a tabela pela localidade 'municipalities', "
+            "mas somente as localidades 'brazil, states' são permitidas."
         )
 
 
