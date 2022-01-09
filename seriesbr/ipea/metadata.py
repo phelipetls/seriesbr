@@ -1,4 +1,4 @@
-from seriesbr.utils import requests
+from seriesbr.utils import session
 
 
 def get_metadata(code):
@@ -24,7 +24,7 @@ def get_metadata(code):
     BASNOME                                            Macroeconômico
     """
     url, params = build_url(code)
-    response = requests.get(url, params=params)
+    response = session.get(url, params=params)
     json = response.json()
     return json["value"][0]
 

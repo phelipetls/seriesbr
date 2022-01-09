@@ -1,4 +1,4 @@
-from seriesbr.utils import requests
+from seriesbr.utils import session
 
 
 def get_metadata(table):
@@ -20,7 +20,7 @@ def get_metadata(table):
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
     url = build_url(table)
-    response = requests.get(url)
+    response = session.get(url)
     json = response.json()
     return json
 

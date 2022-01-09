@@ -1,6 +1,6 @@
 import pandas as pd
 
-from seriesbr.utils import requests, dates, misc
+from seriesbr.utils import session, dates, misc
 from .metadata import get_metadata
 from datetime import datetime
 
@@ -87,7 +87,7 @@ def get_series(
         frequency,
     )
 
-    response = requests.get(url)
+    response = session.get(url)
     json = response.json()
     df = build_df(json, frequency)
     return df

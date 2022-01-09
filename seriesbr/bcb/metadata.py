@@ -1,4 +1,4 @@
-from seriesbr.utils import requests
+from seriesbr.utils import session
 
 
 def get_metadata(code):
@@ -26,7 +26,7 @@ def get_metadata(code):
     vcge                     Política Econômica [http://vocab.e.gov.br/2011...
     """
     url, params = build_url(code)
-    response = requests.get(url, params=params)
+    response = session.get(url, params=params)
     json = response.json()
     return json["result"]["results"][0]
 

@@ -1,5 +1,5 @@
 import pandas as pd
-from seriesbr.utils import requests, misc, dates
+from seriesbr.utils import session, misc, dates
 
 DATE_FORMAT = "%Y-%m-%dT00:00:00Z"
 
@@ -31,7 +31,7 @@ def get_series(*args, start=None, end=None, **kwargs):
 
     def get_timeseries(code, label=None, start=None, end=None):
         url, params = build_url(code, start, end)
-        response = requests.get(url, params=params)
+        response = session.get(url, params=params)
         json = response.json()
         df = build_df(json, code, label)
         return df
