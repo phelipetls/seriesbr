@@ -9,10 +9,10 @@ SeriesBR
 |pypi|
 |codecov|
 
-**seriesbr** é útil para pesquisadores e estudantes que precisam consultar
-séries temporais dos bancos de dados do Banco Central do Brasil (BCB),
-Instituto de Pesquisa Econômica Aplicada (IPEA) e Instituto Brasileiro de
-Geografia e Estatística (IBGE) de forma automatizada.
+**seriesbr** ajuda a consultar, de forma programática, séries temporais dos
+bancos de dados do Banco Central do Brasil (BCB), Instituto de Pesquisa
+Econômica Aplicada (IPEA) e Instituto Brasileiro de Geografia e Estatística
+(IBGE).
 
 Installation
 ------------
