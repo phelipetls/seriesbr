@@ -49,6 +49,13 @@ Date
 2016-12-01   39.12  0.050788
 ```
 
+# Contribuindo
+
+Sinta-se à vontade para abrir issues ou pull requests.
+
+Caso queira contribuir, primeiro instale o `poetry` e depois `poetry install`.
+Rode os testes localmente com `poetry run pytest`.
+
 # Licença
 
 [MIT](https://github.com/phelipetls/seriesbr/blob/master/LICENSE)
