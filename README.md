@@ -1,12 +1,12 @@
-# seriesbr: Uma biblioteca de Python para consultar bancos de dados com séries temporais do BCB, IPEA e IBGE
+# seriesbr: Uma biblioteca em Python para consultar bancos de dados com séries temporais do BCB, IPEA e IBGE
 
 [![pypi version](https://img.shields.io/pypi/v/seriesbr.svg)](https://pypi.org/project/seriesbr/)
 [![readthedocs status](https://readthedocs.org/projects/seriesbr/badge/?version=latest)](https://seriesbr.readthedocs.io/en/latest/?badge=latest)
 
-**seriesbr** é útil para pesquisadores e estudantes que precisam consultar
-séries temporais dos bancos de dados do Banco Central do Brasil (BCB),
-Instituto de Pesquisa Econômica Aplicada (IPEA) e Instituto Brasileiro de
-Geografia e Estatística (IBGE) de forma automatizada.
+**seriesbr** ajuda a consultar, de forma programática, séries temporais dos
+bancos de dados do Banco Central do Brasil (BCB), Instituto de Pesquisa
+Econômica Aplicada (IPEA) e Instituto Brasileiro de Geografia e Estatística
+(IBGE).
 
 É inspirado nos seguintes pacotes escritos em R:
 [rbcb](https://github.com/wilsonfreitas/rbcb),
@@ -17,9 +17,9 @@ Geografia e Estatística (IBGE) de forma automatizada.
 
 A biblioteca possui três módulos, `bcb`, `ipea` e `ibge`. Cada uma possui uma
 função chamada `get_series` que aceita o identificador da série e retorna um
-pandas `DataFrame` com os dados.
+[`DataFrame`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html).
 
-Leia a [documentação](https://seriesbr.readthedocs.io/) para aprender mais.
+Para mais detalhes, leia a [documentação](https://seriesbr.readthedocs.io/).
 
 # Exemplo
 
