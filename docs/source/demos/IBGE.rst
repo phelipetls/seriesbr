@@ -52,8 +52,6 @@ variação mensal e acumulada no ano.
        "IPCA - Variação acumulada no ano"
    ).plot(
        kind="barh", title="IPCA por Produto / Serviço - " + date, figsize=(10, 8)
-   ).legend(
-       bbox_to_anchor=(1, 0.5), loc="center left", frameon=False
    )
 
    plt.ylabel("");
