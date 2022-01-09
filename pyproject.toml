@@ -3,6 +3,10 @@ name = "seriesbr"
 version = "0.1.8"
 description = "A Python library to interact with brazilian time series databases"
 authors = ["Phelipe Teles <phelipe_teles@hotmail.com>"]
+readme = "README.md"
+license = "MIT"
+documentation = "https://seriesbr.readthedocs.io/"
+repository = "https://github.com/phelipetls/seriesbr"
 
 [tool.poetry.dependencies]
 python = "^3.8"
