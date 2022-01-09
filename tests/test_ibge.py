@@ -92,20 +92,6 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             },
         ),
         (
-            {"start": "2019-11-07", "end": "2019-11-07"},
-            {
-                "url": BASE_URL + "/periodos/201907-201907/variaveis",
-                "params": {},
-            },
-        ),
-        (
-            {"start": "2019-11-07", "end": "2019-11-07"},
-            {
-                "url": BASE_URL + "/periodos/201907-201907/variaveis",
-                "params": {},
-            },
-        ),
-        (
             {"variables": 100},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
