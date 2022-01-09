@@ -21,6 +21,21 @@ Installation
 
    pip3 install seriesbr
 
+Demonstração
+------------
+
+.. ipython:: python
+
+   import matplotlib
+   import matplotlib.pyplot as plt
+
+   from seriesbr import bcb
+
+   df = bcb.get_series({"Spread bancário": 20786}, start="2015", end="2018-06-01")
+   df.plot(kind="line", title="Spread bancário no Brasil de 2016 até 01/06/2018")
+   @savefig spread_bcb.png
+   plt.tight_layout()
+
 .. toctree::
    :hidden:
    :maxdepth: 2
