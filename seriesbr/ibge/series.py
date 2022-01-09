@@ -387,16 +387,16 @@ def ibge_filter_by_location(**kwargs):
 
     query = []
     for name, code in kwargs.items():
-        location_name = locations_names_to_codes.get(name)
+        location_code = locations_names_to_codes.get(name)
 
         if name == "brazil" and code:
             query.append("BR")
         elif isinstance(code, list):
             joined_codes = misc.cat(code, ",")
-            query.append(f"{location_name}[{joined_codes}]")
+            query.append(f"{location_code}[{joined_codes}]")
         elif type(code) == int:
-            query.append(f"{location_name}[{code}]")
+            query.append(f"{location_code}[{code}]")
         elif code:
-            query.append(f"{location_name}")
+            query.append(f"{location_code}")
 
     return prefix + "|".join(query)
