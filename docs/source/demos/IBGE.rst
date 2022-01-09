@@ -22,8 +22,8 @@ argumentos.
 <https://sidra.ibge.gov.br/acervo>`_ para obter os identificadores das tabelas,
 localidades, classificações, categorias etc.
 
-Para ilustrar o uso do módulo, vamos reproduzir as `visualizações da variável
-IPCA no site do Sidra <https://sidra.ibge.gov.br/home/ipca/brasil>`_.
+Para ilustrar o uso do módulo, vamos reproduzir uma `visualização do IPCA no
+site do Sidra <https://sidra.ibge.gov.br/home/ipca/brasil>`_.
 
 O identificador da tabela do IPCA é 7060 e nós vamos querer as variáveis de
 variação mensal e acumulada no ano.
