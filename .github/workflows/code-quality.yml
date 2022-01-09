@@ -1,10 +1,10 @@
-name: Test
+name: Code quality
 
 on: [push]
 
 jobs:
   build:
-    name: Test
+    name: Code quality
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,12 +23,10 @@ jobs:
         uses: snok/install-poetry@v1
 
       - name: Install dependencies
-        run: |
-          poetry install
+        run: poetry install
 
       - name: Test and generate code coverage report in XML
-        run: |
-          poetry run pytest --cov=seriesbr --cov-report=xml
+        run: poetry run pytest --cov=seriesbr --cov-report=xml
 
       - name: Upload coverage report to codecov
         uses: codecov/codecov-action@v2
