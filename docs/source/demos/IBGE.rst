@@ -76,6 +76,8 @@ lista usada no exemplo anterior:
 
 .. ipython:: python
 
-   metadata["classificacoes"][0]["id"]
+   classification = metadata["classificacoes"][0]
 
-   [categoria["id"] for categoria in metadata["classificacoes"][0]["categorias"] if categoria["nivel"] == 1]
+   classification["id"]
+
+   [categoria["id"] for categoria in classification["categorias"] if categoria["nivel"] == 1]
