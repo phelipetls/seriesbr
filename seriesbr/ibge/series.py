@@ -388,7 +388,9 @@ def ibge_filter_by_location(metadata=None, **kwargs):
     # NOTE: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
     prefix = "&localidades="
 
-    if not kwargs or all([v is None for v in kwargs.values()]):
+    locations_dict = {k: v for k, v in kwargs.items() if v}
+
+    if not locations_dict:
         return prefix + "BR"
 
     allowed_locations_codes = metadata["nivelTerritorial"]["Administrativo"]
@@ -397,10 +399,11 @@ def ibge_filter_by_location(metadata=None, **kwargs):
     ]
 
     query = []
-    for name, code in kwargs.items():
+
+    for name, code in locations_dict.items():
         location_code = locations_names_to_codes.get(name)
 
-        if code and location_code not in allowed_locations_codes:
+        if location_code not in allowed_locations_codes:
             joined_allowed_locations_names = misc.cat(allowed_locations_names, ",")
             print(
                 f"Você está tentando filtrar a tabela pela localidade '{name}', "
@@ -408,14 +411,14 @@ def ibge_filter_by_location(metadata=None, **kwargs):
             )
             raise ValueError
 
-        if name == "brazil" and code:
+        if name == "brazil":
             query.append("BR")
         elif isinstance(code, list):
             joined_codes = misc.cat(code, ",")
             query.append(f"{location_code}[{joined_codes}]")
         elif type(code) == int:
             query.append(f"{location_code}[{code}]")
-        elif code:
+        else:
             query.append(f"{location_code}")
 
     return prefix + "|".join(query)
