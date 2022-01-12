@@ -149,10 +149,11 @@ def test_ipea_get_series_url(kwargs, expected):
 @freeze_time("2021-12-31")
 @responses.activate
 @pytest.mark.parametrize(
-    "periodicity,kwargs,expected",
+    "periodicity,max_date,kwargs,expected",
     [
         (
             "Mensal",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 6},
             {
                 "params": {
@@ -162,6 +163,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
         (
             "Trimestral",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 2},
             {
                 "params": {
@@ -171,6 +173,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
         (
             "Anual",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
             {
                 "params": {
@@ -190,6 +193,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
         (
             "Quadrienal",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
             {
                 "params": {
@@ -199,6 +203,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
         (
             "Quinquenal",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
             {
                 "params": {
@@ -208,6 +213,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
         (
             "Irregular",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
             {
                 "params": {
@@ -217,6 +223,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
         (
             "NOT_IMPLEMENTED",
+            "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
             {
                 "params": {
@@ -226,7 +233,7 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
     ],
 )
-def test_ipea_get_series_url_last_n(periodicity, kwargs, expected):
+def test_ipea_get_series_url_last_n(periodicity, max_date, kwargs, expected):
     expected_params = expected["params"]
 
     responses.add(
@@ -236,7 +243,7 @@ def test_ipea_get_series_url_last_n(periodicity, kwargs, expected):
             "value": [
                 {
                     "SERCODIGO": "BM12_TJOVER12",
-                    "SERMAXDATA": "2019-12-01T00:00:00-03:00",
+                    "SERMAXDATA": max_date,
                     "SERMINDATA": "2019-01-01T00:00:00-03:00",
                     "PERNOME": periodicity,
                 }
