@@ -1,10 +1,12 @@
 import pandas as pd
+
+from datetime import datetime
+from .metadata import get_metadata
 from seriesbr.utils import session, misc, dates
+from dateutil.relativedelta import relativedelta
 
-DATE_FORMAT = "%Y-%m-%dT00:00:00Z"
 
-
-def get_series(*args, start=None, end=None, **kwargs):
+def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
     Get multiple IPEA time series.
 
@@ -30,9 +32,12 @@ def get_series(*args, start=None, end=None, **kwargs):
     parsed_args = misc.parse_arguments(*args)
 
     def get_timeseries(code, label=None, start=None, end=None):
-        url, params = build_url(code, start, end)
+        metadata = get_metadata(code)
+        url, params = build_url(code, start, end, last_n, metadata)
+
         response = session.get(url, params=params)
         json = response.json()
+
         df = build_df(json, code, label)
         return df
 
@@ -62,7 +67,7 @@ def build_df(json, code, label):
     return df
 
 
-def build_url(code, start, end):
+def build_url(code, start, end, last_n, metadata):
     assert isinstance(code, str), "Not a valid code format."
 
     params = {"$select": "VALDATA,VALVALOR"}
@@ -71,15 +76,52 @@ def build_url(code, start, end):
         f"http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='{code}')"
     )
 
-    if start:
-        start = dates.parse_start_date(start).strftime(DATE_FORMAT)
+    max_date = (
+        datetime.fromisoformat(metadata["SERMAXDATA"])
+        if metadata["SERMAXDATA"]
+        else datetime.utcnow()
+    )
 
-    if end:
-        end = dates.parse_end_date(end).strftime(DATE_FORMAT)
+    min_date = (
+        datetime.fromisoformat(metadata["SERMINDATA"])
+        if metadata["SERMINDATA"]
+        else datetime.utcnow()
+    )
 
-    date_filter = ipea_filter_by_date(start, end)
-    if date_filter:
-        params["$filter"] = date_filter
+    if last_n:
+        periodicity = metadata["PERNOME"]
+        if periodicity == "Anual":
+            offset_date = max_date - relativedelta(years=last_n)
+        elif periodicity == "Quadrienal":
+            offset_date = max_date - relativedelta(years=4 * last_n)
+        elif periodicity == "Quinquenal":
+            offset_date = max_date - relativedelta(years=5 * last_n)
+        elif periodicity == "Decenal":
+            offset_date = max_date - relativedelta(years=10 * last_n)
+        elif periodicity == "Trimestral":
+            offset_date = max_date - relativedelta(months=3 * last_n)
+        elif periodicity == "Mensal":
+            offset_date = max_date - relativedelta(months=last_n)
+        elif periodicity == "Irregular":
+            offset_date = max_date
+        else:
+            offset_date = max_date
+
+        params["$filter"] = f"VALDATA gt {offset_date.isoformat()}"
+    else:
+        if start:
+            start = (
+                dates.parse_start_date(start)
+                .replace(tzinfo=min_date.tzinfo)
+                .isoformat()
+            )
+
+        if end:
+            end = dates.parse_end_date(end).replace(tzinfo=max_date.tzinfo).isoformat()
+
+        date_filter = ipea_filter_by_date(start, end)
+        if date_filter:
+            params["$filter"] = date_filter
 
     return url, params
 

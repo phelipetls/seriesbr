@@ -40,6 +40,17 @@ Filtrando por data:
        end="07-2016",
    )
 
+Obtendo as últimas 12 observações:
+
+.. ipython:: python
+
+   ipea.get_series(
+       {
+           "Selic": "BM12_TJOVER12",
+       },
+       last_n=12
+   )
+
 
 Obtendo metadados
 -----------------
