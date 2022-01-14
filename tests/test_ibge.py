@@ -637,14 +637,6 @@ def test_ibge_get_series_forbidden_location_filter(capsys):
 def test_ibge_get_metadata():
     json = {
         "id": 1419,
-        "nome": "nome",
-        "URL": "URL",
-        "pesquisa": "pesquisa",
-        "assunto": "assunto",
-        "periodicidade": "periodicidade",
-        "nivelTerritorial": "nivelTerritorial",
-        "variaveis": "variaveis",
-        "classificacoes": "classificacoes",
     }
 
     responses.add(
