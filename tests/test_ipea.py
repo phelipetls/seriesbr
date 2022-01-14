@@ -105,9 +105,6 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
     ],
 )
 def test_ipea_get_series_url(kwargs, expected):
-    expected_url = expected["url"]
-    expected_params = expected["params"]
-
     responses.add(
         responses.GET,
         "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
@@ -122,6 +119,9 @@ def test_ipea_get_series_url(kwargs, expected):
         },
         status=200,
     )
+
+    expected_url = expected["url"]
+    expected_params = expected["params"]
 
     responses.add(
         responses.GET,
@@ -234,8 +234,6 @@ def test_ipea_get_series_url(kwargs, expected):
     ],
 )
 def test_ipea_get_series_url_last_n(periodicity, max_date, kwargs, expected):
-    expected_params = expected["params"]
-
     responses.add(
         responses.GET,
         "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
@@ -251,6 +249,8 @@ def test_ipea_get_series_url_last_n(periodicity, max_date, kwargs, expected):
         },
         status=200,
     )
+
+    expected_params = expected["params"]
 
     responses.add(
         responses.GET,

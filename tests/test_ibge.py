@@ -207,9 +207,6 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
     ],
 )
 def test_ibge_get_monthly_series_url(kwargs, expected):
-    expected_url = expected["url"]
-    expected_params = expected["params"]
-
     responses.add(
         responses.GET,
         BASE_URL + "/metadados",
@@ -221,6 +218,9 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
         },
         status=200,
     )
+
+    expected_url = expected["url"]
+    expected_params = expected["params"]
 
     responses.add(
         responses.GET,
@@ -305,15 +305,15 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
     ],
 )
 def test_ibge_get_quarterly_series_url(kwargs, expected):
-    expected_url = expected["url"]
-    expected_params = expected["params"]
-
     responses.add(
         responses.GET,
         BASE_URL + "/metadados",
         json={"periodicidade": {"frequencia": "trimestral"}},
         status=200,
     )
+
+    expected_url = expected["url"]
+    expected_params = expected["params"]
 
     responses.add(
         responses.GET,
@@ -398,15 +398,15 @@ def test_ibge_get_quarterly_series_url(kwargs, expected):
     ],
 )
 def test_ibge_get_yearly_series_url_and_dataframe(kwargs, expected):
-    expected_url = expected["url"]
-    expected_params = expected["params"]
-
     responses.add(
         responses.GET,
         BASE_URL + "/metadados",
         json={"periodicidade": {"frequencia": "anual"}},
         status=200,
     )
+
+    expected_url = expected["url"]
+    expected_params = expected["params"]
 
     responses.add(
         responses.GET,
