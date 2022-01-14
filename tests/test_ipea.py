@@ -9,6 +9,19 @@ from seriesbr import ipea
 BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='BM12_TJOVER12')"
 
 
+@pytest.fixture
+def mock_get_metadata():
+    def _mock_get_metadata(metadata):
+        responses.add(
+            responses.GET,
+            "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
+            json={"value": [metadata]},
+            status=200,
+        )
+
+    return _mock_get_metadata
+
+
 @freeze_time("2021-12-31")
 @responses.activate
 @pytest.mark.parametrize(
@@ -104,20 +117,16 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
         ),
     ],
 )
-def test_ipea_get_series_url(kwargs, expected):
-    responses.add(
-        responses.GET,
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
-        json={
-            "value": [
-                {
-                    "SERCODIGO": "BM12_TJOVER12",
-                    "SERMAXDATA": "2021-12-31T00:00:00-03:00",
-                    "SERMINDATA": "2019-01-01T00:00:00-03:00",
-                }
-            ]
-        },
-        status=200,
+def test_ipea_get_series_url(kwargs, expected, mock_get_metadata):
+    expected_url = expected["url"]
+    expected_params = expected["params"]
+
+    mock_get_metadata(
+        {
+            "SERCODIGO": "BM12_TJOVER12",
+            "SERMAXDATA": "2021-12-31T00:00:00-03:00",
+            "SERMINDATA": "2019-01-01T00:00:00-03:00",
+        }
     )
 
     expected_url = expected["url"]
@@ -233,21 +242,18 @@ def test_ipea_get_series_url(kwargs, expected):
         ),
     ],
 )
-def test_ipea_get_series_url_last_n(periodicity, max_date, kwargs, expected):
-    responses.add(
-        responses.GET,
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
-        json={
-            "value": [
-                {
-                    "SERCODIGO": "BM12_TJOVER12",
-                    "SERMAXDATA": max_date,
-                    "SERMINDATA": "2019-01-01T00:00:00-03:00",
-                    "PERNOME": periodicity,
-                }
-            ]
-        },
-        status=200,
+def test_ipea_get_series_url_last_n(
+    periodicity, max_date, kwargs, expected, mock_get_metadata
+):
+    expected_params = expected["params"]
+
+    mock_get_metadata(
+        {
+            "SERCODIGO": "BM12_TJOVER12",
+            "SERMAXDATA": max_date,
+            "SERMINDATA": "2019-01-01T00:00:00-03:00",
+            "PERNOME": periodicity,
+        }
     )
 
     expected_params = expected["params"]
@@ -276,20 +282,13 @@ def test_ipea_get_series_url_last_n(periodicity, max_date, kwargs, expected):
 
 
 @responses.activate
-def test_ipea_get_series_dataframe():
-    responses.add(
-        responses.GET,
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
-        json={
-            "value": [
-                {
-                    "SERCODIGO": "BM12_TJOVER12",
-                    "SERMAXDATA": "2021-12-31T00:00:00-03:00",
-                    "SERMINDATA": "2019-01-01T00:00:00-03:00",
-                }
-            ]
-        },
-        status=200,
+def test_ipea_get_series_dataframe(mock_get_metadata):
+    mock_get_metadata(
+        {
+            "SERCODIGO": "BM12_TJOVER12",
+            "SERMAXDATA": "2021-12-31T00:00:00-03:00",
+            "SERMINDATA": "2019-01-01T00:00:00-03:00",
+        }
     )
 
     responses.add(
@@ -315,18 +314,11 @@ def test_ipea_get_series_dataframe():
 
 
 @responses.activate
-def test_ipea_get_metadata():
-    responses.add(
-        responses.GET,
-        "http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('BM12_TJOVER12')",
-        json={
-            "value": [
-                {
-                    "SERCODIGO": "BM12_TJOVER12",
-                }
-            ]
-        },
-        status=200,
+def test_ipea_get_metadata(mock_get_metadata):
+    mock_get_metadata(
+        {
+            "SERCODIGO": "BM12_TJOVER12",
+        }
     )
 
     assert ipea.get_metadata("BM12_TJOVER12") == {

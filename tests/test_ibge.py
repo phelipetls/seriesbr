@@ -10,6 +10,19 @@ from seriesbr import ibge
 BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
 
 
+@pytest.fixture
+def mock_get_metadata():
+    def _mock_get_metadata(metadata):
+        responses.add(
+            responses.GET,
+            BASE_URL + "/metadados",
+            json=metadata,
+            status=200,
+        )
+
+    return _mock_get_metadata
+
+
 @freeze_time("2021-12-31")
 @responses.activate
 @pytest.mark.parametrize(
@@ -206,17 +219,14 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
         ),
     ],
 )
-def test_ibge_get_monthly_series_url(kwargs, expected):
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={
+def test_ibge_get_monthly_series_url(kwargs, expected, mock_get_metadata):
+    mock_get_metadata(
+        {
             "periodicidade": {"frequencia": "mensal"},
             "nivelTerritorial": {
                 "Administrativo": ["N6", "N3", "N2", "N7", "N9", "N1"]
             },
-        },
-        status=200,
+        }
     )
 
     expected_url = expected["url"]
@@ -304,13 +314,8 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
         ),
     ],
 )
-def test_ibge_get_quarterly_series_url(kwargs, expected):
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={"periodicidade": {"frequencia": "trimestral"}},
-        status=200,
-    )
+def test_ibge_get_quarterly_series_url(kwargs, expected, mock_get_metadata):
+    mock_get_metadata({"periodicidade": {"frequencia": "trimestral"}})
 
     expected_url = expected["url"]
     expected_params = expected["params"]
@@ -397,13 +402,11 @@ def test_ibge_get_quarterly_series_url(kwargs, expected):
         ),
     ],
 )
-def test_ibge_get_yearly_series_url_and_dataframe(kwargs, expected):
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={"periodicidade": {"frequencia": "anual"}},
-        status=200,
-    )
+def test_ibge_get_yearly_series_url_and_dataframe(kwargs, expected, mock_get_metadata):
+    expected_url = expected["url"]
+    expected_params = expected["params"]
+
+    mock_get_metadata({"periodicidade": {"frequencia": "anual"}})
 
     expected_url = expected["url"]
     expected_params = expected["params"]
@@ -455,13 +458,8 @@ def test_ibge_get_yearly_series_url_and_dataframe(kwargs, expected):
 
 @freeze_time("2019-01-01")
 @responses.activate
-def test_get_series_dataframe():
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={"periodicidade": {"frequencia": "mensal"}},
-        status=200,
-    )
+def test_get_series_dataframe(mock_get_metadata):
+    mock_get_metadata({"periodicidade": {"frequencia": "mensal"}})
 
     responses.add(
         responses.GET,
@@ -504,13 +502,8 @@ def test_get_series_dataframe():
 
 @responses.activate
 @freeze_time("2021-12-31")
-def test_ibge_get_quarterly_series_dataframe():
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={"periodicidade": {"frequencia": "trimestral"}},
-        status=200,
-    )
+def test_ibge_get_quarterly_series_dataframe(mock_get_metadata):
+    mock_get_metadata({"periodicidade": {"frequencia": "trimestral"}})
 
     responses.add(
         responses.GET,
@@ -580,13 +573,8 @@ def test_ibge_get_quarterly_series_dataframe():
 
 @freeze_time("2021-12-31")
 @responses.activate
-def test_ibge_get_series_internal_server_error_message(capsys):
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={"periodicidade": {"frequencia": "mensal"}},
-        status=200,
-    )
+def test_ibge_get_series_internal_server_error_message(capsys, mock_get_metadata):
+    mock_get_metadata({"periodicidade": {"frequencia": "mensal"}})
 
     responses.add(
         responses.GET,
@@ -606,15 +594,12 @@ def test_ibge_get_series_internal_server_error_message(capsys):
 
 @freeze_time("2021-12-31")
 @responses.activate
-def test_ibge_get_series_forbidden_location_filter(capsys):
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json={
+def test_ibge_get_series_forbidden_location_filter(capsys, mock_get_metadata):
+    mock_get_metadata(
+        {
             "periodicidade": {"frequencia": "mensal"},
             "nivelTerritorial": {"Administrativo": ["N1", "N3"]},
-        },
-        status=200,
+        }
     )
 
     responses.add(
@@ -634,16 +619,11 @@ def test_ibge_get_series_forbidden_location_filter(capsys):
 
 
 @responses.activate
-def test_ibge_get_metadata():
+def test_ibge_get_metadata(mock_get_metadata):
     json = {
         "id": 1419,
     }
 
-    responses.add(
-        responses.GET,
-        BASE_URL + "/metadados",
-        json=json,
-        status=200,
-    )
+    mock_get_metadata(json)
 
     assert ibge.get_metadata(1419) == json
