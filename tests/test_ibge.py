@@ -112,14 +112,6 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with a number variables",
         ),
         pytest.param(
-            {"variables": "100"},
-            {
-                "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
-                "params": {},
-            },
-            id="with string as variables",
-        ),
-        pytest.param(
             {"variables": [1, 2, 3]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/1|2|3",
@@ -198,14 +190,6 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
                 "params": {"classificacao": "3[all]"},
             },
             id="with classifications",
-        ),
-        pytest.param(
-            {"classifications": "3"},
-            {
-                "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"classificacao": "3[all]"},
-            },
-            id="with string as classifications",
         ),
         pytest.param(
             {"classifications": [1, 2]},
