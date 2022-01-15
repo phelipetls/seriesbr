@@ -23,9 +23,9 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             },
         ),
         (
-            {"last_n": 5},
+            {"last_n": 1},
             {
-                "url": BASE_URL + "/periodos/-5/variaveis",
+                "url": BASE_URL + "/periodos/-1/variaveis",
                 "params": {},
             },
         ),

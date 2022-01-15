@@ -23,9 +23,9 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
             },
         ),
         (
-            {"last_n": 10},
+            {"last_n": 1},
             {
-                "url": BASE_URL + "/ultimos/10",
+                "url": BASE_URL + "/ultimos/1",
                 "params": {},
             },
         ),

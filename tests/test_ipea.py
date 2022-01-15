@@ -154,20 +154,20 @@ def test_ipea_get_series_url(kwargs, expected):
         (
             "Mensal",
             "2019-12-01T00:00:00-03:00",
-            {"last_n": 6},
+            {"last_n": 1},
             {
                 "params": {
-                    "$filter": "VALDATA gt 2019-06-01T00:00:00-03:00",
+                    "$filter": "VALDATA gt 2019-11-01T00:00:00-03:00",
                 },
             },
         ),
         (
             "Trimestral",
             "2019-12-01T00:00:00-03:00",
-            {"last_n": 2},
+            {"last_n": 1},
             {
                 "params": {
-                    "$filter": "VALDATA gt 2019-06-01T00:00:00-03:00",
+                    "$filter": "VALDATA gt 2019-09-01T00:00:00-03:00",
                 },
             },
         ),
