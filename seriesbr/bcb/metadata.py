@@ -1,7 +1,8 @@
 from seriesbr.utils import session
+from typing import Tuple
 
 
-def get_metadata(code):
+def get_metadata(code: int) -> dict:
     """
     Get a BCB time series metadata.
 
@@ -31,6 +32,6 @@ def get_metadata(code):
     return json["result"]["results"][0]
 
 
-def build_url(code):
+def build_url(code: int) -> Tuple[str, dict]:
     params = {"fq": f"codigo_sgs:{code}"}
     return "https://dadosabertos.bcb.gov.br/api/3/action/package_search", params

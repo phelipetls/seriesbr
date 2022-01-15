@@ -2,11 +2,18 @@ import pandas as pd
 
 from seriesbr.utils import session, misc, dates
 from datetime import datetime
+from typing import Union, Tuple, TypedDict, Literal
 
 DATE_FORMAT = "%d/%m/%Y"
 
 
-def get_series(*args, start=None, end=None, last_n=None, **kwargs):
+def get_series(
+    *args: Union[int, str, dict],
+    start: str = None,
+    end: str = None,
+    last_n: int = None,
+    **kwargs,
+) -> pd.DataFrame:
     """
     Get multiple BCB time series.
 
@@ -34,7 +41,13 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
     parsed_args = misc.parse_arguments(*args)
 
-    def get_timeseries(code, label=None, start=None, end=None, last_n=None):
+    def get_timeseries(
+        code: int,
+        label: str = None,
+        start: str = None,
+        end: str = None,
+        last_n: int = None,
+    ) -> pd.DataFrame:
         url, params = build_url(code, start, end, last_n)
         response = session.get(url, params=params)
         json = response.json()
@@ -51,11 +64,26 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     )
 
 
-def build_url(code, start=None, end=None, last_n=None):
-    assert isinstance(code, (str, int)), "Not a valid code format."
+BcbOptionalUrlParams = TypedDict(
+    "BcbOptionalUrlParams", {"dataInicial": str, "dataFinal": str}, total=False
+)
 
+BcbDefaultUrlParams = TypedDict(
+    "BcbDefaultUrlParams",
+    {"format": Literal["json"]},
+)
+
+
+class BcbUrlParams(BcbDefaultUrlParams, BcbOptionalUrlParams):
+    pass
+
+
+def build_url(
+    code: int, start: str = None, end: str = None, last_n: int = None
+) -> Tuple[str, BcbUrlParams]:
     url = f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
-    params = {"format": "json"}
+
+    params: BcbUrlParams = {"format": "json"}
 
     if last_n:
         url += f"/ultimos/{last_n}"
@@ -64,16 +92,16 @@ def build_url(code, start=None, end=None, last_n=None):
     if not start and not end:
         return url, params
 
-    start = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
-    params["dataInicial"] = start.strftime(DATE_FORMAT)
+    start_date = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
+    params["dataInicial"] = start_date.strftime(DATE_FORMAT)
 
-    end = dates.parse_end_date(end) if end else datetime.today()
-    params["dataFinal"] = end.strftime(DATE_FORMAT)
+    end_date = dates.parse_end_date(end) if end else datetime.today()
+    params["dataFinal"] = end_date.strftime(DATE_FORMAT)
 
     return url, params
 
 
-def build_df(json, code, label):
+def build_df(json: dict, code: int, label: str = None) -> pd.DataFrame:
     df = pd.DataFrame(json)
 
     df["valor"] = df["valor"].astype("float64")
