@@ -15,61 +15,69 @@ BASE_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.11/dados"
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
-        (
+        pytest.param(
             {},
             {
                 "url": BASE_URL,
                 "params": {},
             },
+            id="default",
         ),
-        (
+        pytest.param(
             {"last_n": 1},
             {
                 "url": BASE_URL + "/ultimos/1",
                 "params": {},
             },
+            id="with last_n",
         ),
-        (
+        pytest.param(
             {"start": "2019"},
             {
                 "url": BASE_URL,
                 "params": {"dataInicial": "01/01/2019", "dataFinal": "31/12/2021"},
             },
+            id="with year as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11"},
             {
                 "url": BASE_URL,
                 "params": {"dataInicial": "01/11/2019", "dataFinal": "31/12/2021"},
             },
+            id="with year-month as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL,
                 "params": {"dataInicial": "07/11/2019", "dataFinal": "31/12/2021"},
             },
+            id="with year-month-day as start date",
         ),
-        (
+        pytest.param(
             {"end": "2019"},
             {
                 "url": BASE_URL,
                 "params": {"dataInicial": "01/01/1970", "dataFinal": "31/12/2019"},
             },
+            id="with year as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11"},
             {
                 "url": BASE_URL,
                 "params": {"dataInicial": "01/01/1970", "dataFinal": "30/11/2019"},
             },
+            id="with year-month as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL,
                 "params": {"dataInicial": "01/01/1970", "dataFinal": "07/11/2019"},
             },
+            id="with year-month-day as end date",
         ),
     ],
 )

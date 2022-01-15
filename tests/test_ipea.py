@@ -14,14 +14,15 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
-        (
+        pytest.param(
             {},
             {
                 "url": BASE_URL,
                 "params": {},
             },
+            id="no parameters",
         ),
-        (
+        pytest.param(
             {"start": "2019"},
             {
                 "url": BASE_URL,
@@ -29,8 +30,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA ge 2019-01-01T00:00:00-03:00",
                 },
             },
+            id="with year as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11"},
             {
                 "url": BASE_URL,
@@ -38,8 +40,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA ge 2019-11-01T00:00:00-03:00",
                 },
             },
+            id="with year-month as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL,
@@ -47,8 +50,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA ge 2019-11-07T00:00:00-03:00",
                 },
             },
+            id="with year-month-day as start date",
         ),
-        (
+        pytest.param(
             {"end": "2019"},
             {
                 "url": BASE_URL,
@@ -56,8 +60,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA le 2019-12-31T00:00:00-03:00",
                 },
             },
+            id="with year as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11"},
             {
                 "url": BASE_URL,
@@ -65,8 +70,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA le 2019-11-30T00:00:00-03:00",
                 },
             },
+            id="with year-month as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL,
@@ -74,8 +80,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA le 2019-11-07T00:00:00-03:00",
                 },
             },
+            id="with year-month-day as end date",
         ),
-        (
+        pytest.param(
             {"start": "2019", "end": "2019"},
             {
                 "url": BASE_URL,
@@ -83,8 +90,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA ge 2019-01-01T00:00:00-03:00 and VALDATA le 2019-12-31T00:00:00-03:00",
                 },
             },
+            id="with year as start and end date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11", "end": "2019-11"},
             {
                 "url": BASE_URL,
@@ -92,8 +100,9 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA ge 2019-11-01T00:00:00-03:00 and VALDATA le 2019-11-30T00:00:00-03:00",
                 },
             },
+            id="with year-month as start and end date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
                 "url": BASE_URL,
@@ -101,6 +110,7 @@ BASE_URL = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO=
                     "$filter": "VALDATA ge 2019-11-07T00:00:00-03:00 and VALDATA le 2019-11-07T00:00:00-03:00",
                 },
             },
+            id="with year-month-day as start and end date",
         ),
     ],
 )
@@ -151,7 +161,7 @@ def test_ipea_get_series_url(kwargs, expected):
 @pytest.mark.parametrize(
     "periodicity,max_date,kwargs,expected",
     [
-        (
+        pytest.param(
             "Mensal",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -160,8 +170,9 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2019-11-01T00:00:00-03:00",
                 },
             },
+            id="monthly periodicity",
         ),
-        (
+        pytest.param(
             "Trimestral",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -170,8 +181,9 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2019-09-01T00:00:00-03:00",
                 },
             },
+            id="quarterly periodicity",
         ),
-        (
+        pytest.param(
             "Anual",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -180,8 +192,9 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2018-12-01T00:00:00-03:00",
                 },
             },
+            id="yearly periodicity",
         ),
-        (
+        pytest.param(
             "Decenal",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -190,8 +203,9 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2009-12-01T00:00:00-03:00",
                 },
             },
+            id="decennial periodicity",
         ),
-        (
+        pytest.param(
             "Quadrienal",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -200,8 +214,9 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2015-12-01T00:00:00-03:00",
                 },
             },
+            id="quadrennial periodicity",
         ),
-        (
+        pytest.param(
             "Quinquenal",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -210,8 +225,9 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2014-12-01T00:00:00-03:00",
                 },
             },
+            id="quinquennial periodicity",
         ),
-        (
+        pytest.param(
             "Irregular",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
@@ -220,9 +236,10 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2019-12-01T00:00:00-03:00",
                 },
             },
+            id="irregular periodicity",
         ),
-        (
-            "NOT_IMPLEMENTED",
+        pytest.param(
+            "UNEXPECTED",
             "2019-12-01T00:00:00-03:00",
             {"last_n": 1},
             {
@@ -230,6 +247,7 @@ def test_ipea_get_series_url(kwargs, expected):
                     "$filter": "VALDATA gt 2019-12-01T00:00:00-03:00",
                 },
             },
+            id="unexpected periodicity",
         ),
     ],
 )

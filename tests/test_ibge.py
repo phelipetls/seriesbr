@@ -15,194 +15,221 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
-        (
+        pytest.param(
             {},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {},
             },
+            id="default",
         ),
-        (
+        pytest.param(
             {"last_n": 1},
             {
                 "url": BASE_URL + "/periodos/-1/variaveis",
                 "params": {},
             },
+            id="with last_n in params",
         ),
-        (
+        pytest.param(
             {"start": "2019"},
             {
                 "url": BASE_URL + "/periodos/201901-202112/variaveis",
                 "params": {},
             },
+            id="with year as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/201911-202112/variaveis",
                 "params": {},
             },
+            id="with year-month as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201911-202112/variaveis",
                 "params": {},
             },
+            id="with year-month-day as start date",
         ),
-        (
+        pytest.param(
             {"end": "2019"},
             {
                 "url": BASE_URL + "/periodos/197001-201912/variaveis",
                 "params": {},
             },
+            id="with year as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/197001-201911/variaveis",
                 "params": {},
             },
+            id="with year-month as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/197001-201911/variaveis",
                 "params": {},
             },
+            id="with year-month-day as end date",
         ),
-        (
+        pytest.param(
             {"start": "2019", "end": "2019"},
             {
                 "url": BASE_URL + "/periodos/201901-201912/variaveis",
                 "params": {},
             },
+            id="with year as start and end date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11", "end": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/201911-201911/variaveis",
                 "params": {},
             },
+            id="with year-month as start and end date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07", "end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201911-201911/variaveis",
                 "params": {},
             },
+            id="with year-month-day as start and end date",
         ),
-        (
+        pytest.param(
             {"variables": 100},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
                 "params": {},
             },
+            id="with a number variables",
         ),
-        (
+        pytest.param(
             {"variables": "100"},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/100",
                 "params": {},
             },
+            id="with string as variables",
         ),
-        (
+        pytest.param(
             {"variables": [1, 2, 3]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis/1|2|3",
                 "params": {},
             },
+            id="with list as variables",
         ),
-        (
+        pytest.param(
             {"brazil": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "BR"},
             },
+            id="with brazil",
         ),
-        (
+        pytest.param(
             {"municipalities": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N6"},
             },
+            id="with municipalities",
         ),
-        (
+        pytest.param(
             {"states": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N3"},
             },
+            id="with states",
         ),
-        (
+        pytest.param(
             {"macroregions": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N2"},
             },
+            id="with macroregions",
         ),
-        (
+        pytest.param(
             {"mesoregions": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N7"},
             },
+            id="with mesoregions",
         ),
-        (
+        pytest.param(
             {"microregions": True},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N9"},
             },
+            id="with microregions",
         ),
-        (
+        pytest.param(
             {"states": [2, 3]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N3[2,3]"},
             },
+            id="with list as states",
         ),
-        (
+        pytest.param(
             {"states": [2, 3], "municipalities": 3},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N6[3]|N3[2,3]"},
             },
+            id="with list as states and number as municipalities",
         ),
-        (
+        pytest.param(
             {"classifications": 3},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"classificacao": "3[all]"},
             },
+            id="with classifications",
         ),
-        (
+        pytest.param(
             {"classifications": "3"},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"classificacao": "3[all]"},
             },
+            id="with string as classifications",
         ),
-        (
+        pytest.param(
             {"classifications": [1, 2]},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"classificacao": "1[all]|2[all]"},
             },
+            id="with list as classifications",
         ),
-        (
+        pytest.param(
             {"classifications": {1: [2], 3: [4, 5]}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"classificacao": "1[2]|3[4,5]"},
             },
+            id="with dict as classifications",
         ),
-        (
+        pytest.param(
             {"classifications": {1: []}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"classificacao": "1[all]"},
             },
+            id="with dict as classifications and empty list as categories",
         ),
     ],
 )
@@ -260,47 +287,53 @@ def test_ibge_get_monthly_series_url(kwargs, expected):
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
-        (
+        pytest.param(
             {"start": "2019"},
             {
                 "url": BASE_URL + "/periodos/201901-202104/variaveis",
                 "params": {},
             },
+            id="with year as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/201904-202104/variaveis",
                 "params": {},
             },
+            id="with year-month as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/201904-202104/variaveis",
                 "params": {},
             },
+            id="with year-month-day as start date",
         ),
-        (
+        pytest.param(
             {"end": "2019"},
             {
                 "url": BASE_URL + "/periodos/197001-201904/variaveis",
                 "params": {},
             },
+            id="with year as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/197001-201904/variaveis",
                 "params": {},
             },
+            id="with year-month as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/197001-201904/variaveis",
                 "params": {},
             },
+            id="with year-month-day as end date",
         ),
     ],
 )
@@ -353,47 +386,53 @@ def test_ibge_get_quarterly_series_url(kwargs, expected):
 @pytest.mark.parametrize(
     "kwargs,expected",
     [
-        (
+        pytest.param(
             {"start": "2019"},
             {
                 "url": BASE_URL + "/periodos/2019-2021/variaveis",
                 "params": {},
             },
+            id="with year as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/2019-2021/variaveis",
                 "params": {},
             },
+            id="with year-month as start date",
         ),
-        (
+        pytest.param(
             {"start": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/2019-2021/variaveis",
                 "params": {},
             },
+            id="with year-month-day as start date",
         ),
-        (
+        pytest.param(
             {"end": "2019"},
             {
                 "url": BASE_URL + "/periodos/1970-2019/variaveis",
                 "params": {},
             },
+            id="with year as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11"},
             {
                 "url": BASE_URL + "/periodos/1970-2019/variaveis",
                 "params": {},
             },
+            id="with year-month as end date",
         ),
-        (
+        pytest.param(
             {"end": "2019-11-07"},
             {
                 "url": BASE_URL + "/periodos/1970-2019/variaveis",
                 "params": {},
             },
+            id="with year-month-day as end date",
         ),
     ],
 )
