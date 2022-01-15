@@ -42,3 +42,6 @@ htmlcov
 
 # docs
 docs/source/savefig/*
+
+# rope
+.vim/.ropeproject
