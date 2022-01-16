@@ -1,12 +1,15 @@
 import pandas as pd
 
 from datetime import datetime
-from .metadata import get_metadata
+from .metadata import get_metadata, IpeaMetadata
 from seriesbr.utils import session, misc, dates
 from dateutil.relativedelta import relativedelta
+from typing import Tuple, TypedDict, Optional
 
 
-def get_series(*args, start=None, end=None, last_n=None, **kwargs):
+def get_series(
+    *args: str, start: str = None, end: str = None, last_n: int = None, **kwargs
+) -> pd.DataFrame:
     """
     Get multiple IPEA time series.
 
@@ -31,7 +34,9 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     """
     parsed_args = misc.parse_arguments(*args)
 
-    def get_timeseries(code, label=None, start=None, end=None):
+    def get_timeseries(
+        code: str, label: str = None, start: str = None, end: str = None
+    ):
         metadata = get_metadata(code)
         url, params = build_url(code, start, end, last_n, metadata)
 
@@ -52,7 +57,7 @@ def get_series(*args, start=None, end=None, last_n=None, **kwargs):
     )
 
 
-def build_df(json, code, label):
+def build_df(json: dict, code: str, label: Optional[str]) -> pd.DataFrame:
     json = json["value"]
     df = pd.DataFrame(json)
 
@@ -67,9 +72,24 @@ def build_df(json, code, label):
     return df
 
 
-def build_url(code, start, end, last_n, metadata):
-    assert isinstance(code, str), "Not a valid code format."
+IpeaUrlParams = TypedDict(
+    "IpeaUrlParams",
+    {
+        "$select": str,
+        "$filter": str,
+    },
+    total=False,
+)
 
+
+def build_url(
+    code: str,
+    start: Optional[str],
+    end: Optional[str],
+    last_n: Optional[int],
+    metadata: IpeaMetadata,
+) -> Tuple[str, IpeaUrlParams]:
+    params: IpeaUrlParams
     params = {"$select": "VALDATA,VALVALOR"}
 
     url = (
@@ -126,7 +146,7 @@ def build_url(code, start, end, last_n, metadata):
     return url, params
 
 
-def ipea_filter_by_date(start=None, end=None):
+def ipea_filter_by_date(start: str = None, end: str = None) -> str:
     """
     Filter an IPEA time series by date.
 

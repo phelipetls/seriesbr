@@ -1,7 +1,19 @@
 from seriesbr.utils import session
+from typing import Tuple, TypedDict
 
 
-def get_metadata(code):
+class IpeaMetadata(TypedDict):
+    SERCODIGO: str
+    SERNOME: str
+    SERCOMENTARIO: str
+    SERATUALIZACAO: str
+    BASNOME: str
+    SERMAXDATA: str
+    SERMINDATA: str
+    PERNOME: str
+
+
+def get_metadata(code: str) -> IpeaMetadata:
     """
     Get IPEA time series metadata.
 
@@ -29,5 +41,5 @@ def get_metadata(code):
     return json["value"][0]
 
 
-def build_url(code):
+def build_url(code: str) -> Tuple[str, None]:
     return f"http://ipeadata2-homologa.ipea.gov.br/api/v1/Metadados('{code}')", None
