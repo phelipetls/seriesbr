@@ -4,11 +4,15 @@ from datetime import datetime
 from .metadata import get_metadata, IpeaMetadata
 from seriesbr.utils import session, misc, dates
 from dateutil.relativedelta import relativedelta
-from typing import Tuple, TypedDict, Optional
+from typing import Tuple, TypedDict, Optional, Union
 
 
 def get_series(
-    *args: str, start: str = None, end: str = None, last_n: int = None, **kwargs
+    *args: Union[str, dict],
+    start: str = None,
+    end: str = None,
+    last_n: int = None,
+    **kwargs,
 ) -> pd.DataFrame:
     """
     Get multiple IPEA time series.
