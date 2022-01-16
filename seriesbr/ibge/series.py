@@ -4,7 +4,7 @@ import pandas as pd
 from seriesbr.utils import session, dates
 from .metadata import get_metadata
 from datetime import datetime
-from typing import List, Union, Literal, TypedDict, Optional
+from typing import List, Union, Literal, TypedDict, Optional, Tuple
 
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
@@ -92,7 +92,7 @@ def get_series(
     metadata = get_metadata(table)
     frequency: IbgeFrequency = metadata["periodicidade"]["frequencia"]
 
-    url = build_url(
+    url, params = build_url(
         table,
         metadata,
         frequency,
@@ -105,7 +105,7 @@ def get_series(
     )
 
     try:
-        response = session.get(url)
+        response = session.get(url, params=params)
         json = response.json()
         df = build_df(json, frequency)
         return df
@@ -193,6 +193,13 @@ def build_df(json: dict, freq: IbgeFrequency) -> pd.DataFrame:
     return df
 
 
+IbgeUrlParams = TypedDict(
+    "IbgeUrlParams",
+    {"classificacao": str, "localidades": str, "view": str},
+    total=False,
+)
+
+
 def build_url(
     table: int,
     metadata: dict,
@@ -203,20 +210,20 @@ def build_url(
     last_n: int = None,
     locations: LocationsInput = None,
     classifications: ClassificationInput = None,
-) -> str:
+) -> Tuple[str, IbgeUrlParams]:
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
 
     url += ibge_filter_by_date(frequency, start, end, last_n)
     url += ibge_filter_by_variable(variables)
-    url += "?"
-    url += ibge_filter_by_locations(locations, metadata)
-    url += ibge_filter_by_classification(classifications)
-    url += "&view=flat"
 
-    return url
+    params: IbgeUrlParams = {"view": "flat"}
+    params["localidades"] = ibge_get_location_params_value(locations, metadata)
+    params["classificacao"] = ibge_get_classifications_params_value(classifications)
+
+    return url, params
 
 
-def ibge_filter_by_classification(classifications: ClassificationInput = None) -> str:
+def ibge_get_classifications_params_value(classifications: ClassificationInput = None) -> str:
     """
     Filter a table by classification and categories
 
@@ -236,16 +243,14 @@ def ibge_filter_by_classification(classifications: ClassificationInput = None) -
     Examples
     --------
     >>> url.ibge_filter_by_classification({1: [2, 3]})
-    'classificacao=1[2,3]'
+    '1[2,3]'
 
     >>> url.ibge_filter_by_classification([1, 2])
-    'classificacao=1[all]|2[all]'
+    '1[all]|2[all]'
 
     >>> url.ibge_filter_by_classification(3)
-    'classificacao=3[all]'
+    '3[all]'
     """
-    prefix = "&classificacao="
-
     def format_classification_and_category(
         classification: Classification, category: Union[str, int]
     ):
@@ -268,10 +273,10 @@ def ibge_filter_by_classification(classifications: ClassificationInput = None) -
             for classification, category in classifications.items()
         ]
 
-        return prefix + "|".join(result)
+        return "|".join(result)
 
     elif isinstance(classifications, int):
-        return prefix + format_classification_and_category(classifications, "all")
+        return format_classification_and_category(classifications, "all")
 
     elif isinstance(classifications, list):
         joined_classifications = "|".join(
@@ -280,7 +285,7 @@ def ibge_filter_by_classification(classifications: ClassificationInput = None) -
                 for classification in classifications
             ]
         )
-        return prefix + f"{joined_classifications}"
+        return f"{joined_classifications}"
 
     return ""
 
@@ -380,7 +385,7 @@ locations_names_to_codes = {
 }
 
 
-def ibge_filter_by_locations(
+def ibge_get_location_params_value(
     locations: Optional[LocationsInput], metadata: dict
 ) -> str:
     """
@@ -409,19 +414,17 @@ def ibge_filter_by_locations(
     Examples
     --------
     >>> url.ibge_filter_by_location()
-    '&localidades=BR'
+    'BR'
     >>> url.ibge_filter_by_location(cities=True)
-    '&localidades=N6'
+    'N6'
     >>> url.ibge_filter_by_location(cities=1)
-    '&localidades=N6[1]'
+    'N6[1]'
     >>> url.ibge_filter_by_location(cities=[2, 3, 4])
-    '&localidades=N6[2,3,4]'
+    'N6[2,3,4]'
     """
     # NOTE: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
-    prefix = "&localidades="
-
     if not locations:
-        return prefix + "BR"
+        return "BR"
 
     locations_dict = {name: value for name, value in locations.items() if value}
 
@@ -430,7 +433,7 @@ def ibge_filter_by_locations(
         locations_codes_to_names[code] for code in allowed_locations_codes
     ]
 
-    query = []
+    value = []
 
     for name, code in locations_dict.items():
         location_code = locations_names_to_codes.get(name)
@@ -444,13 +447,13 @@ def ibge_filter_by_locations(
             raise ValueError
 
         if name == "brazil":
-            query.append("BR")
+            value.append("BR")
         elif isinstance(code, list):
             joined_codes = ",".join(map(str, code))
-            query.append(f"{location_code}[{joined_codes}]")
+            value.append(f"{location_code}[{joined_codes}]")
         elif type(code) == int:
-            query.append(f"{location_code}[{code}]")
+            value.append(f"{location_code}[{code}]")
         else:
-            query.append(f"{location_code}")
+            value.append(f"{location_code}")
 
-    return prefix + "|".join(query)
+    return "|".join(value)
