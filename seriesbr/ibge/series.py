@@ -163,10 +163,14 @@ def build_df(json: dict, freq: IbgeFrequency) -> pd.DataFrame:
     ]
 
     if freq == "trimestral":
-        df[date_column] = pd.PeriodIndex(
-            df[date_column].str.replace(r"([0-9]{4}).([0-9])", r"\1-Q\2", regex=True),
-            freq="Q",
-        ).to_timestamp()
+
+        def to_quarterly_period(date_str: str) -> pd.Period:
+            """Converts a string like 'YYYYmm' into a quarterly period."""
+            year_str, quarter_str = date_str[:4], date_str[4:]
+            year, quarter = int(year_str), int(quarter_str)
+            return pd.Period(year=year, quarter=quarter, freq="Q").to_timestamp()
+
+        df[date_column] = df[date_column].apply(to_quarterly_period)
     else:
         df[date_column] = pd.to_datetime(df[date_column], format=get_date_format(freq))
 
