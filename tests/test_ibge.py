@@ -120,7 +120,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with list as variables",
         ),
         pytest.param(
-            {"brazil": True},
+            {"locations": {"brazil": True}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "BR"},
@@ -128,7 +128,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with brazil",
         ),
         pytest.param(
-            {"municipalities": True},
+            {"locations": {"municipalities": True}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N6"},
@@ -136,7 +136,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with municipalities",
         ),
         pytest.param(
-            {"states": True},
+            {"locations": {"states": True}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N3"},
@@ -144,7 +144,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with states",
         ),
         pytest.param(
-            {"macroregions": True},
+            {"locations": {"macroregions": True}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N2"},
@@ -152,7 +152,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with macroregions",
         ),
         pytest.param(
-            {"mesoregions": True},
+            {"locations": {"mesoregions": True}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N7"},
@@ -160,7 +160,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with mesoregions",
         ),
         pytest.param(
-            {"microregions": True},
+            {"locations": {"microregions": True}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N9"},
@@ -168,7 +168,7 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with microregions",
         ),
         pytest.param(
-            {"states": [2, 3]},
+            {"locations": {"states": [2, 3]}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
                 "params": {"localidades": "N3[2,3]"},
@@ -176,10 +176,10 @@ BASE_URL = "https://servicodados.ibge.gov.br/api/v3/agregados/1419"
             id="with list as states",
         ),
         pytest.param(
-            {"states": [2, 3], "municipalities": 3},
+            {"locations": {"states": [2, 3], "municipalities": 3}},
             {
                 "url": BASE_URL + "/periodos/197001-202112/variaveis",
-                "params": {"localidades": "N6[3]|N3[2,3]"},
+                "params": {"localidades": "N3[2,3]|N6[3]"},
             },
             id="with list as states and number as municipalities",
         ),
@@ -648,7 +648,7 @@ def test_ibge_get_series_forbidden_location_filter(capsys):
     )
 
     with pytest.raises(ValueError):
-        ibge.get_series(1419, municipalities=True)
+        ibge.get_series(1419, locations={"municipalities": True})
         captured = capsys.readouterr()
         assert captured.out == (
             "Você está tentando filtrar a tabela pela localidade 'municipalities', "

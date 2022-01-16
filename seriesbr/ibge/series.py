@@ -4,20 +4,33 @@ import pandas as pd
 from seriesbr.utils import session, dates
 from .metadata import get_metadata
 from datetime import datetime
-from typing import List, Union, Literal, Optional
+from typing import List, Union, Literal, TypedDict, Optional
 
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
 IbgeFrequency = Union[Literal["mensal"], Literal["trimestral"], Literal["anual"]]
 
 VariableInput = Union[int, str, List[int], List[str]]
-LocationInput = Union[bool, int, List[int]]
 
 Classification = int
 Category = Union[int, List[int]]
 ClassificationInput = Union[
     Classification, List[Classification], "dict[Classification, Category]"
 ]
+
+LocationInput = Union[bool, int, List[int]]
+LocationsInput = TypedDict(
+    "LocationsInput",
+    {
+        "municipalities": Optional[LocationInput],
+        "states": Optional[LocationInput],
+        "macroregions": Optional[LocationInput],
+        "mesoregions": Optional[LocationInput],
+        "microregions": Optional[LocationInput],
+        "brazil": Optional[Literal[True]],
+    },
+    total=False,
+)
 
 
 def get_series(
@@ -26,12 +39,7 @@ def get_series(
     start: str = None,
     end: str = None,
     last_n: int = None,
-    municipalities: LocationInput = None,
-    states: LocationInput = None,
-    macroregions: LocationInput = None,
-    microregions: LocationInput = None,
-    mesoregions: LocationInput = None,
-    brazil: bool = None,
+    locations: LocationsInput = None,
     classifications: ClassificationInput = None,
 ) -> pd.DataFrame:
     """
@@ -92,12 +100,7 @@ def get_series(
         start=start,
         end=end,
         last_n=last_n,
-        municipalities=municipalities,
-        states=states,
-        macroregions=macroregions,
-        microregions=microregions,
-        mesoregions=mesoregions,
-        brazil=brazil,
+        locations=locations,
         classifications=classifications,
     )
 
@@ -198,12 +201,7 @@ def build_url(
     start: str = None,
     end: str = None,
     last_n: int = None,
-    municipalities: LocationInput = None,
-    states: LocationInput = None,
-    macroregions: LocationInput = None,
-    microregions: LocationInput = None,
-    mesoregions: LocationInput = None,
-    brazil: bool = None,
+    locations: LocationsInput = None,
     classifications: ClassificationInput = None,
 ) -> str:
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
@@ -211,15 +209,7 @@ def build_url(
     url += ibge_filter_by_date(frequency, start, end, last_n)
     url += ibge_filter_by_variable(variables)
     url += "?"
-    url += ibge_filter_by_location(
-        metadata,
-        municipalities=municipalities,
-        states=states,
-        macroregions=macroregions,
-        microregions=microregions,
-        mesoregions=mesoregions,
-        brazil=brazil,
-    )
+    url += ibge_filter_by_locations(locations, metadata)
     url += ibge_filter_by_classification(classifications)
     url += "&view=flat"
 
@@ -390,25 +380,27 @@ locations_names_to_codes = {
 }
 
 
-def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationInput]) -> str:
+def ibge_filter_by_locations(
+    locations: Optional[LocationsInput], metadata: dict
+) -> str:
     """
     Filter a table by location.
 
     Parameters
     ----------
-    metadata : dict
-        Dictionary with IBGE table metadata.
-
-    **kwargs
-        Keys must be one of these:
+    locations : dict
+        Dictionary whose keys are one of the following:
             - municipalities
             - states
             - macroregions
             - mesoregions
             - microregions
             - brazil
-        And values should be an int or a
+        And values should the locations identifiers an int or a
         list of ints.
+
+    metadata : dict
+        Dictionary with IBGE table metadata.
 
     Returns
     -------
@@ -428,10 +420,10 @@ def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationInput]) -
     # NOTE: http://api.sidra.ibge.gov.br/desctabapi.aspx?c=136
     prefix = "&localidades="
 
-    locations_dict = {k: v for k, v in kwargs.items() if v}
-
-    if not locations_dict:
+    if not locations:
         return prefix + "BR"
+
+    locations_dict = {name: value for name, value in locations.items() if value}
 
     allowed_locations_codes = metadata["nivelTerritorial"]["Administrativo"]
     allowed_locations_names = [
