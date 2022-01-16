@@ -7,9 +7,7 @@ def parse_arguments(*args: Union[dict, int, str]):
 
     Returns
     -------
-    tuple
-        First element with codes and second element
-        with names.
+    dict
 
     Examples
     >>> utils.collect_args({"A": 1, "B": 2}, 100)
