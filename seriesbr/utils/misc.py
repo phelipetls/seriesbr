@@ -1,4 +1,4 @@
-from typing import Union, Any, Iterable
+from typing import Union
 
 
 def merge_into_dict(*args: Union[dict, int, str]) -> dict:
@@ -20,37 +20,3 @@ def merge_into_dict(*args: Union[dict, int, str]) -> dict:
         else:
             d.update({arg: arg})
     return d
-
-
-def cat(something: Iterable, sep: str):
-    """
-    Join any iterable, except strings, by
-    a custom delimiter.
-
-    Parameters
-    ----------
-    something : list
-        List to be joined.
-
-    sep : str
-        Delimiter.
-    """
-    return sep.join(map(str, something)) if is_iterable(something) else something
-
-
-def is_iterable(something: Any) -> bool:
-    """
-    Test if it is an iterable other than
-    a string.
-
-    Returns
-    -------
-    bool
-        True if an iterable other than str,
-        False otherwise.
-    """
-    try:
-        iter(something)
-    except TypeError:
-        return False
-    return True and not isinstance(something, str)

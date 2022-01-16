@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-from seriesbr.utils import session, dates, misc
+from seriesbr.utils import session, dates
 from .metadata import get_metadata
 from datetime import datetime
 from typing import List, Union, Literal, Optional
@@ -11,7 +11,12 @@ BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 IbgeFrequency = Union[Literal["mensal"], Literal["trimestral"], Literal["anual"]]
 VariableValue = Union[int, str, List[int], List[str]]
 LocationValue = Union[bool, int, List[int]]
-ClassificationValue = Union[int, List[int], dict]
+
+Classification = int
+Category = Union[int, List[int]]
+ClassificationValue = Union[
+    Classification, List[Classification], "dict[Classification, Category]"
+]
 
 
 def get_series(
@@ -250,22 +255,39 @@ def ibge_filter_by_classification(classifications: ClassificationValue = None) -
     """
     prefix = "&classificacao="
 
-    if isinstance(classifications, dict):
-        s = []
-        for classification, categories in classifications.items():
-            if not categories or categories == "all":
-                s.append(f"{classification}[all]")
-            else:
-                joined_categories = misc.cat(categories, ",")
-                s.append(f"{classification}[{joined_categories}]")
-        return prefix + "|".join(s)
+    def format_classification_and_category(
+        classification: Classification, category: Union[str, int]
+    ):
+        return f"{classification}[{category}]"
 
-    elif isinstance(classifications, (int, str)):
-        return prefix + f"{classifications}[all]"
+    if isinstance(classifications, dict):
+
+        def parse_category(category: Category):
+            if isinstance(category, list):
+                joined_categories = ",".join(map(str, category))
+                return joined_categories
+            else:
+                if category is True:
+                    return "all"
+                else:
+                    return category
+
+        result = [
+            format_classification_and_category(classification, parse_category(category))
+            for classification, category in classifications.items()
+        ]
+
+        return prefix + "|".join(result)
+
+    elif isinstance(classifications, int):
+        return prefix + format_classification_and_category(classifications, "all")
 
     elif isinstance(classifications, list):
         joined_classifications = "|".join(
-            [f"{classification}[all]" for classification in classifications]
+            [
+                format_classification_and_category(classification, "all")
+                for classification in classifications
+            ]
         )
         return prefix + f"{joined_classifications}"
 
@@ -320,7 +342,7 @@ def ibge_filter_by_date(
     return f"/periodos/{format_date(start_date, freq)}-{format_date(end_date, freq)}"
 
 
-def ibge_filter_by_variable(variables=None) -> str:
+def ibge_filter_by_variable(variables: VariableValue = None) -> str:
     """
     Filter a table by variable.
 
@@ -343,8 +365,8 @@ def ibge_filter_by_variable(variables=None) -> str:
     >>> url.ibge_filter_by_variable()
     '/variaveis'
     """
-    if misc.is_iterable(variables):
-        joined_variables = misc.cat(variables, "|")
+    if isinstance(variables, list):
+        joined_variables = "|".join(map(str, variables))
         return f"/variaveis/{joined_variables}"
     elif variables:
         return f"/variaveis/{variables}"
@@ -421,7 +443,7 @@ def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationValue]) -
         location_code = locations_names_to_codes.get(name)
 
         if location_code not in allowed_locations_codes:
-            joined_allowed_locations_names = misc.cat(allowed_locations_names, ",")
+            joined_allowed_locations_names = ",".join(allowed_locations_names)
             print(
                 f"Você está tentando filtrar a tabela pela localidade '{name}', "
                 f"mas somente as localidades '{joined_allowed_locations_names}' são permitidas."
@@ -431,7 +453,7 @@ def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationValue]) -
         if name == "brazil":
             query.append("BR")
         elif isinstance(code, list):
-            joined_codes = misc.cat(code, ",")
+            joined_codes = ",".join(map(str, code))
             query.append(f"{location_code}[{joined_codes}]")
         elif type(code) == int:
             query.append(f"{location_code}[{code}]")
