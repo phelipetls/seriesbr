@@ -1,7 +1,8 @@
 from seriesbr.utils import session
+from typing import Tuple
 
 
-def get_metadata(table):
+def get_metadata(table: int) -> dict:
     """
     Get an IBGE table metadata.
 
@@ -19,11 +20,11 @@ def get_metadata(table):
     variaveis         [{'id': 63, 'nome': 'IPCA - Variação mensal', ...
     classificacoes    [{'id': 315, 'nome': 'Geral, grupo, subgrupo, ...
     """
-    url = build_url(table)
+    url, _ = build_url(table)
     response = session.get(url)
     json = response.json()
     return json
 
 
-def build_url(table):
-    return f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}/metadados"
+def build_url(table: int) -> Tuple[str, None]:
+    return f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}/metadados", None

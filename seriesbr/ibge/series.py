@@ -4,24 +4,30 @@ import pandas as pd
 from seriesbr.utils import session, dates, misc
 from .metadata import get_metadata
 from datetime import datetime
+from typing import List, Union, Literal, Optional
 
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
+IbgeFrequency = Union[Literal["mensal"], Literal["trimestral"], Literal["anual"]]
+VariableValue = Union[int, str, List[int], List[str]]
+LocationValue = Union[bool, int, List[int]]
+ClassificationValue = Union[int, List[int], dict]
+
 
 def get_series(
-    table,
-    variables=None,
-    start=None,
-    end=None,
-    last_n=None,
-    municipalities=None,
-    states=None,
-    macroregions=None,
-    microregions=None,
-    mesoregions=None,
-    brazil=None,
-    classifications=None,
-):
+    table: int,
+    variables: VariableValue = None,
+    start: str = None,
+    end: str = None,
+    last_n: int = None,
+    municipalities: LocationValue = None,
+    states: LocationValue = None,
+    macroregions: LocationValue = None,
+    microregions: LocationValue = None,
+    mesoregions: LocationValue = None,
+    brazil: bool = None,
+    classifications: ClassificationValue = None,
+) -> pd.DataFrame:
     """
     Get an IBGE table
 
@@ -70,23 +76,23 @@ def get_series(
     2019-11-01            Brasil                     IPCA - Peso mensal   Índice geral                            100.00
     """
     metadata = get_metadata(table)
-    frequency = metadata["periodicidade"]["frequencia"]
+    frequency: IbgeFrequency = metadata["periodicidade"]["frequencia"]
 
     url = build_url(
         table,
-        variables,
-        start,
-        end,
-        last_n,
-        municipalities,
-        states,
-        macroregions,
-        microregions,
-        mesoregions,
-        brazil,
-        classifications,
-        frequency,
         metadata,
+        frequency,
+        variables=variables,
+        start=start,
+        end=end,
+        last_n=last_n,
+        municipalities=municipalities,
+        states=states,
+        macroregions=macroregions,
+        microregions=microregions,
+        mesoregions=mesoregions,
+        brazil=brazil,
+        classifications=classifications,
     )
 
     try:
@@ -103,12 +109,12 @@ def get_series(
         raise error
 
 
-def get_date_format(freq):
+def get_date_format(freq: IbgeFrequency) -> str:
     formats = {"mensal": "%Y%m", "anual": "%Y", "trimestral": "%Y0%q"}
     return formats[freq]
 
 
-def format_date(date, frequency):
+def format_date(date: datetime, frequency: IbgeFrequency) -> str:
     if frequency == "trimestral":
         period = pd.Period(year=date.year, month=date.month, day=date.day, freq="M")
         return period.strftime("%Y0%q")
@@ -144,7 +150,7 @@ selected_ibge_columns = [
 ]
 
 
-def build_df(json, freq="mensal"):
+def build_df(json: dict, freq: IbgeFrequency) -> pd.DataFrame:
     columns, data = json[0], json[1:]
 
     date_column = columns["D2C"]
@@ -173,34 +179,34 @@ def build_df(json, freq="mensal"):
 
 
 def build_url(
-    table,
-    variables=None,
-    start=None,
-    end=None,
-    last_n=None,
-    municipalities=None,
-    states=None,
-    macroregions=None,
-    microregions=None,
-    mesoregions=None,
-    brazil=None,
-    classifications=None,
-    frequency=None,
-    metadata=None,
-):
+    table: int,
+    metadata: dict,
+    frequency: IbgeFrequency,
+    variables: VariableValue = None,
+    start: str = None,
+    end: str = None,
+    last_n: int = None,
+    municipalities: LocationValue = None,
+    states: LocationValue = None,
+    macroregions: LocationValue = None,
+    microregions: LocationValue = None,
+    mesoregions: LocationValue = None,
+    brazil: bool = None,
+    classifications: ClassificationValue = None,
+) -> str:
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
 
-    url += ibge_filter_by_date(start, end, last_n, frequency)
+    url += ibge_filter_by_date(frequency, start, end, last_n)
     url += ibge_filter_by_variable(variables)
     url += "?"
     url += ibge_filter_by_location(
+        metadata,
         municipalities=municipalities,
         states=states,
         macroregions=macroregions,
         microregions=microregions,
         mesoregions=mesoregions,
         brazil=brazil,
-        metadata=metadata,
     )
     url += ibge_filter_by_classification(classifications)
     url += "&view=flat"
@@ -208,7 +214,7 @@ def build_url(
     return url
 
 
-def ibge_filter_by_classification(classifications=None):
+def ibge_filter_by_classification(classifications: ClassificationValue = None) -> str:
     """
     Filter a table by classification and categories
 
@@ -260,7 +266,12 @@ def ibge_filter_by_classification(classifications=None):
     return ""
 
 
-def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
+def ibge_filter_by_date(
+    freq: IbgeFrequency,
+    start: str = None,
+    end: str = None,
+    last_n: int = None,
+) -> str:
     """
     Filter a table by date.
 
@@ -297,13 +308,13 @@ def ibge_filter_by_date(start=None, end=None, last_n=None, freq=None):
     if last_n:
         return f"/periodos/-{last_n}"
 
-    start = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
-    end = dates.parse_end_date(end) if end else datetime.today()
+    start_date = dates.parse_start_date(start) if start else dates.UNIX_EPOCH
+    end_date = dates.parse_end_date(end) if end else datetime.today()
 
-    return f"/periodos/{format_date(start, freq)}-{format_date(end, freq)}"
+    return f"/periodos/{format_date(start_date, freq)}-{format_date(end_date, freq)}"
 
 
-def ibge_filter_by_variable(variables=None):
+def ibge_filter_by_variable(variables=None) -> str:
     """
     Filter a table by variable.
 
@@ -350,7 +361,7 @@ locations_names_to_codes = {
 }
 
 
-def ibge_filter_by_location(metadata=None, **kwargs):
+def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationValue]) -> str:
     """
     Filter a table by location.
 
