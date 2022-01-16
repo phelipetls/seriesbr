@@ -8,7 +8,7 @@ DATE_FORMAT = "%d/%m/%Y"
 
 
 def get_series(
-    *args: Union[int, str, dict],
+    *args: Union[int, dict],
     start: str = None,
     end: str = None,
     last_n: int = None,
