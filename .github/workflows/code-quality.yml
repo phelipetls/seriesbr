@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
+      - name: Run MyPy
+        run: poetry run mypy seriesbr
+
       - name: Test and generate code coverage report in XML
         run: poetry run pytest --cov=seriesbr --cov-report=xml
 
