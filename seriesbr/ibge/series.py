@@ -141,9 +141,7 @@ ibge_columns = {
 }
 
 selected_ibge_columns = [
-    ibge_columns["value"],
     ibge_columns["location_code"],
-    ibge_columns["period_code"],
     ibge_columns["variable_name"],
     ibge_columns["variable_code"],
     ibge_columns["classification_name"],
@@ -153,14 +151,11 @@ selected_ibge_columns = [
 def build_df(json: dict, freq: IbgeFrequency) -> pd.DataFrame:
     columns, data = json[0], json[1:]
 
-    date_column = columns["D2C"]
-
     df = pd.DataFrame(data)
-    df = df.loc[:, selected_ibge_columns]
 
-    df.columns = [
-        label for code, label in columns.items() if code in selected_ibge_columns
-    ]
+    df = df.rename(
+        columns={ibge_columns["period_code"]: "Date", ibge_columns["value"]: "Valor"}
+    )
 
     if freq == "trimestral":
 
@@ -170,12 +165,19 @@ def build_df(json: dict, freq: IbgeFrequency) -> pd.DataFrame:
             year, quarter = int(year_str), int(quarter_str)
             return pd.Period(year=year, quarter=quarter, freq="Q").to_timestamp()
 
-        df[date_column] = df[date_column].apply(to_quarterly_period)
+        df["Date"] = df["Date"].apply(to_quarterly_period)
     else:
-        df[date_column] = pd.to_datetime(df[date_column], format=get_date_format(freq))
+        df["Date"] = pd.to_datetime(df["Date"], format=get_date_format(freq))
+    df = df.set_index("Date")
 
-    df = df.set_index(date_column)
-    df = df.rename_axis("Date")
+    df = df.loc[:, ["Valor"] + selected_ibge_columns]
+    df = df.rename(
+        columns={
+            code: label
+            for code, label in columns.items()
+            if code in selected_ibge_columns
+        }
+    )
 
     df["Valor"] = pd.to_numeric(df["Valor"], errors="coerce")
 
