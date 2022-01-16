@@ -9,29 +9,30 @@ from typing import List, Union, Literal, Optional
 BASEURL = "https://servicodados.ibge.gov.br/api/v3/agregados/"
 
 IbgeFrequency = Union[Literal["mensal"], Literal["trimestral"], Literal["anual"]]
-VariableValue = Union[int, str, List[int], List[str]]
-LocationValue = Union[bool, int, List[int]]
+
+VariableInput = Union[int, str, List[int], List[str]]
+LocationInput = Union[bool, int, List[int]]
 
 Classification = int
 Category = Union[int, List[int]]
-ClassificationValue = Union[
+ClassificationInput = Union[
     Classification, List[Classification], "dict[Classification, Category]"
 ]
 
 
 def get_series(
     table: int,
-    variables: VariableValue = None,
+    variables: VariableInput = None,
     start: str = None,
     end: str = None,
     last_n: int = None,
-    municipalities: LocationValue = None,
-    states: LocationValue = None,
-    macroregions: LocationValue = None,
-    microregions: LocationValue = None,
-    mesoregions: LocationValue = None,
+    municipalities: LocationInput = None,
+    states: LocationInput = None,
+    macroregions: LocationInput = None,
+    microregions: LocationInput = None,
+    mesoregions: LocationInput = None,
     brazil: bool = None,
-    classifications: ClassificationValue = None,
+    classifications: ClassificationInput = None,
 ) -> pd.DataFrame:
     """
     Get an IBGE table
@@ -193,17 +194,17 @@ def build_url(
     table: int,
     metadata: dict,
     frequency: IbgeFrequency,
-    variables: VariableValue = None,
+    variables: VariableInput = None,
     start: str = None,
     end: str = None,
     last_n: int = None,
-    municipalities: LocationValue = None,
-    states: LocationValue = None,
-    macroregions: LocationValue = None,
-    microregions: LocationValue = None,
-    mesoregions: LocationValue = None,
+    municipalities: LocationInput = None,
+    states: LocationInput = None,
+    macroregions: LocationInput = None,
+    microregions: LocationInput = None,
+    mesoregions: LocationInput = None,
     brazil: bool = None,
-    classifications: ClassificationValue = None,
+    classifications: ClassificationInput = None,
 ) -> str:
     url = f"https://servicodados.ibge.gov.br/api/v3/agregados/{table}"
 
@@ -225,7 +226,7 @@ def build_url(
     return url
 
 
-def ibge_filter_by_classification(classifications: ClassificationValue = None) -> str:
+def ibge_filter_by_classification(classifications: ClassificationInput = None) -> str:
     """
     Filter a table by classification and categories
 
@@ -342,7 +343,7 @@ def ibge_filter_by_date(
     return f"/periodos/{format_date(start_date, freq)}-{format_date(end_date, freq)}"
 
 
-def ibge_filter_by_variable(variables: VariableValue = None) -> str:
+def ibge_filter_by_variable(variables: VariableInput = None) -> str:
     """
     Filter a table by variable.
 
@@ -389,7 +390,7 @@ locations_names_to_codes = {
 }
 
 
-def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationValue]) -> str:
+def ibge_filter_by_location(metadata: dict, **kwargs: Optional[LocationInput]) -> str:
     """
     Filter a table by location.
 
