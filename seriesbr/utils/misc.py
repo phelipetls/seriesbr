@@ -1,7 +1,7 @@
 from typing import Union, Any, Iterable
 
 
-def parse_arguments(*args: Union[dict, int, str]):
+def merge_into_dict(*args: Union[dict, int, str]):
     """
     Parse arguments into a dictionary.
 

@@ -39,7 +39,6 @@ def get_series(
     -------
     pandas.DataFrame
     """
-    parsed_args = misc.parse_arguments(*args)
 
     def get_timeseries(
         code: int,
@@ -53,10 +52,12 @@ def get_series(
         json = response.json()
         return build_df(json, code, label)
 
+    args_dict = misc.merge_into_dict(*args)
+
     return pd.concat(
         (
             get_timeseries(code, label, start=start, end=end, last_n=last_n)
-            for label, code in parsed_args.items()
+            for label, code in args_dict.items()
         ),
         axis="columns",
         sort=True,
