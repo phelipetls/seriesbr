@@ -105,11 +105,9 @@ def build_df(json: dict, code: int, label: str = None) -> pd.DataFrame:
     df = pd.DataFrame(json)
 
     df["valor"] = df["valor"].astype("float64")
+    df["data"] = pd.to_datetime(df["data"], format="%d/%m/%Y")
 
-    df = df.set_index("data")
-    df = df.rename_axis("Date")
-    df.index = pd.to_datetime(df.index, format="%d/%m/%Y")
-
-    df.columns = [label or code]
+    df = df.rename(columns={"data": "Date", "valor": label or code})
+    df = df.set_index("Date")
 
     return df
