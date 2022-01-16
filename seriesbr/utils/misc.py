@@ -1,4 +1,7 @@
-def parse_arguments(*args):
+from typing import Union, Any, Iterable
+
+
+def parse_arguments(*args: Union[dict, int, str]):
     """
     Parse arguments into a dictionary.
 
@@ -21,7 +24,7 @@ def parse_arguments(*args):
     return d
 
 
-def cat(something, sep):
+def cat(something: Iterable, sep: str):
     """
     Join any iterable, except strings, by
     a custom delimiter.
@@ -37,7 +40,7 @@ def cat(something, sep):
     return sep.join(map(str, something)) if is_iterable(something) else something
 
 
-def is_iterable(something):
+def is_iterable(something: Any) -> bool:
     """
     Test if it is an iterable other than
     a string.
