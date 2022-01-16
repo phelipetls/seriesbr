@@ -24,6 +24,7 @@ pytest-cov = "^3.0.0"
 rope = "^0.22.0"
 types-python-dateutil = "^2.8.6"
 types-requests = "^2.27.7"
+pyright = "^0.0.13"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
