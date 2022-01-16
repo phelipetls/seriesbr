@@ -62,12 +62,12 @@ def build_df(json: dict, code: str, label: Optional[str]) -> pd.DataFrame:
     df = pd.DataFrame(json)
 
     df["VALDATA"] = df["VALDATA"].str[:-6]
-    df = df.set_index("VALDATA")
-    df = df.rename_axis("Date")
-    df.index = pd.to_datetime(df.index, format="%Y-%m-%dT%H:%M:%S")
+    df["VALDATA"] = pd.to_datetime(df["VALDATA"], format="%Y-%m-%dT%H:%M:%S")
+    df = df.rename(columns={"VALDATA": "Date"})
+    df = df.set_index("Date")
 
     df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
-    df.columns = [label or code]
+    df = df.rename(columns={"VALVALOR": label or code})
 
     return df
 
