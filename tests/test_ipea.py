@@ -324,9 +324,9 @@ def test_ipea_get_series_dataframe():
         status=200,
     )
 
-    df = ipea.get_series({"Selic": "BM12_TJOVER12"})
+    df = ipea.get_series("BM12_TJOVER12")
     expected_df = pd.DataFrame(
-        {"Selic": [4.41]}, index=pd.DatetimeIndex(["01/01/2019"], name="Date")
+        {"BM12_TJOVER12": [4.41]}, index=pd.DatetimeIndex(["01/01/2019"], name="Date")
     )
 
     pd.testing.assert_frame_equal(df, expected_df)

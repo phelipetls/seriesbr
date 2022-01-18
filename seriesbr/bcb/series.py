@@ -1,18 +1,17 @@
 import pandas as pd
 
-from seriesbr.utils import session, misc, dates
+from seriesbr.utils import session, dates
 from datetime import datetime
-from typing import Union, Tuple, TypedDict, Literal
+from typing import Tuple, TypedDict, Literal
 
 DATE_FORMAT = "%d/%m/%Y"
 
 
 def get_series(
-    *args: Union[int, dict],
+    code: int,
     start: str = None,
     end: str = None,
     last_n: int = None,
-    **kwargs,
 ) -> pd.DataFrame:
     """
     Get multiple BCB time series.
@@ -20,8 +19,8 @@ def get_series(
     Parameters
     ----------
 
-    *args : int, dict
-        Arbitrary number of time series codes.
+    code : int
+        Series identifier.
 
     start : str, optional
         Initial date.
@@ -32,37 +31,14 @@ def get_series(
     last_n : int, optional
         Number of last observations.
 
-    **kwargs
-        Passed to pandas.concat
-
     Returns
     -------
     pandas.DataFrame
     """
-
-    def get_timeseries(
-        code: int,
-        label: str = None,
-        start: str = None,
-        end: str = None,
-        last_n: int = None,
-    ) -> pd.DataFrame:
-        url, params = build_url(code, start, end, last_n)
-        response = session.get(url, params=params)
-        json = response.json()
-        return build_df(json, code, label)
-
-    args_dict = misc.merge_into_dict(*args)
-
-    return pd.concat(
-        (
-            get_timeseries(code, label, start=start, end=end, last_n=last_n)
-            for label, code in args_dict.items()
-        ),
-        axis="columns",
-        sort=True,
-        **kwargs,
-    )
+    url, params = build_url(code, start, end, last_n)
+    response = session.get(url, params=params)
+    json = response.json()
+    return build_df(json, code)
 
 
 BcbOptionalUrlParams = TypedDict(
@@ -102,13 +78,13 @@ def build_url(
     return url, params
 
 
-def build_df(json: dict, code: int, label: str = None) -> pd.DataFrame:
+def build_df(json: dict, code: int) -> pd.DataFrame:
     df = pd.DataFrame(json)
 
     df["valor"] = df["valor"].astype("float64")
     df["data"] = pd.to_datetime(df["data"], format="%d/%m/%Y")
 
-    df = df.rename(columns={"data": "Date", "valor": label or code})
+    df = df.rename(columns={"data": "Date", "valor": str(code)})
     df = df.set_index("Date")
 
     return df

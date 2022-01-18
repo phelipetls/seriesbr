@@ -2,17 +2,16 @@ import pandas as pd
 
 from datetime import datetime
 from .metadata import get_metadata, IpeaMetadata
-from seriesbr.utils import session, misc, dates
+from seriesbr.utils import session, dates
 from dateutil.relativedelta import relativedelta
-from typing import Tuple, TypedDict, Optional, Union
+from typing import Tuple, TypedDict, Optional
 
 
 def get_series(
-    *args: Union[str, dict],
+    code: str,
     start: str = None,
     end: str = None,
     last_n: int = None,
-    **kwargs,
 ) -> pd.DataFrame:
     """
     Get multiple IPEA time series.
@@ -20,8 +19,8 @@ def get_series(
     Parameters
     ----------
 
-    *args : int, dict
-        Arbitrary number of time series codes.
+    code : str
+        Series identifier.
 
     start : str, optional
         Initial date.
@@ -29,40 +28,22 @@ def get_series(
     end : str, optional
         Final date.
 
-    **kwargs
-        Passed to pandas.concat
-
     Returns
     -------
     pandas.DataFrame
     """
 
-    def get_timeseries(
-        code: str, label: str = None, start: str = None, end: str = None
-    ):
-        metadata = get_metadata(code)
-        url, params = build_url(code, start, end, last_n, metadata)
+    metadata = get_metadata(code)
+    url, params = build_url(code, start, end, last_n, metadata)
 
-        response = session.get(url, params=params)
-        json = response.json()
+    response = session.get(url, params=params)
+    json = response.json()
 
-        df = build_df(json, code, label)
-        return df
-
-    args_dict = misc.merge_into_dict(*args)
-
-    return pd.concat(
-        (
-            get_timeseries(code, label, start=start, end=end)
-            for label, code in args_dict.items()
-        ),
-        axis="columns",
-        sort=True,
-        **kwargs,
-    )
+    df = build_df(json, code)
+    return df
 
 
-def build_df(json: dict, code: str, label: Optional[str]) -> pd.DataFrame:
+def build_df(json: dict, code: str) -> pd.DataFrame:
     json = json["value"]
     df = pd.DataFrame(json)
 
@@ -72,7 +53,7 @@ def build_df(json: dict, code: str, label: Optional[str]) -> pd.DataFrame:
     df = df.set_index("Date")
 
     df["VALVALOR"] = pd.to_numeric(df["VALVALOR"], errors="coerce")
-    df = df.rename(columns={"VALVALOR": label or code})
+    df = df.rename(columns={"VALVALOR": code})
 
     return df
 

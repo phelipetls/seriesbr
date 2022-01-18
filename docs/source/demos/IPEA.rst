@@ -14,42 +14,19 @@ Selic - acumulada no mês) e "BM12_PIB12" (PIB):
 
    from seriesbr import ipea
 
-   ipea.get_series("BM12_TJOVER12", "BM12_PIB12")
-
-Dando nome às colunas:
-
-.. ipython:: python
-
-   ipea.get_series(
-       {
-           "Selic": "BM12_TJOVER12",
-           "PIB": "BM12_PIB12",
-       }
-   )
+   ipea.get_series("BM12_TJOVER12")
 
 Filtrando por data:
 
 .. ipython:: python
 
-   ipea.get_series(
-       {
-           "Selic": "BM12_TJOVER12",
-           "PIB": "BM12_PIB12",
-       },
-       start="07-2015",
-       end="07-2016",
-   )
+   ipea.get_series("BM12_TJOVER12", start="07-2015", end="07-2016")
 
 Obtendo as últimas 12 observações:
 
 .. ipython:: python
 
-   ipea.get_series(
-       {
-           "Selic": "BM12_TJOVER12",
-       },
-       last_n=12
-   )
+   ipea.get_series("BM12_TJOVER12", last_n=12)
 
 
 Obtendo metadados

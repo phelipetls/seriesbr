@@ -106,9 +106,9 @@ def test_bcb_get_series_dataframe():
         status=200,
     )
 
-    df = bcb.get_series({"Selic": 11})
+    df = bcb.get_series(11)
     expected_df = pd.DataFrame(
-        data={"Selic": [100.0]}, index=pd.DatetimeIndex(["01/01/2019"], name="Date")
+        data={"11": [100.0]}, index=pd.DatetimeIndex(["01/01/2019"], name="Date")
     )
 
     pd.testing.assert_frame_equal(df, expected_df)
