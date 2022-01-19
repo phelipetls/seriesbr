@@ -59,6 +59,35 @@ variação mensal e acumulada no ano.
    @savefig ipca_by_product.png
    plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
+
+É possível ainda filtrar por localidades, por exemplo, o mesmo gráfico mas para
+a capital do Rio de Janeiro (o identificador do município do Rio é 33001 e o do
+estado é 33, como você pode verificar na `API de localidades do IBGE
+<https://servicodados.ibge.gov.br/api/docs/localidades>`_).
+
+.. ipython:: python
+
+   ipca_by_product_rio = ibge.get_series(
+       7060,
+       last_n=1,
+       classifications={315: [7170, 7445, 7486, 7558, 7625, 7660, 7712, 7766, 7786]},
+       locations={"municipalities": {33: 33001}}
+   )
+
+   ipca_by_product_rio.pivot_table(
+       index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
+   ).drop("IPCA - Peso mensal", axis="columns").sort_values(
+       "IPCA - Variação acumulada no ano"
+   ).plot(
+       kind="barh", title="IPCA por Produto / Serviço na cidade do Rio - " + date, figsize=(10, 8)
+   )
+
+   plt.ylabel("");
+   plt.tight_layout()
+   @savefig ipca_by_product_rio.png
+   plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
+
+
 Obtendo metadados
 -----------------
 
