@@ -44,14 +44,14 @@ variação mensal e acumulada no ano.
 
    ipca_by_product
 
-   date = ipca_by_product.index.unique().strftime("%b/%Y").values[0].title()
+   current_date = ipca_by_product.index.unique().strftime("%b/%Y").values[0].title()
 
    ipca_by_product.pivot_table(
        index="Geral, grupo, subgrupo, item e subitem", columns="Variável", values="Valor"
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada no ano"
    ).plot(
-       kind="barh", title="IPCA por Produto / Serviço - " + date, figsize=(10, 8)
+       kind="barh", title="IPCA por Produto / Serviço - " + current_date, figsize=(10, 8)
    )
 
    plt.ylabel("");
@@ -79,7 +79,7 @@ estado é 33, como você pode verificar na `API de localidades do IBGE
    ).drop("IPCA - Peso mensal", axis="columns").sort_values(
        "IPCA - Variação acumulada no ano"
    ).plot(
-       kind="barh", title="IPCA por Produto / Serviço na cidade do Rio - " + date, figsize=(10, 8)
+       kind="barh", title="IPCA por Produto / Serviço na cidade do Rio - " + current_date, figsize=(10, 8)
    )
 
    plt.ylabel("");
