@@ -7,8 +7,8 @@ Obtendo séries
 Seguem alguns exemplos para ilustrar o uso da função
 :py:func:`seriesbr.ipea.get_series`.
 
-Obtendo as séries de identificador "BM12_TJOVER12" (Taxa de juros - Over /
-Selic - acumulada no mês) e "BM12_PIB12" (PIB):
+Obtendo as séries de identificador "*BM12_TJOVER12*" (Taxa de juros - Over /
+Selic - acumulada no mês):
 
 .. ipython:: python
 
