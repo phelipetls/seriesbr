@@ -17,7 +17,7 @@ sys.path.append('..')
 
 # -- Project information -----------------------------------------------------
 
-project = 'SeriesBR'
+project = 'seriesbr'
 copyright = '2022, Phelipe Teles'
 author = 'Phelipe Teles'
 
