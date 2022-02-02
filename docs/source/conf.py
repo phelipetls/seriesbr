@@ -18,7 +18,7 @@ sys.path.append('..')
 # -- Project information -----------------------------------------------------
 
 project = 'SeriesBR'
-copyright = '2019, Phelipe Teles'
+copyright = '2022, Phelipe Teles'
 author = 'Phelipe Teles'
 
 # The full version, including alpha/beta/rc tags
