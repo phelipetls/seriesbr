@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "seriesbr"
-version = "0.1.8"
+version = "1.0.0"
 description = "A Python library to interact with brazilian time series databases"
 authors = ["Phelipe Teles <phelipe_teles@hotmail.com>"]
 readme = "README.md"
