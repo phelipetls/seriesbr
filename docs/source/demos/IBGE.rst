@@ -4,16 +4,17 @@ Instituto Brasileiro de Geografia e Estatística
 Obtendo séries
 -------------------
 
-O uso do módulo do IBGE não é tão simples quanto às do BCB e IPEA.
+Usar o módulo do IBGE não é tão simples quanto o uso dos módulos do BCB e IPEA.
 
 Isso porque uma série temporal para a `API de agregados do IBGE
-<https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>`_ é uma variável
-que pertence a um agregado (ou tabela), que por sua vez pertence a uma
-pesquisa.
+<https://servicodados.ibge.gov.br/api/docs/agregados?versao=3>`_ é uma
+**variável** que pertence a um **agregado** (ou tabela), que, por sua vez,
+pertence a uma pesquisa.
 
 Além disso, é possível obter dados por localidade (municípios, estados etc.),
-classificações (grupo, por exemplo tipo de produto) e categorias (tipo
-específico, por exemplo alimentação), além de filtrar por período.
+classificações (grupo, por exemplo tipo de produto) e categorias (subgrupo de
+uma classificação, por exemplo um produto para alimentação), além de filtrar
+por período.
 
 Por isso, a função :py:func:`seriesbr.ibge.get_series` aceita muito mais
 argumentos.
@@ -60,9 +61,11 @@ variação mensal e acumulada no ano.
    plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter())
 
 
-É possível ainda filtrar por localidades, por exemplo, o mesmo gráfico mas para
-a capital do Rio de Janeiro (o identificador do município do Rio é 33001 e o do
-estado é 33, como você pode verificar na `API de localidades do IBGE
+É possível ainda filtrar por localidades.
+
+Por exemplo, eis o mesmo gráfico mas para a capital do Rio de Janeiro (cujo
+identificador é 33001 e o do estado do Rio é 33, como é possível de se
+verificar na `API de localidades do IBGE
 <https://servicodados.ibge.gov.br/api/docs/localidades>`_).
 
 .. ipython:: python
@@ -99,9 +102,9 @@ Pode ser útil obter metadados sobre uma série específica:
 
    metadata.keys()
 
-Por exemplo, pode ser útil para obter os identificadores dos grupos
-da classificação "Geral, grupo, subgrupo, item e subitem" do IPCA, que foi a
-lista usada no exemplo anterior:
+Por exemplo, para obter os identificadores dos grupos da classificação "Geral,
+grupo, subgrupo, item e subitem" do IPCA, que foi a lista usada no exemplo
+anterior:
 
 .. ipython:: python
 
