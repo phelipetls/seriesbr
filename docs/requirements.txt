@@ -1,4 +1,4 @@
-seriesbr==1.0.0
+seriesbr
 sphinx
 alabaster
 IPython
