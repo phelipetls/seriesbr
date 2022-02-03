@@ -12,6 +12,7 @@
 #
 # import os
 import pkg_resources
+from datetime import datetime
 
 import sys
 sys.path.append('..')
@@ -20,7 +21,7 @@ sys.path.append('..')
 # -- Project information -----------------------------------------------------
 
 project = 'seriesbr'
-copyright = '2022, Phelipe Teles'
+copyright = f'{datetime.today().year}, Phelipe Teles'
 author = 'Phelipe Teles'
 
 # The full version, including alpha/beta/rc tags
