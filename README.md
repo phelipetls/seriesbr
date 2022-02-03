@@ -2,6 +2,7 @@
 
 [![pypi version](https://img.shields.io/pypi/v/seriesbr.svg)](https://pypi.org/project/seriesbr/)
 [![readthedocs status](https://readthedocs.org/projects/seriesbr/badge/?version=latest)](https://seriesbr.readthedocs.io/en/latest/?badge=latest)
+![codecov](https://codecov.io/gh/phelipetls/seriesbr/branch/master/graph/badge.svg)
 
 **seriesbr** ajuda a consultar, de forma programática, séries temporais dos
 bancos de dados do Banco Central do Brasil (BCB), Instituto de Pesquisa
