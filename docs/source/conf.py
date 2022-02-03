@@ -11,6 +11,8 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # import os
+import pkg_resources
+
 import sys
 sys.path.append('..')
 
@@ -22,7 +24,7 @@ copyright = '2022, Phelipe Teles'
 author = 'Phelipe Teles'
 
 # The full version, including alpha/beta/rc tags
-release = 'v1.0.0'
+release = pkg_resources.get_distribution(project).version
 
 
 # -- General configuration ---------------------------------------------------
