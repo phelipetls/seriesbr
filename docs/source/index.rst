@@ -32,8 +32,8 @@ Demonstração
    from seriesbr import bcb
 
    df = bcb.get_series(20786, start="2015", end="2018-06-01")
-   df.plot(kind="line", title="Spread bancário no Brasil de 2016 até 01/06/2018")
    df.columns = ["Spread bancário"]
+   df.plot(kind="line", title="Spread bancário no Brasil de 2016 até junho de 2018")
    @savefig spread_bcb.png
    plt.tight_layout()
 
