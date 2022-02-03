@@ -21,8 +21,8 @@ sys.path.append('..')
 # -- Project information -----------------------------------------------------
 
 project = 'seriesbr'
-copyright = f'{datetime.today().year}, Phelipe Teles'
 author = 'Phelipe Teles'
+copyright = f'{datetime.today().year}, {author}'
 
 # The full version, including alpha/beta/rc tags
 release = pkg_resources.get_distribution(project).version
